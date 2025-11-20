@@ -1,0 +1,41 @@
+@rendermode InteractiveServer
+@code {
+    [Parameter]
+    public string InputType { get; set; } = "text";
+
+    [Parameter]
+    public string Value { get; set; } = string.Empty;
+
+    [Parameter]
+    public string Label { get; set; } = string.Empty;
+
+    [Parameter]
+    public EventCallback<string> ValueChanged { get; set; }
+
+    private readonly Guid ForId = Guid.NewGuid();
+
+    private async Task OnInputChanged(ChangeEventArgs e)
+    {
+        Value = e.Value?.ToString() ?? string.Empty;
+        await ValueChanged.InvokeAsync(Value);
+    }
+}
+<label for="@ForId" class="form-label">@Label</label>
+<input type="@InputType" id="@ForId" value="@Value" class="form-control" @oninput="OnInputChanged" />
+
+@* @page "/input-demo"
+
+<h3>Input Demo</h3>
+
+<InputField InputType="email" Value="@userInput" Label="Hello!" ValueChanged="OnValueChanged" />
+
+<p>You typed: @userInput</p>
+
+@code {
+    private string userInput = "";
+
+    private void OnValueChanged(string newValue)
+    {
+        userInput = newValue;
+    }
+} *@

@@ -1,0 +1,52 @@
+@using System.Collections.Immutable
+@using System.Reflection.Metadata
+@using Microsoft.CodeAnalysis.CSharp.Syntax
+@using ufshop.Data.Models
+@using ufshop.Services
+@using ufshop.Shared
+@namespace ufshop.Components.UI
+@rendermode InteractiveServer
+
+@code {
+    public readonly BeService beService;
+
+    public readonly ImageSelectorService Service;
+
+    [Parameter]
+    public ShopImage Image { get; set; }
+
+    [Parameter]
+    public EventCallback<string> OnValueSelected { get; set; }
+
+    public HashSet<ShopImage> AllImages
+    {
+        get
+        {
+            return Service.GetAllImages();
+        }
+    }
+
+    public ImageSelector(BeService srv)
+    {
+        beService = srv;
+        Service = new ImageSelectorService(srv);
+    }
+
+    private async Task SelectImage(EventArgs args, ShopImage shopImage)
+    {
+        string SelectedId = shopImage.Id.ToString();
+        await OnValueSelected.InvokeAsync(SelectedId);
+    }
+
+}
+
+@foreach(ShopImage shopImage in AllImages.OrderBy(e => e.Created))
+{
+    string imagestyle = string.Empty; //"border: 2px solid transparent;";
+    if (Image.Id.Equals(shopImage.Id))
+    {
+        imagestyle = "border: 2px solid green; box-shadow: 0 0 8px green; padding: 0; transform:scale(1.11)";
+    }
+    string thumbImageUrl = "/img/t/" + shopImage.Filename;
+    <Image Src="@thumbImageUrl" IsThumbNail="true" @onclick="((args) => SelectImage(args, shopImage))" style="@imagestyle" loading="lazy" />
+}

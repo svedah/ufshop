@@ -1,0 +1,48 @@
+@using ufshop.Data.Models
+@rendermode InteractiveServer
+@code {
+        [Parameter]
+        public IQueryable<ShopPage> Pages { get; set; } = new HashSet<ShopPage>().AsQueryable();
+        [Parameter]
+        public IQueryable<ShopItem> Items { get; set; } = new HashSet<ShopItem>().AsQueryable();
+    @* [Parameter]
+    public string InputType { get; set; } = "text";
+
+    [Parameter]
+    public string Value { get; set; } = string.Empty;
+
+    [Parameter]
+    public string Label { get; set; } = string.Empty;
+
+    [Parameter]
+    public EventCallback<string> ValueChanged { get; set; }
+ *@
+    @* private readonly Guid ForId = Guid.NewGuid(); *@
+
+    @* private async Task OnInputChanged(ChangeEventArgs e)
+    {
+        Value = e.Value?.ToString() ?? string.Empty;
+        await ValueChanged.InvokeAsync(Value);
+    } *@
+}
+
+<Tabs NavStyle="NavStyle.Pills">
+
+    <Tab Title="Våra varor och tjänster">
+        <Content>
+            <ArticleCards ShopItems=Items />
+        </Content>
+    </Tab>
+
+    @foreach(ShopPage sp in Pages)
+    {
+        <Tab Title="@sp.Header">
+            <Content>
+                @foreach(ShopPageFragment spf in sp.ShopPageFragments.OrderBy(e => e.Order))
+                {
+                    <PagesTabContent ContentFragment=spf />
+                }
+            </Content>
+        </Tab>
+    }
+</Tabs>

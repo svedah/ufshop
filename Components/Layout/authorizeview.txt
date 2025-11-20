@@ -1,0 +1,12 @@
+        <AuthorizeView>
+            <Authorized>
+                <NavLink class="nav-link" href="/logout">
+                    <span class="bi bi-person-badge-nav-menu" aria-hidden="true"></span>Logga Ut
+                </NavLink>
+            </Authorized>
+            <NotAuthorized>
+                <NavLink class="nav-link" href="/login">
+                    <span class="bi bi-person-badge-nav-menu" aria-hidden="true"></span>Logga In
+                </NavLink>
+            </NotAuthorized>
+        </AuthorizeView>

@@ -1,0 +1,53 @@
+﻿@page "/"
+@using ufshop.Services
+
+@* the following will redirect to authentication immediately if not authenticated *@
+@* @attribute [Authorize] *@ 
+
+@rendermode InteractiveServer
+@* @inject ufshop.Services.BeService BeService *@
+@code {
+    private readonly HomePageService Service;
+    public Home(ufshop.Services.BeService beService)
+    {
+        Service = new HomePageService(beService);
+        @* Hejsan = "Tjosan"; *@
+
+        //TODO: move this shit to Service to see if it works.
+
+        @* wwwPath = Service.beService.wwwroot; *@
+    }
+}
+<PageTitle>Home</PageTitle>
+<HeadContent>
+    @* <meta name="headcontent" description="lol yep!" /> *@
+</HeadContent>
+@* <h1>Hello, world!</h1> *@
+@* <p>@wwwPath</p> *@
+@* <p>@Service.beService.DomainPrefix</p> *@
+@* <AuthorizeView>
+    Hello @context.User.Identity?.Name!
+</AuthorizeView> *@
+<div class="row">
+    <div class="col-2">
+        <Image Src="@Service.LogoImageFile" Alt="@Service.LogoImageAltText" />
+    </div>
+    <div class="col-10">
+        <div class="row">
+            <h1 class="col-12">
+                @Service.Title
+            </h1>
+            <p class="col-12">
+                @Service.Description
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <PagesTabs Pages=Service.Pages Items=Service.ShopItems />
+    </div>
+</div>
+
+

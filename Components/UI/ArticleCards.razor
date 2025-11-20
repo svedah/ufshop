@@ -1,0 +1,20 @@
+@using ufshop.Data.Models
+@rendermode InteractiveServer
+@code {
+    [Parameter]
+    public IQueryable<ShopItem> ShopItems { get; set; } = new HashSet<ShopItem>().AsQueryable();
+}
+<div class="row">
+    <div class="col">
+        <h4>Artiklar</h4>
+    </div> 
+</div>
+
+<div class="row">
+    <CardGroup>
+    @foreach(ShopItem si in ShopItems)
+    {
+        <ArticleCard Item="@si" />
+    }
+    </CardGroup>
+</div>

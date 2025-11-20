@@ -1,0 +1,44 @@
+@rendermode InteractiveServer
+@code {
+    [Parameter]
+    public int Min { get; set; } = 0;
+    [Parameter]
+    public int Max { get; set; } = 0;
+
+    [Parameter]
+    public int Value { get; set; } = 0;
+
+    [Parameter]
+    public string Label { get; set; } = string.Empty;
+
+    [Parameter]
+    public EventCallback<int> ValueChanged { get; set; }
+
+    private readonly Guid ForId = Guid.NewGuid();
+
+    private async Task OnInputChanged(ChangeEventArgs e)
+    {
+        Value = Math.Min(Value, Max);
+        Value = Math.Max(Value, Min);
+        await ValueChanged.InvokeAsync(Value);
+    }
+}
+<label for="@ForId" class="form-label">@Label</label>
+<input type="number" id="@ForId" min="@Min" max="@Max" value="@Value" class="form-control" @oninput="OnInputChanged" />
+
+@* @page "/input-demo"
+
+<h3>Input Demo</h3>
+
+<InputField InputType="email" Min="0" Max="999" Value="@userInput" Label="Hello!" ValueChanged="OnValueChanged" />
+
+<p>You typed: @userInput</p>
+
+@code {
+    private string userInput = "";
+
+    private void OnValueChanged(string newValue)
+    {
+        userInput = newValue;
+    }
+} *@

@@ -1,0 +1,15 @@
+@namespace ufshop.Components.UI
+@rendermode InteractiveServer
+
+<form action="Account/Logout" method="post">
+    <AntiforgeryToken />
+    <input type="hidden" name="ReturnUrl" value="@currentUrl" />
+    <button class="btn btn-primary" type="submit">
+        @* <span class="bi bi-arrow-bar-left-nav-menu" aria-hidden="true"></span> Logout *@
+         <Icon Name="IconName.DoorClosed" />
+    </button>
+</form>
+
+@code {
+    private string? currentUrl;
+}

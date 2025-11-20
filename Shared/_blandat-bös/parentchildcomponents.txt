@@ -1,0 +1,50 @@
+CHILD COMPONENT
+@code {
+    [Parameter]
+    public string InitialValue { get; set; } = string.Empty;
+
+    [Parameter]
+    public EventCallback<string> OnValueSelected { get; set; }
+
+    private string selectedValue;
+
+    private async Task HandleSelection(ChangeEventArgs e)
+    {
+        selectedValue = e.Value?.ToString() ?? string.Empty;
+        await OnValueSelected.InvokeAsync(selectedValue);
+    }
+}
+
+<div>
+    <p>Initial value from parent: <strong>@InitialValue</strong></p>
+
+    <select @onchange="HandleSelection">
+        <option value="">-- Select an option --</option>
+        <option value="Option A">Option A</option>
+        <option value="Option B">Option B</option>
+        <option value="Option C">Option C</option>
+    </select>
+
+    <p>You selected: @selectedValue</p>
+</div>
+
+
+PARENT COMPONENT
+@page "/parent"
+
+<h3>Parent Component</h3>
+
+<p>Value sent to child: <strong>@ParentValue</strong></p>
+<p>Value returned from child: <strong>@ChildReturnedValue</strong></p>
+
+<ChildComponent InitialValue="@ParentValue" OnValueSelected="HandleChildValue" />
+
+@code {
+    private string ParentValue = "Hello from Parent!";
+    private string ChildReturnedValue = string.Empty;
+
+    private void HandleChildValue(string value)
+    {
+        ChildReturnedValue = value;
+    }
+}

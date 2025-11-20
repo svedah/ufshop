@@ -1,0 +1,23 @@
+﻿@page "/test"
+@rendermode InteractiveServer
+
+<PageTitle>Test</PageTitle>
+
+<hr />
+<OrderShop />
+<hr />
+
+<h1>Test</h1>
+<p>@myBoolean.ToString()</p>
+<button @onclick="SwitchFunction">Switch</button>
+
+@code
+{
+    private bool myBoolean = false;
+
+    private void SwitchFunction()
+    {
+        myBoolean = !myBoolean;
+    }
+}
+

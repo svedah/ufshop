@@ -1,0 +1,67 @@
+﻿@page "/manage"
+@using ufshop.Services
+
+
+@* the following will redirect to authentication immediately if not authenticated *@
+@attribute [Authorize] 
+
+@rendermode InteractiveServer
+@* @inject ufshop.Services.BeService BeService *@
+@code {
+    private readonly ManagePageService Service;
+    public Manage(ufshop.Services.BeService beService)
+    {
+        Service = new ManagePageService(beService);
+    }
+}
+<PageTitle>Hantera Shop</PageTitle>
+<HeadContent>
+    @* <meta name="headcontent" description="lol yep!" /> *@
+</HeadContent>
+<div class="row">
+    <div class="col">
+        <h1>Hantera shop</h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+    <Tabs>
+        <Tab Title="Beställningar">
+            <Content>
+                Beställningar
+            </Content>
+        </Tab>
+        <Tab Title="Bildbibliotek">
+            <Content>
+                <ManageImages />
+            </Content>
+        </Tab>
+        <Tab Title="Skapa vara">
+            <Content>
+                <ManageCreateItem />
+            </Content>
+        </Tab>
+        <Tab Title="Redigera vara">
+            <Content>
+                Redigera Vara
+            </Content>
+        </Tab>
+        <Tab Title="Skapa sida">
+            <Content>
+                Skapa ny sida
+            </Content>
+        </Tab>
+        <Tab Title="Redigera sida">
+            <Content>
+                Redigera Vara
+            </Content>
+        </Tab>
+        <Tab Title="Shop">
+            <Content>
+                Shop
+            </Content>
+        </Tab>
+
+    </Tabs>
+    </div>
+</div>

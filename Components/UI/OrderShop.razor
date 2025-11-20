@@ -1,0 +1,55 @@
+@namespace ufshop.Components.UI
+@rendermode InteractiveServer
+@inject ufshop.Services.BeService BeService
+
+<fieldset class="form-group border p-3">
+    <legend>Beställ UF-shop</legend>
+
+    <label class="form-label">
+        Namn UF-shop
+    </label>
+    <input  @bind="Prefix"
+            type="text"
+            class="form-control"
+    />
+
+    <label class="form-label">
+        E-post adress
+    </label>
+    <input  @bind="Email"
+            type="email"
+            class="form-control"
+    />
+
+    <label class="form-label">
+        Mobilnummer
+    </label>
+    <input  @bind="Phone"
+            type="number"
+            class="form-control"
+    />
+
+    @* <button @onclick="MakeOrder">Beställ</button> *@
+    <Button Color="ButtonColor.Success" @onclick="MakeOrder"> Beställ </Button>
+
+</fieldset>
+
+
+@code {
+    //BEGIN Form bindings
+    string Email { get; set; } = string.Empty;
+    string Phone { get; set; } = string.Empty;
+    string Prefix { get; set; } = string.Empty;
+    bool Assisted { get; set; } = false;
+    //END Form bindings
+
+    private bool PrefixExists()
+    {
+        return false;
+    }
+
+    private void MakeOrder()
+    {
+        ;
+    }
+}

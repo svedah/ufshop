@@ -1,0 +1,18 @@
+﻿@page "/template"
+@using ufshop.Services
+@rendermode InteractiveServer
+@* @inject ufshop.Services.BeService BeService *@
+@code {
+    private readonly TemplatePageService Service;
+    public Template(ufshop.Services.BeService svc)
+    {
+        Service = new TemplatePageService(svc);
+    }
+}
+<PageTitle>Home</PageTitle>
+<HeadContent>
+    <meta name="headcontent" description="lol yep!" />
+</HeadContent>
+
+
+<h1>Template</h1>

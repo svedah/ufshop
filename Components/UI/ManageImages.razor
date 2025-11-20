@@ -1,0 +1,131 @@
+@using System.Collections.Immutable
+@using System.Reflection.Metadata
+@using ufshop.Data.Models
+@using ufshop.Services
+@using ufshop.Shared
+@namespace ufshop.Components.UI
+@rendermode InteractiveServer
+
+@code {
+
+    public readonly BeService beService;
+    public readonly ManageImagesService Service;
+
+    public readonly string FormImagesId = Guid.NewGuid().ToString();
+
+    public HashSet<ShopImage> Images = new HashSet<ShopImage>();
+
+    
+
+    public ManageImages(BeService srv)
+    {
+        beService = srv;
+        Service = new ManageImagesService(srv);
+        Images = Service.GetShopImages();
+    }
+
+    protected void DeleteImage(EventArgs args, Guid Id)
+    {
+
+        //get image
+        if (Images.Where(e => e.Id.Equals(Id)).Any())
+        {
+            ShopImage shopImage = Images.Where(e => e.Id.Equals(Id)).First();
+            Service.DeleteImage(shopImage);
+        }
+    }
+
+    protected void UpdateImageAltText(EventArgs args, Guid Id)
+    {
+        ;
+        //get image
+        if (Images.Where(e => e.Id.Equals(Id)).Any())
+        {
+            ShopImage shopImage = Images.Where(e => e.Id.Equals(Id)).First();
+            Service.UpdateAltText(shopImage);
+        }
+    }
+
+
+    public async Task LoadFile(InputFileChangeEventArgs e)
+    {
+        if (e.File.ContentType.Contains("image/"))
+        {
+            var ms = new MemoryStream();
+            await e.File.OpenReadStream(Constants.MAXALLOWEDFILESIZE).CopyToAsync(ms);
+            byte[] rawdata = ms.ToArray();
+
+            if (rawdata.Length > 0)
+            {
+                if (Service.AddImage(rawdata))
+                {
+                    Images = Service.GetShopImages();
+                }
+            }
+        }
+        @* if (e.File.ContentType.Contains("image/"))
+        {
+            var ms = new MemoryStream();
+            await e.File.OpenReadStream(Constants.MAXALLOWEDFILESIZE).CopyToAsync(ms);
+            byte[] rawdata = ms.ToArray();
+
+            ShopImage primaryImage = newShopItem.PrimaryImage;
+
+            if (rawdata.Length > 0)
+            {
+                if (Service.UpdateImage(rawdata, ref primaryImage))
+                {
+                    ;
+                    newShopItem.PrimaryImage = primaryImage;
+                    
+                }
+            }
+        } *@
+    }
+
+}
+
+<div class="row">
+    <div class="col">
+        <h1>Bildbibliotek</h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        <label for="@FormImagesId">Ladda upp bild</label>
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+        <InputFile id="@FormImagesId" OnChange="LoadFile" />
+    </div>
+</div>
+
+@foreach(ShopImage image in Images.OrderByDescending(e=>e.Created))
+{
+    string imagename = "/img/" + image.Filename;
+    string thumbname = "/img/t/" + image.Filename;
+
+    <div class="row">
+        <div class="col">
+            <Image Src="@imagename"  Alt="@image.AltText" style="width:100px;height:100px"/>
+            @* <Image Src="@thumbname"  Alt="@image.AltText" style="box-shadow: 0 0 0.5rem red;"/> *@
+        </div>
+    @* </div>
+    <div class="row"> *@
+        <div class="col">
+            <InputText @bind-Value="@image.AltText"/>
+            <Button Color="ButtonColor.Primary" @onclick="((args) => UpdateImageAltText(args, image.Id))">
+                <Icon Name="IconName.Check" />
+            </Button>
+        </div>
+    @* </div>
+    <div class="row"> *@
+        <div class="col">
+            <Button Color="ButtonColor.Danger" @onclick="((args) => DeleteImage(args, image.Id))">
+                <Icon Name="IconName.Trash" />
+            </Button>
+        </div>
+    </div>
+}

@@ -1,0 +1,237 @@
+@using System.Collections.Immutable
+@using System.Reflection.Metadata
+@using ufshop.Data.Models
+@using ufshop.Services
+@using ufshop.Shared
+@namespace ufshop.Components.UI
+@rendermode InteractiveServer
+
+@code {
+
+    public readonly BeService beService;
+    public readonly ManageCreateItemService Service;
+
+    public readonly string FormTitleId = Guid.NewGuid().ToString();
+    public readonly string FormDescriptionId = Guid.NewGuid().ToString();
+    public readonly string FormItemsAvailableId = Guid.NewGuid().ToString();
+    public readonly string FormItemsPriceId = Guid.NewGuid().ToString();
+    public readonly string FormItemsOrderId = Guid.NewGuid().ToString();
+    public readonly string FormPrimaryImageId = Guid.NewGuid().ToString();
+    public readonly string FormImagesId = Guid.NewGuid().ToString();
+    public readonly string FormActiveId = Guid.NewGuid().ToString();
+
+
+    ShopItem newShopItem = new ShopItem
+    {
+        Id = Guid.Empty,
+        Active = false,
+        Title = string.Empty,
+        Description = string.Empty,
+        ItemsAvailable = 0,
+        Price = 0,
+        Order = 0,
+        PrimaryImage = new ShopImage
+        {
+            Id = Guid.Empty,
+            Created = DateTime.Now,
+            Filename = Constants.EMPTYIMAGEFILENAME,
+            AltText = "BildBeskrivning"
+        },
+        Images = new HashSet<ShopImage>(),
+        Properties = new HashSet<ShopItemProperty>()
+    };
+
+    public ManageCreateItem(BeService srv)
+    {
+        beService = srv;
+        Service = new ManageCreateItemService(srv);
+    }
+
+    private async Task HandleSelectedPrimaryImage(string value)
+    {
+        Guid Id = Guid.Parse(value);
+        var iss = new ImageSelectorService(beService);
+        ShopImage image = null;
+        bool result = iss.GetImage(Id, ref image);
+        if (result)
+        {
+            newShopItem.PrimaryImage = image;
+        }
+    }
+
+    private async Task HandleSelectedCarouselImage(string value)
+    {
+        Guid Id = Guid.Parse(value);
+
+        ShopService ss = new ShopService(beService);
+        Shop shop;
+        if (ss.GetShop(beService.DomainPrefix, out shop))
+        {
+            if (shop.Images.Where(e=>e.Id.Equals(Id)).Any())
+            {
+                ShopImage shopImage = shop.Images.Where(e=>e.Id.Equals(Id)).First();
+                if (newShopItem.Images.Where(e=>e.Id.Equals(Id)).Any())
+                {
+                    newShopItem.Images.Remove(shopImage);
+                }
+                else
+                {
+                    newShopItem.Images.Add(shopImage);
+                }
+            }
+
+        }
+    }
+
+    private async Task CreateNewItem()
+    {
+        Service.CreateNew(newShopItem);
+    }
+
+    private bool CanCreateNewItem
+    {
+        get
+        {
+            return Service.CanCreateNew(newShopItem);
+        }
+    }
+}
+
+<div class="row">
+    <div class="col">
+        <h1>Skapa vara</h1>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col">
+        <label class="col-form-label" for="@FormTitleId">Titel</label>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        <InputText class="form-control" id="@FormTitleId" @bind-Value="@newShopItem.Title" />
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        <label class="col-form-label" for="@FormDescriptionId">Beskrivning</label>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        <TextAreaInput class="form-control" id="@FormDescriptionId" Rows="5" @bind-Value="@newShopItem.Description" />
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        <label class="col-form-label" for="@FormItemsAvailableId">Antal tillgängliga</label>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        <InputNumber class="form-control" id="@FormItemsAvailableId" @bind-Value="@newShopItem.ItemsAvailable" Min="1" Max="1000" />
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col">
+        <label class="col-form-label" for="@FormItemsPriceId">Pris</label>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        <InputNumber class="form-control" id="@FormItemsPriceId" @bind-Value="@newShopItem.Price" Min="0" Max="10000" />
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col">
+        <label class="col-form-label" for="@FormItemsOrderId">Sorteringsordning</label>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        <InputNumber class="form-control" id="@FormItemsOrderId" @bind-Value="@newShopItem.Order" Min="1" Max="10000" />
+    </div>
+</div>
+
+
+
+
+<div class="row">
+    <div class="col">
+        <Accordion>
+            <AccordionItem Title="Primär bild">
+                <Content>
+                    <ImageSelector Image=@newShopItem.PrimaryImage OnValueSelected="HandleSelectedPrimaryImage"/>
+                </Content>
+            </AccordionItem>
+            <AccordionItem Title="Karusellbilder">
+                <Content>
+                    <ImagesSelector Images=@newShopItem.Images OnValueSelected="HandleSelectedCarouselImage" />
+                </Content>
+            </AccordionItem>
+        </Accordion>
+    </div>
+</div>
+
+
+
+
+<div class="row">
+    <div class="col">
+        <label class="col-form-label">Vald primär bild</label>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+@{
+    string imageFile = "/img/" + newShopItem.PrimaryImage.Filename;
+}
+        <Image Src="@imageFile" Alt="@newShopItem.PrimaryImage.AltText" style="width: 200px; height: 200px" />
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        <label class="col-form-label">Valda karusellbilder</label>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+    @foreach(ShopImage image in @newShopItem.Images.OrderBy(e=>e.Created))
+    {
+        string imageFileName = "/img/t/" + image.Filename;
+        <Image Src="@imageFileName" IsThumbNail="true" Alt="@newShopItem.PrimaryImage.AltText" />
+    }
+
+    </div>
+</div>
+
+@* <div class="row">
+    <div class="col">
+        <label class="col-form-label" for="@FormActiveId">Publicera</label>
+    </div>
+</div> *@
+<div class="row">
+    <div class="col">
+        <CheckboxInput id="FormActiveId" Label="Publicera" @bind-Value="@newShopItem.Active" />
+    </div>
+</div>
+
+
+
+<Button Color="ButtonColor.Primary" @onclick="CreateNewItem" Disabled="!CanCreateNewItem">Spara</Button>

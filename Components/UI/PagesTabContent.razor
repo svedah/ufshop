@@ -1,0 +1,19 @@
+@using ufshop.Data.Models
+@rendermode InteractiveServer
+@code {
+        [Parameter]
+        public ShopPageFragment ContentFragment { get; set; }
+}
+
+    <h4 class="h4">
+        @ContentFragment.Header
+    </h4>
+    <p class="p">
+        @ContentFragment.Paragraph
+    </p>
+    @if (ContentFragment.Image is not null)
+    {
+        <span>bild:</span>
+        <img />
+        <span>bild:</span>
+    }

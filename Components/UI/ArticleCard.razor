@@ -1,0 +1,49 @@
+@using ufshop.Data.Models
+@using ufshop.Services
+@rendermode InteractiveServer
+@code {
+    [Parameter]
+    public ShopItem Item { get; set; }
+
+    public readonly BeService beService;
+
+    public string ImageUrl
+    {
+        get
+        {
+            return "/img/" + Item.PrimaryImage.Filename;
+        }
+    }
+
+    public ArticleCard(BeService srv)
+    {
+        beService = srv;
+    }
+
+    public async Task AddToBasket()
+    {
+        //TODO
+        //check if availability > 0
+
+        //CartService.Add(Item)
+    }
+}
+@* 
+ TODO: ersätt Image Med Carousel 
+ https://demos.blazorbootstrap.com/carousel
+*@
+<Card Class="mb-4" Style="max-width:12rem;">
+    <Image Src="@ImageUrl" Alt="@Item.PrimaryImage.AltText" />
+    <CardBody>
+        <CardTitle>
+            @Item.Title
+        </CardTitle>
+        <CardText>
+            @Item.Description
+        </CardText>
+    </CardBody>
+    <CardFooter>
+        Pris
+        <Button Color="ButtonColor.Primary" @onclick="AddToBasket">Lägg i varukorg</Button>
+    </CardFooter>
+</Card>
