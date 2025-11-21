@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using System.Diagnostics.Contracts;
 using System.Reflection;
+using System.Reflection.Metadata;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.Build.Framework;
@@ -45,11 +46,11 @@ public class Seeder
 
     void SeedEmptyImage()
     {
-        if (!BeService.DbContext.ShopImages.Where(e => e.Id.Equals(Guid.Empty)).Any())
+        if (!BeService.DbContext.ShopImages.Where(e => e.Filename.Equals(Constants.EMPTYIMAGEFILENAME)).Any())
         {
             ShopImage shopImage = new ShopImage
             {
-                Id = Guid.Empty,
+                Id = Constants.EMPTYIMAGEGUID, //BUG: (ef core bug) använd EJ Guid.Empty, den blir NewGuid() i databasen
                 AltText = "Tom bild",
                 Created = DateTime.UnixEpoch,
                 Filename = Constants.EMPTYIMAGEFILENAME

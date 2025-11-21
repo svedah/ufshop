@@ -27,4 +27,5 @@ static public class Constants
 
     // default-bild som används när ingen bild finns för vara eller företagslogo
     static public string EMPTYIMAGEFILENAME = "Empty.jpeg";
+    static public Guid EMPTYIMAGEGUID = Guid.Parse("11111111111111111111111111111111");
 }
