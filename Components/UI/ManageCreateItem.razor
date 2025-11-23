@@ -47,11 +47,11 @@
         Service = new ManageCreateItemService(srv);
     }
 
-    private async Task HandleSelectedPrimaryImage(string value)
+    private void HandleSelectedPrimaryImage(string value)
     {
         Guid Id = Guid.Parse(value);
         var iss = new ImageSelectorService(beService);
-        ShopImage image = null;
+        ShopImage image = null!;
         bool result = iss.GetImage(Id, ref image);
         if (result)
         {
@@ -59,7 +59,7 @@
         }
     }
 
-    private async Task HandleSelectedCarouselImage(string value)
+    private void HandleSelectedCarouselImage(string value)
     {
         Guid Id = Guid.Parse(value);
 
@@ -79,11 +79,10 @@
                     newShopItem.Images.Add(shopImage);
                 }
             }
-
         }
     }
 
-    private async Task CreateNewItem()
+    private void CreateNewItem()
     {
         Service.CreateNew(newShopItem);
     }

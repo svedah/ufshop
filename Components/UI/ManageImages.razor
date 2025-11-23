@@ -32,6 +32,7 @@
         {
             ShopImage shopImage = Images.Where(e => e.Id.Equals(Id)).First();
             Service.DeleteImage(shopImage);
+            Images = Service.GetShopImages();
         }
     }
 
@@ -43,6 +44,7 @@
         {
             ShopImage shopImage = Images.Where(e => e.Id.Equals(Id)).First();
             Service.UpdateAltText(shopImage);
+            Images = Service.GetShopImages();
         }
     }
 

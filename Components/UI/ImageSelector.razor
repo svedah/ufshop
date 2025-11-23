@@ -43,7 +43,7 @@
 @foreach(ShopImage shopImage in AllImages.OrderBy(e => e.Created))
 {
     string imagestyle = string.Empty; //"border: 2px solid transparent;";
-    if (Image.Id.Equals(shopImage.Id))
+    if (Image is not null && Image.Id.Equals(shopImage.Id))
     {
         imagestyle = "border: 2px solid green; box-shadow: 0 0 8px green; padding: 0; transform:scale(1.11)";
     }

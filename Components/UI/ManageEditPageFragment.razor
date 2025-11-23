@@ -1,0 +1,106 @@
+@using System.Collections.Immutable
+@using System.Reflection.Metadata
+@using ufshop.Data.Models
+@using ufshop.Services
+@using ufshop.Shared
+
+@namespace ufshop.Components.UI
+@rendermode InteractiveServer
+
+@code {
+
+    public readonly BeService beService;
+    public readonly ManageEditPageFragmentService Service;
+
+    [Parameter]
+    public Guid ShopPageFragmentId { get; set; }
+
+    public ShopPageFragment shopPageFragment { get; set; }
+
+    public ManageEditPageFragment(BeService srv)
+    {
+        beService = srv;
+        Service = new ManageEditPageFragmentService(srv);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        ShopPageFragment spf;
+        if (!ShopPageFragmentId.Equals(Guid.Empty) && Service.GetShopPageFragment(ShopPageFragmentId, out spf))
+        {
+            shopPageFragment = spf;
+        }
+        else
+        {
+            //händer det här har jag förmodligen f:at upp i manageeditpage...
+            shopPageFragment = Service.MockEmptyShopPageFragment();
+        }
+    }
+
+    //TODO: untested
+    private void HandleSelectedPrimaryImage(string value)
+    {
+        Guid imageId = Guid.Empty;
+        if (Guid.TryParse(value, out imageId))
+        {
+            @* Service.ChangeImageForShopPageFragment(shopPageFragment, imageId); *@
+        }
+    }
+
+
+
+
+}
+<div class="row">
+    <div class="col">
+        <label class="form-label">Titel</label>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        <InputText @bind-value="shopPageFragment.Header" class="form-control" />
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        <label class="form-label">Paragraf</label>
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+        <TextAreaInput @bind-value="shopPageFragment.Paragraph" class="form-control" rows="8" />
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        <label class="form-label">Sorteringsordning</label>
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+        <InputNumber @bind-value="shopPageFragment.Order" class="form-control" />
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        <label class="form-label">Bild</label>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        @* <Accordion @onclick="((args) => SetCurrentShopPageFragment(args, shopPageFragment.Id))"> *@
+        <Accordion>
+            <AccordionItem Title="Primär bild">
+                <Content>
+                    <ImageSelector Image=@shopPageFragment.Image OnValueSelected="HandleSelectedPrimaryImage" />
+                </Content>
+            </AccordionItem>
+        </Accordion>
+    </div>
+</div>
+

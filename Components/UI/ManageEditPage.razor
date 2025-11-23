@@ -1,0 +1,198 @@
+@using System.Collections.Immutable
+@using System.Reflection.Metadata
+@using Microsoft.CodeAnalysis.Differencing
+@using Microsoft.EntityFrameworkCore.Storage.ValueConversion
+@using ufshop.Data.Models
+@using ufshop.Services
+@using ufshop.Shared
+@namespace ufshop.Components.UI
+@rendermode InteractiveServer
+
+@code {
+
+    public readonly BeService beService;
+    public readonly ManageEditPageService Service;
+
+    public ShopPage editShopPage;
+
+    public ManageEditPage(BeService srv)
+    {
+        beService = srv;
+        Service = new ManageEditPageService(srv);
+        editShopPage = Service.MockEmptyShopPage();
+    }
+    @* protected override async Task OnInitializedAsync()
+    {
+
+    } *@
+
+    private void SelectPageChange(ChangeEventArgs e)
+    {
+        if (e is not null && e.Value is not null)
+        {
+            Guid SelectedId = Guid.Empty;
+            if (Guid.TryParse(e.Value.ToString(), out SelectedId))
+            {
+                ShopPage shopPage;
+                if (Service.GetShopPage(SelectedId, out shopPage))
+                {
+                    editShopPage = shopPage;
+                }
+            }
+        }
+    }
+
+
+    public void EmptyFunction(EventArgs args, Guid Id)
+    {
+
+    }
+
+    //TODO: untested
+    private void AddNewShopPageFragment(EventArgs args)
+    {
+        editShopPage.ShopPageFragments.Add(Service.AddNewShopPageFragment(editShopPage.ShopPageFragments.Count));
+    }
+
+    //TODO: untested
+    private void DeleteShopPageFragment(EventArgs args, Guid Id)
+    {
+        Service.DeleteShopPageFragment(Id);
+    }
+
+    //TODO: untested
+    private void DeleteShopPage(EventArgs args, Guid Id)
+    {
+        Service.DeleteShopPage(editShopPage);
+        editShopPage = Service.MockEmptyShopPage();
+    }
+
+    //TODO: untested
+    private void SaveShopPage(EventArgs args)
+    {
+        Service.SaveShopPage(editShopPage);
+        //TODO: refresh from db???
+    }
+
+}
+
+<div class="row">
+    <div class="col">
+        <h1>Redigera sida</h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        <select class="form-select" @onchange="SelectPageChange">
+            <option selected disabled>Välj sida</option>
+            @foreach(ShopPage shopPage in Service.AllShopPages().OrderBy(e => e.Order))
+            {
+                <option value="@shopPage.Id">
+                    @shopPage.Header
+                </option>
+            }
+        </select>
+    </div>
+</div>
+
+
+@if (editShopPage.Id != Guid.Empty)
+{
+    <div class="row">
+        <div class="col">
+            <label class="form-label">Sidtitel</label>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <InputText @bind-value="editShopPage.Header" class="form-control" />
+        </div>
+        @* <div class="col">
+            <Button Color="ButtonColor.Primary" @onclick="((args) => EmptyFunction(args, Guid.Empty))">
+                <Icon Name="IconName.Check" />
+            </Button>
+        </div> *@
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <label class="form-label">Sidordning</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <InputNumber @bind-value="editShopPage.Order" class="form-control" />
+        </div>
+        @* <div class="col">
+            <Button Color="ButtonColor.Primary" @onclick="((args) => EmptyFunction(args, Guid.Empty))">
+                <Icon Name="IconName.Check" />
+            </Button>
+        </div> *@
+    </div>
+
+    <Accordion>
+    @foreach(ShopPageFragment shopPageFragment in editShopPage.ShopPageFragments.OrderBy(e => e.Order))
+    {
+        string accordionTitle = "Sidstycke: " + shopPageFragment.Header;
+        <AccordionItem Title="@accordionTitle">
+            <Content>
+                @* wtf micro$oft... varför inte hela objektet, varför bara id?!?*@
+                <ManageEditPageFragment ShopPageFragmentId="@shopPageFragment.Id" />
+                <div class="row">
+                    <div class="col">
+                        <label class="form-label">Ta bort sidstycke</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <Button Color="ButtonColor.Danger" @onclick="((args) => DeleteShopPageFragment(args, shopPageFragment.Id))">
+                            <Icon Name="IconName.Trash" />
+                        </Button>
+                    </div>
+                </div>
+            </Content>
+        </AccordionItem>
+    }
+    </Accordion>
+
+    <div class="row">
+        <div class="col">
+            <label class="form-label">Lägg till nytt sidstycke</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <Button Color="ButtonColor.Primary" @onclick="((args) => AddNewShopPageFragment(args))">
+                <Icon Name="IconName.Plus" />
+            </Button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <label class="form-label">Spara sida</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <Button Color="ButtonColor.Success" @onclick="((args) => SaveShopPage(args))">
+                <Icon Name="IconName.Save" />
+            </Button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <label class="form-label">Ta bort sida</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <Button Color="ButtonColor.Danger" @onclick="((args) => DeleteShopPage(args, editShopPage.Id))">
+                <Icon Name="IconName.Trash" />
+            </Button>
+        </div>
+    </div>
+}

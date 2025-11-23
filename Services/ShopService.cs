@@ -26,7 +26,7 @@ public class ShopService
         Contract.Assert(domainPrefix.Length > 2);
         if (!beService.DbContext.Shops.Where(e => e.Prefix.Equals(domainPrefix)).Any())
         {
-            shop = null; //(Shop)default;
+            shop = null!; //(Shop)default;
             return false;
         }
 

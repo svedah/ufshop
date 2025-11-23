@@ -140,7 +140,8 @@ public class ManageImagesService
             {
                 foreach(ShopPageFragment spf in shopPage.ShopPageFragments)
                 {
-                    if (spf.Image.Id.Equals(shopImage.Id))
+
+                    if (spf.Image is not null && spf.Image.Id.Equals(shopImage.Id))
                     {
                         spf.Image = emptyImage;
                         beService.DbContext.ShopPageFragments.Update(spf);

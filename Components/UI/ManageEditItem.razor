@@ -46,16 +46,16 @@
         Service = new ManageEditItemService(srv);
     }
 
-    protected override async Task OnInitializedAsync()
+    @* protected override async Task OnInitializedAsync()
     {
 
-    }
+    } *@
 
-    private async Task HandleSelectedPrimaryImage(string value)
+    private void HandleSelectedPrimaryImage(string value)
     {
         Guid Id = Guid.Parse(value);
         var iss = new ImageSelectorService(beService);
-        ShopImage image = null;
+        ShopImage image = default!;
         bool result = iss.GetImage(Id, ref image);
         if (result)
         {
@@ -63,7 +63,7 @@
         }
     }
 
-    private async Task HandleSelectedCarouselImage(string value)
+    private void HandleSelectedCarouselImage(string value)
     {
         Guid Id = Guid.Parse(value);
 
@@ -83,11 +83,10 @@
                     editShopItem.Images.Add(shopImage);
                 }
             }
-
         }
     }
 
-    private async Task EditItem()
+    private void EditItem()
     {
         Service.Edit(editShopItem);
     }
@@ -103,12 +102,15 @@
     private void SelectItemChange(ChangeEventArgs e)
     {
         Guid SelectedId = Guid.Empty;
-        if (Guid.TryParse(e.Value.ToString(), out SelectedId))
+        if (e is not null && e.Value is not null)
         {
-            ShopItem shopItem;
-            if (Service.GetShopItem(SelectedId, out shopItem))
+            if (Guid.TryParse(e.Value.ToString(), out SelectedId))
             {
-                editShopItem = shopItem;
+                ShopItem shopItem;
+                if (Service.GetShopItem(SelectedId, out shopItem))
+                {
+                    editShopItem = shopItem;
+                }
             }
         }
     }
