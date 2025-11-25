@@ -49,16 +49,37 @@ public class ManageEditPageService
         };
     }
 
-    public ShopPageFragment AddNewShopPageFragment(int fragments)
+    public ShopPageFragment AddNewShopPageFragment(ShopPage shopPage)
     {
-        return new ShopPageFragment
+        ShopPageFragment output = default!;
+        Shop shop;
+        ShopService ss = new ShopService(beService);
+        if (ss.GetShop(beService.DomainPrefix, out shop))
         {
-            Id = Guid.NewGuid(),
-            Header = string.Empty,
-            Paragraph = string.Empty,
-            Order = fragments,
-            Image = null
-        };
+            bool shopPageExists = beService.DbContext.ShopPages.Where(e=>e.Id.Equals(shopPage.Id)).Any();
+            if (!shopPageExists)
+            {
+                beService.DbContext.ShopPages.Add(shopPage);
+                beService.DbContext.SaveChanges();
+            }
+
+            ShopPageFragment newShopPageFragment = new ShopPageFragment
+            {
+                Id = Guid.NewGuid(),
+                Header = string.Empty,
+                Paragraph = string.Empty,
+                Order = shopPage.ShopPageFragments.Count,
+                Image = null
+            };
+
+            output = newShopPageFragment;
+
+            shopPage.ShopPageFragments.Add(newShopPageFragment);
+            beService.DbContext.ShopPageFragments.Add(newShopPageFragment);
+            beService.DbContext.ShopPages.Update(shopPage);
+            beService.DbContext.SaveChanges();
+        }
+        return output;
     }
 
     public void DeleteShopPageFragment(Guid Id)
@@ -109,7 +130,7 @@ public class ManageEditPageService
     //TODO: untested
     public void SaveShopPage(ShopPage shopPage)
     {
-        //shoppagefragments first
+        //save shoppagefragments
         foreach(ShopPageFragment spf in shopPage.ShopPageFragments)
         {
             bool spfExists = beService.DbContext.ShopPageFragments.Where(e => e.Id.Equals(spf.Id)).Any();
@@ -122,9 +143,10 @@ public class ManageEditPageService
                 beService.DbContext.ShopPageFragments.Add(spf);
             }
         }
+        beService.DbContext.SaveChanges();
 
-        //page last
-        bool pageExists = beService.DbContext.ShopPages.Where(e => e.Id.Equals(shopPage)).Any();
+        //save page
+        bool pageExists = beService.DbContext.ShopPages.Where(e => e.Id.Equals(shopPage.Id)).Any();
         if (pageExists)
         {
             beService.DbContext.ShopPages.Update(shopPage);
@@ -133,8 +155,23 @@ public class ManageEditPageService
         {
             beService.DbContext.ShopPages.Add(shopPage);
         }
-
         beService.DbContext.SaveChanges();
+
+        //Save page to shop
+        Shop shop;
+        ShopService ss = new ShopService(beService);
+        if (ss.GetShop(beService.DomainPrefix, out shop))
+        {
+            bool shopHasPage = shop.Pages.Where(e => e.Id.Equals(shopPage.Id)).Any();
+
+            if (!shopHasPage)
+            {
+                shop.Pages.Add(shopPage);
+                beService.DbContext.Shops.Update(shop);                
+            }
+            beService.DbContext.SaveChanges();
+        }
+
     }
 
 }

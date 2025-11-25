@@ -1,0 +1,132 @@
+@using System.Collections.Immutable
+@using System.Reflection.Metadata
+@using ufshop.Data.Models
+@using ufshop.Services
+@using ufshop.Shared
+@namespace ufshop.Components.UI
+@rendermode InteractiveServer
+
+@code {
+
+    public readonly BeService beService;
+    public readonly ManageCreatePageService Service;
+
+    public ShopPage newShopPage; 
+    @* = new ShopPage{
+        Id = Guid.NewGuid(),
+        Header = string.Empty,
+        Order = 0,
+        ShopPageFragments = new HashSet<ShopPageFragment>()
+    }; *@
+
+    public ManageCreatePage(BeService srv)
+    {
+        beService = srv;
+        Service = new ManageCreatePageService(beService);
+        newShopPage = Service.MockNewShopPage();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+
+    }
+
+    public void AddNewShopPageFragment(EventArgs args)
+    {
+        Service.AddNewShopPageFragment(newShopPage);
+    }
+    public void DeleteShopPageFragment(EventArgs args, Guid Id)
+    {
+        @* NOT THIS *@
+        @* newShopPage.ShopPageFragments.RemoveWhere(e => e.Id.Equals(Id)); *@
+        
+        
+        @* THIS *@
+        @* Service.DeleteShopPageFragment(newShopPage, Id); *@
+    }
+
+    public void SaveShopPage(EventArgs args)
+    {
+        Service.SaveShopPage(newShopPage);
+    }
+
+}
+<div class="row">
+    <div class="col">
+        <h1>Skapa ny sida</h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        <label class="form-label">Sidtitel</label>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        <InputText @bind-value="newShopPage.Header" class="form-control" />
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        <label class="form-label">Sidordning</label>
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+        <InputNumber @bind-value="newShopPage.Order" class="form-control" />
+    </div>
+</div>
+
+<Accordion>
+@foreach(ShopPageFragment shopPageFragment in newShopPage.ShopPageFragments.OrderBy(e => e.Order))
+{
+    string accordionTitle = "Sidstycke: " + shopPageFragment.Header;
+    <AccordionItem Title="@accordionTitle">
+        <Content>
+            @* wtf micro$oft... varför inte hela objektet, varför bara id?!?*@
+            <ManageEditPageFragment ShopPageFragmentId="@shopPageFragment.Id" />
+            <div class="row">
+                <div class="col">
+                    <label class="form-label">Ta bort sidstycke</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <Button Color="ButtonColor.Danger" @onclick="((args) => DeleteShopPageFragment(args, shopPageFragment.Id))">
+                        <Icon Name="IconName.Trash" />
+                    </Button>
+                </div>
+            </div>
+        </Content>
+    </AccordionItem>
+}
+</Accordion>
+
+<div class="row">
+    <div class="col">
+        <label class="form-label">Lägg till nytt sidstycke</label>
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+        <Button Color="ButtonColor.Primary" @onclick="((args) => AddNewShopPageFragment(args))">
+            <Icon Name="IconName.Plus" />
+        </Button>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        <label class="form-label">Spara sida</label>
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+        <Button Color="ButtonColor.Success" @onclick="((args) => SaveShopPage(args))">
+            <Icon Name="IconName.Save" />
+        </Button>
+    </div>
+</div>

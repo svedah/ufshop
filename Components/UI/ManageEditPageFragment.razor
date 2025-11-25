@@ -32,6 +32,7 @@
         }
         else
         {
+            throw new Exception("must not happen");
             //händer det här har jag förmodligen f:at upp i manageeditpage...
             shopPageFragment = Service.MockEmptyShopPageFragment();
         }
@@ -47,10 +48,15 @@
         }
     }
 
-
+    private void Debug()
+    {
+        ;
+    }
 
 
 }
+<button @onclick="Debug">DEBUG ManageEditPageFragment</button>
+
 <div class="row">
     <div class="col">
         <label class="form-label">Titel</label>

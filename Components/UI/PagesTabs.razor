@@ -28,7 +28,7 @@
 
 <Tabs NavStyle="NavStyle.Pills">
 
-    <Tab Title="Våra varor och tjänster">
+    <Tab Title="Våra varor och tjänster" KeepAlive="false">
         <Content>
             <ArticleCards ShopItems=Items />
         </Content>
@@ -40,7 +40,7 @@
             <Content>
                 @foreach(ShopPageFragment spf in sp.ShopPageFragments.OrderBy(e => e.Order))
                 {
-                    <PagesTabContent ContentFragment=spf />
+                    <PagesTabContent ContentFragment=spf  KeepAlive="false"/>
                 }
             </Content>
         </Tab>

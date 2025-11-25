@@ -21,10 +21,10 @@
         Service = new ManageEditPageService(srv);
         editShopPage = Service.MockEmptyShopPage();
     }
-    @* protected override async Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
-
-    } *@
+        ;
+    } 
 
     private void SelectPageChange(ChangeEventArgs e)
     {
@@ -51,7 +51,7 @@
     //TODO: untested
     private void AddNewShopPageFragment(EventArgs args)
     {
-        editShopPage.ShopPageFragments.Add(Service.AddNewShopPageFragment(editShopPage.ShopPageFragments.Count));
+        editShopPage.ShopPageFragments.Add(Service.AddNewShopPageFragment(editShopPage));
     }
 
     //TODO: untested
@@ -74,7 +74,13 @@
         //TODO: refresh from db???
     }
 
+    public void Debug()
+    {
+        ;
+    }
+
 }
+<button @onclick="Debug">DEBUG ManageEditPage</button>
 
 <div class="row">
     <div class="col">

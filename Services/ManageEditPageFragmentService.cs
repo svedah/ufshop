@@ -37,14 +37,15 @@ public class ManageEditPageFragmentService
     {
         bool output = false;
 
-        HashSet<ShopPageFragment> ShopPageFragments = AllShopPageFragments();
+        // HashSet<ShopPageFragment> ShopPageFragments = AllShopPageFragments();
 
-        output = ShopPageFragments.Where(e => e.Id.Equals(Id)).Any();
+        // output = ShopPageFragments.Where(e => e.Id.Equals(Id)).Any();
+        output = beService.DbContext.ShopPageFragments.Where(e=>e.Id.Equals(Id)).Any();
 
         // fragment = output ? ShopPageFragments.Where(e => e.Id.Equals(Id)).First() : default!;
         if (output)
         {
-            fragment = ShopPageFragments.Where(e => e.Id.Equals(Id)).First();
+            fragment = beService.DbContext.ShopPageFragments.Where(e => e.Id.Equals(Id)).First();
         }
         else
         {
