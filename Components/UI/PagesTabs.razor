@@ -40,7 +40,7 @@
             <Content>
                 @foreach(ShopPageFragment spf in sp.ShopPageFragments.OrderBy(e => e.Order))
                 {
-                    <PagesTabContent ContentFragment=spf  KeepAlive="false"/>
+                    <PagesTabContent ContentFragment=spf />
                 }
             </Content>
         </Tab>

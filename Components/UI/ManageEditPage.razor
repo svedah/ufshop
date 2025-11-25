@@ -79,6 +79,12 @@
         ;
     }
 
+    public List<ShopPage> ShopPages = new List<ShopPage>();
+    public void UpdateAllShopPages()
+    {
+        ShopPages = Service.AllShopPages().OrderBy(e => e.Order).ToList();
+    }
+
 }
 <button @onclick="Debug">DEBUG ManageEditPage</button>
 
@@ -90,9 +96,10 @@
 
 <div class="row">
     <div class="col">
-        <select class="form-select" @onchange="SelectPageChange">
+        <select class="form-select" @onchange="SelectPageChange" @onfocus="UpdateAllShopPages">
             <option selected disabled>Välj sida</option>
-            @foreach(ShopPage shopPage in Service.AllShopPages().OrderBy(e => e.Order))
+            @* @foreach(ShopPage shopPage in Service.AllShopPages().OrderBy(e => e.Order)) *@
+            @foreach(ShopPage shopPage in ShopPages)
             {
                 <option value="@shopPage.Id">
                     @shopPage.Header
