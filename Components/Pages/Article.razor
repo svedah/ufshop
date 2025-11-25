@@ -1,0 +1,41 @@
+﻿@page "/article/{id:guid}"
+@using ufshop.Data.Models
+@using ufshop.Services
+@rendermode InteractiveServer
+@using Microsoft.AspNetCore.Authorization
+
+
+@code {
+    //TODO: ska vi stöda /article/Title också? chatgpt vet hur man gör ;)
+    private readonly BeService BeService;
+    private readonly ArticleService Service;
+
+    [Parameter]
+    public Guid id { get; set; }
+
+    public ShopItem shopItem = null;
+
+    public Article(BeService beService)
+    {
+        BeService = beService;
+        Service = new ArticleService(beService);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        //fetch from database here
+    }
+}
+
+@if (shopItem is null)
+{
+    <PageTitle>Hämtar artikel</PageTitle>
+    <Spinner />
+    <p>Hämtar...</p>
+    <p>@id</p>
+}
+else
+{
+    <PageTitle>Visar artikel</PageTitle>
+
+}

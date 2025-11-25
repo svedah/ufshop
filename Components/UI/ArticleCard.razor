@@ -32,18 +32,22 @@
  TODO: ersätt Image Med Carousel 
  https://demos.blazorbootstrap.com/carousel
 *@
+@{ string articleUrl = "/article/" + Item.Id.ToString(); }
 <Card Class="mb-4" Style="max-width:12rem;">
-    <Image Src="@ImageUrl" Alt="@Item.PrimaryImage.AltText" />
-    <CardBody>
-        <CardTitle>
-            @Item.Title
-        </CardTitle>
-        <CardText>
-            @Item.Description
-        </CardText>
-    </CardBody>
-    <CardFooter>
-        Pris
-        <Button Color="ButtonColor.Primary" @onclick="AddToBasket">Lägg i varukorg</Button>
-    </CardFooter>
+    <a href=@articleUrl style="text-decoration: inherit;color:inherit;">
+        <Image Src="@ImageUrl" Alt="@Item.PrimaryImage.AltText" />
+        <CardBody>
+            <CardTitle>
+                @Item.Title
+            </CardTitle>
+            <CardText>
+                @Item.Description
+            </CardText>
+        </CardBody>
+        <CardFooter>
+            Pris: @Item.Price
+            @* <Button Color="ButtonColor.Primary" @onclick="AddToBasket">Lägg i varukorg</Button> *@
+            Antal kvar: @Item.ItemsAvailable
+        </CardFooter>
+    </a>
 </Card>

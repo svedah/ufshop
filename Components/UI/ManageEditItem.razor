@@ -115,6 +115,13 @@
         }
     }
 
+    public List<ShopItem> AllShopItems = new List<ShopItem>();
+    public void UpdateAllShopItems()
+    {
+        AllShopItems = Service.AllShopItems().ToList();
+    }
+
+
 }
 <div class="row">
     <div class="col">
@@ -124,9 +131,9 @@
 
 <div class="row">
     <div class="col">
-        <select class="form-select" @onchange="SelectItemChange">
+        <select class="form-select" @onchange="SelectItemChange" @onchange="UpdateAllShopItems">
             <option selected disabled>Välj vara</option>
-            @foreach(ShopItem item in Service.AllShopItems())
+            @foreach(ShopItem item in AllShopItems)
             {
                 string active = item.Active ? string.Empty : "ej";
                 <option value="@item.Id">
