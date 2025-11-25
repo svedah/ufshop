@@ -1,0 +1,80 @@
+@using System.Collections.Immutable
+@using System.Reflection.Metadata
+@using ufshop.Data.Models
+@using ufshop.Services
+@using ufshop.Shared
+@namespace ufshop.Components.UI
+@rendermode InteractiveServer
+
+@code {
+
+    public readonly BeService beService;
+    public readonly ManageShopSettingsService Service;
+
+    //shop . shopsetting . shopcontactinfo . shopsocialmedia
+    //shop .    settings . contactinfo . socialmedia
+    public ManageShopSettings(BeService srv)
+    {
+        beService = srv;
+        Service = new ManageShopSettingsService(srv);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+
+    }
+
+    public void SaveShopSettings(EventArgs args)
+    {
+        Service.SaveShop();
+    }
+}
+<h1>Inställningar UF-shop</h1>
+
+<label class="form-control">Namn UF-företag</label>
+<InputText @bind-value="Service.Shop.Settings.Title" class="form-control" />
+
+<label class="form-control">Beskrivning UF-företag</label>
+@* <InputText @bind-value="Service.Shop.Settings.Description" class="form-control" /> *@
+<TextAreaInput @bind-value="Service.Shop.Settings.Description" class="form-control" rows="5" />
+
+<label class="form-control">Swish nummer</label>
+<InputText @bind-value="Service.Shop.Settings.SwishNumber" class="form-control" />
+
+<label class="form-control">Basfraktpris</label>
+<InputNumber @bind-value="Service.Shop.Settings.BaseShippingPrice" class="form-control" />
+
+<label class="form-control">Layout (används ej ännu)</label>
+<InputText @bind-value="Service.Shop.Settings.Layout" class="form-control" disabled="true" />
+
+<label class="form-control">Färgtema (används ej ännu)</label>
+<InputText @bind-value="Service.Shop.Settings.Theme" class="form-control" disabled="true" />
+
+<h2>Kontaktinformation</h2>
+
+<label class="form-control">E-postadress UF-företag</label>
+<InputText @bind-value="Service.Shop.Settings.ContactInfo.Email" class="form-control" />
+
+<label class="form-control">Mobilnummer UF-företag</label>
+<InputText @bind-value="Service.Shop.Settings.ContactInfo.MobileNumber" class="form-control" />
+
+<h2>Sociala medier</h2>
+
+<label class="form-control">Facebook-sida</label>
+<InputText @bind-value="Service.Shop.Settings.ContactInfo.SocialMedia.Facebook" class="form-control" />
+
+<label class="form-control">Instagram-sida</label>
+<InputText @bind-value="Service.Shop.Settings.ContactInfo.SocialMedia.Instagram" class="form-control" />
+
+<label class="form-control">LinkedIn-sida</label>
+<InputText @bind-value="Service.Shop.Settings.ContactInfo.SocialMedia.LinkedIn" class="form-control" />
+
+<label class="form-control">TikTok-sida</label>
+<InputText @bind-value="Service.Shop.Settings.ContactInfo.SocialMedia.TikTok" class="form-control" />
+
+<label class="form-control">YouTube-sida</label>
+<InputText @bind-value="Service.Shop.Settings.ContactInfo.SocialMedia.YouTube" class="form-control" />
+
+<Button Color="ButtonColor.Success" @onclick="((args) => SaveShopSettings(args))">
+    <Icon Name="IconName.Save" />
+</Button>
