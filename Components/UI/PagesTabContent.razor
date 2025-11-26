@@ -13,7 +13,9 @@
     </p>
     @if (ContentFragment.Image is not null)
     {
+        string imageUrl = "/img/" + ContentFragment.Image.Filename;
+        string imageText = ContentFragment.Image.AltText;
         <span>bild:</span>
-        <img />
+        <img src="@imageUrl" alt="@imageText" />
         <span>bild:</span>
     }

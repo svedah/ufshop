@@ -14,7 +14,10 @@
     <CardGroup>
     @foreach(ShopItem si in ShopItems)
     {
-        <ArticleCard Item="@si" />
+        if (si.Active)
+        {
+            <ArticleCard Item="@si" />
+        }
     }
     </CardGroup>
 </div>

@@ -16,6 +16,8 @@
 
     public ShopItem shopItem = null;
 
+    public int BuyNumItems { get; set; } = 1;
+
     public string ImageURL
     {
         get
@@ -60,6 +62,11 @@
             shopItem = item;
         }
     }
+
+    private void AddToBasket()
+    {
+
+    }
 }
 
 @if (shopItem is null)
@@ -76,7 +83,7 @@ else
     <p>Titel: @shopItem.Title</p>
     <p>Antal tillgängliga: @shopItem.ItemsAvailable</p>
     <p>Pris: @shopItem.Price</p>
-    <p>Beskrvining: @shopItem.Description</p>
+    <p>Beskrivning: @shopItem.Description</p>
     <p>Ordning: @shopItem.Order</p>@* denna är ju onödig på artikelsidan men den finns ju iaf *@
     <p>Till försäljning: @shopItem.Active</p>
     <p>
@@ -91,10 +98,15 @@ else
             string imageText = shopImage.AltText;
             <img src="@imageUrl" alt="@imageText" />
         }
-    
     </p>
 
-
-
-
+    <p>
+        <InputNumber @bind-value="BuyNumItems" min="1" max="@shopItem.ItemsAvailable" />
+    </p>
+    <p>
+        @if (shopItem.Active)
+        {
+            <Button Color="ButtonColor.Primary" @onclick="AddToBasket">Lägg till i varukorg</Button>
+        }
+    </p>
 }
