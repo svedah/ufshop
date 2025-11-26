@@ -20,4 +20,27 @@ public class ArticleService
     //     return false;
     // }
 
+    public bool GetShopItem(Guid Id, out ShopItem shopItem)
+    {
+        bool output = false;
+        shopItem = null;
+
+        //get shop
+        Shop shop;
+        ShopService ss = new ShopService(beService);
+        if (ss.GetShop(beService.DomainPrefix, out shop))
+        {
+            if (shop.Items.Where(e => e.Id.Equals(Id)).Any())
+            {
+                shopItem = shop.Items
+                    .Where(e => e.Id.Equals(Id))
+                    .Where(e => e.Active)
+                    .First();
+                output = true;
+            }
+        }
+
+        return output;
+    }
+
 }

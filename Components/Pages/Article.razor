@@ -1,6 +1,7 @@
 ﻿@page "/article/{id:guid}"
 @using ufshop.Data.Models
 @using ufshop.Services
+@using ufshop.Shared
 @rendermode InteractiveServer
 @using Microsoft.AspNetCore.Authorization
 
@@ -15,6 +16,31 @@
 
     public ShopItem shopItem = null;
 
+    public string ImageURL
+    {
+        get
+        {
+            if (shopItem is not null && shopItem.PrimaryImage is not null)
+            {
+                return "/img/" + shopItem.PrimaryImage.Filename;
+            }
+            return "/img/" + Constants.EMPTYIMAGEFILENAME;
+        }
+    }
+
+    public string ImageText
+    {
+        get
+        {
+            if (shopItem is not null && shopItem.PrimaryImage is not null)
+            {
+                return shopItem.PrimaryImage.AltText;
+            }
+            return "Ingen bild";
+        }
+    }
+
+
     public Article(BeService beService)
     {
         BeService = beService;
@@ -23,7 +49,16 @@
 
     protected override async Task OnInitializedAsync()
     {
-        //fetch from database here
+        if(id.Equals(Guid.Empty))
+        {
+            //TODO: navigate back or to home page?
+        }
+
+        ShopItem item;
+        if (Service.GetShopItem(id, out item))
+        {
+            shopItem = item;
+        }
     }
 }
 
@@ -36,6 +71,30 @@
 }
 else
 {
-    <PageTitle>Visar artikel</PageTitle>
+    <PageTitle>Visar artikel "@shopItem.Title"</PageTitle>
+
+    <p>Titel: @shopItem.Title</p>
+    <p>Antal tillgängliga: @shopItem.ItemsAvailable</p>
+    <p>Pris: @shopItem.Price</p>
+    <p>Beskrvining: @shopItem.Description</p>
+    <p>Ordning: @shopItem.Order</p>@* denna är ju onödig på artikelsidan men den finns ju iaf *@
+    <p>Till försäljning: @shopItem.Active</p>
+    <p>
+        Primär bild:
+        <img src="@ImageURL" alt="@ImageText" />
+    </p>
+    <p>
+        Karusellbilder:
+        @foreach(ShopImage shopImage in shopItem.Images)
+        {
+            string imageUrl = "/img/t/" + shopImage.Filename;
+            string imageText = shopImage.AltText;
+            <img src="@imageUrl" alt="@imageText" />
+        }
+    
+    </p>
+
+
+
 
 }

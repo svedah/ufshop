@@ -131,7 +131,7 @@
 
 <div class="row">
     <div class="col">
-        <select class="form-select" @onchange="SelectItemChange" @onchange="UpdateAllShopItems">
+        <select class="form-select" @onchange="SelectItemChange" @onclick="UpdateAllShopItems">
             <option selected disabled>Välj vara</option>
             @foreach(ShopItem item in AllShopItems)
             {
