@@ -24,6 +24,7 @@ namespace ufshop.Data
         public DbSet<ShopPageFragment> ShopPageFragments { get; set; }
         public DbSet<ShopSetting> ShopSettings { get; set; }
         public DbSet<ShopSocialMedia> ShopSocialMedias { get; set; }
+        public DbSet<UFShopOrder> UFShopOrders { get; set; }
 
         
 

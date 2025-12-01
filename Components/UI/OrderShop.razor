@@ -1,55 +1,137 @@
+@using ufshop.Shared
+@using ufshop.Services
 @namespace ufshop.Components.UI
 @rendermode InteractiveServer
-@inject ufshop.Services.BeService BeService
+@* @inject ufshop.Services.BeService BeService *@
 
-<fieldset class="form-group border p-3">
-    <legend>Beställ UF-shop</legend>
-
-    <label class="form-label">
-        Namn UF-shop
-    </label>
-    <input  @bind="Prefix"
-            type="text"
-            class="form-control"
-    />
-
-    <label class="form-label">
-        E-post adress
-    </label>
-    <input  @bind="Email"
-            type="email"
-            class="form-control"
-    />
-
-    <label class="form-label">
-        Mobilnummer
-    </label>
-    <input  @bind="Phone"
-            type="number"
-            class="form-control"
-    />
-
-    @* <button @onclick="MakeOrder">Beställ</button> *@
-    <Button Color="ButtonColor.Success" @onclick="MakeOrder"> Beställ </Button>
-
-</fieldset>
 
 
 @code {
+
+    public readonly BeService beService;
+    public readonly OrderShopService Service;
+
     //BEGIN Form bindings
+    string Prefix { get; set; } = string.Empty;
+    string Company { get; set; } = string.Empty;
     string Email { get; set; } = string.Empty;
     string Phone { get; set; } = string.Empty;
-    string Prefix { get; set; } = string.Empty;
+    @* string CompanyType { get; set; } = string.Empty; *@
+    bool CompanyTypeUF { get; set; } = false;
+    bool CompanyTypeNotUF { get; set; } = false;
     bool Assisted { get; set; } = false;
+    private bool IsFormDataValid { get { return Service.IsFormDataValid(Prefix, Company, Email, Phone); } }
     //END Form bindings
 
-    private bool PrefixExists()
+    public OrderShop(BeService srv)
     {
-        return false;
+        beService = srv;
+        Service = new OrderShopService(beService);
     }
 
     private void MakeOrder()
     {
-        ;
+        string companytype = string.Empty;
+        if (CompanyTypeUF)
+        {
+            companytype = "uf";
+        }
+        else
+        {
+            companytype = "other";
+        }
+        if (IsFormDataValid && Service.MakeOrder(Prefix, Company, Email, Phone, companytype, Assisted))
+        {
+            //navigate to "order success blabla"
+            //or hide form and show info
+        }
     }
+
 }
+    <div class="row">
+        <div class="col">
+            <label class="form-label">
+                Namn UF-shop
+            </label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col" style="margin:0;padding:0;text-align:right;">
+            <p>https://</p>
+        </div>
+        <div class="col" style="margin:0;padding:0;width:100%;">
+            <input  @bind="Prefix"
+                    type="text"
+                    pattern="[a-z]{16}"
+                    class="form-control"
+                    style="margin:0;padding:0;text-align:right;"
+            />
+        </div>
+        <div class="col" style="margin-left:0;padding-left:0;width:auto;">
+            <p>.ufshop.nu/</p>
+        </div>
+    </div>
+
+     <div class="row">
+        <div class="col">
+            <label class="form-label">
+                Namn företag
+            </label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <InputText @bind-Value="Company" class="form-control" />
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col">
+            <label class="form-label">
+                E-post adress
+            </label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <InputText @bind-Value="Email" type="email" class="form-control" />
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <label class="form-label">
+                Mobilnummer
+            </label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <InputText @bind-Value="Phone" class="form-control" />
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            @* <input type="radio" name="shopType" class="form-check-input" checked /> UF-företag *@
+            <RadioInput Name="shopType" Label="UF" @bind-Value="CompanyTypeUF" />
+        </div>
+        <div class="col">
+            @* <input type="radio" name="shopType" class="form-check-input" /> Annat *@
+            <RadioInput Name="shopType" Label="Annat" @bind-Value="CompanyTypeNotUF" />
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <CheckboxInput @bind-value="Assisted" class="form-check-input" Label="Assisterad" />
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <Button Color="ButtonColor.Success" @onclick="MakeOrder" Disabled="!IsFormDataValid"> Beställ </Button>
+        </div>
+    </div>
+

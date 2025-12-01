@@ -44,7 +44,17 @@
         Guid imageId = Guid.Empty;
         if (Guid.TryParse(value, out imageId))
         {
+            //TODO
+            ShopImage shopImage;
+            if (beService.DbContext.ShopImages.Where(e => e.Id.Equals(imageId)).Any())
+            {
+                shopImage = beService.DbContext.ShopImages.Where(e => e.Id.Equals(imageId)).First();
+                shopPageFragment.Image = shopImage;
+                beService.DbContext.ShopPageFragments.Update(shopPageFragment);
+                beService.DbContext.SaveChanges();
+            }
             @* Service.ChangeImageForShopPageFragment(shopPageFragment, imageId); *@
+
         }
     }
 

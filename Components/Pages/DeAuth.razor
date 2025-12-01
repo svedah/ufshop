@@ -1,0 +1,20 @@
+@page "/deauth"
+@namespace ufshop.Components.UI
+@rendermode InteractiveServer
+
+@code {
+    private string? currentUrl;
+}
+
+<form id="deauthform" action="Account/Logout" method="post">
+    <AntiforgeryToken />
+    <input type="hidden" name="ReturnUrl" value="@currentUrl" />
+</form>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('deauthform');
+        if (form){
+            form.submit();
+        }
+    });
+</script>

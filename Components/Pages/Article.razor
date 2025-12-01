@@ -63,8 +63,25 @@
         }
     }
 
-    private void AddToBasket()
+    private async Task AddToBasket()
     {
+        CartService cartService = new CartService(this.BeService);
+
+        throw new Exception("BUG");
+        //should we push shopitem with amount
+        //instead of cartitems?
+        //seems simpler
+
+        CartItem cartItem = new CartItem {
+            Id = Guid.Empty,//use Id from shopItem
+            Amount = BuyNumItems,
+            ShopItem = shopItem
+        };
+
+        await cartService.AddOrUpdateAsync(cartItem);
+
+
+
 
     }
 }

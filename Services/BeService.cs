@@ -1,5 +1,6 @@
 
 using Microsoft.AspNetCore.Identity;
+using Microsoft.JSInterop;
 using ufshop.Data;
 using ufshop.Helpers;
 namespace ufshop.Services;
@@ -14,6 +15,8 @@ public class BeService
     // public readonly IServiceProvider ServiceProvider;
     public readonly IWebHostEnvironment WebHostEnvironment;
     // public readonly IdentityRedirectManager IdentityRedirectManager;
+
+    public readonly IJSRuntime JsRuntime;
     public readonly string wwwroot;
 
     public readonly string DomainPrefix;
@@ -25,7 +28,8 @@ public class BeService
         SignInManager<ApplicationUser> signInManager,
         RoleManager<IdentityRole> roleManager,
         IHttpContextAccessor httpContextAccessor,
-        IWebHostEnvironment iWebHostEnvironment
+        IWebHostEnvironment iWebHostEnvironment,
+        IJSRuntime iJSRunTime
         // IdentityRedirectManager identityRedirectManager
     // IServiceProvider serviceProvider
     )
@@ -36,6 +40,7 @@ public class BeService
         RoleManager = roleManager;
         HttpContextAccessor = httpContextAccessor;
         WebHostEnvironment = iWebHostEnvironment;
+        JsRuntime = iJSRunTime;
         // IdentityRedirectManager = identityRedirectManager;
         // ServiceProvider = serviceProvider;
 

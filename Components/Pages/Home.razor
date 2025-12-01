@@ -7,15 +7,12 @@
 @rendermode InteractiveServer
 @* @inject ufshop.Services.BeService BeService *@
 @code {
+    private readonly BeService beService;
     private readonly HomePageService Service;
-    public Home(ufshop.Services.BeService beService)
+    public Home(ufshop.Services.BeService srv)
     {
+        beService = srv;
         Service = new HomePageService(beService);
-        @* Hejsan = "Tjosan"; *@
-
-        //TODO: move this shit to Service to see if it works.
-
-        @* wwwPath = Service.beService.wwwroot; *@
     }
 }
 <PageTitle>Home</PageTitle>

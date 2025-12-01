@@ -1,23 +1,72 @@
+@using Microsoft.VisualBasic
 @using ufshop.Data.Models
+@using ufshop.Services
 @rendermode InteractiveServer
 @code {
     [Parameter]
     public IQueryable<ShopItem> ShopItems { get; set; } = new HashSet<ShopItem>().AsQueryable();
+
+    private readonly BeService beService;
+
+    public ArticleCards(BeService srv)
+    {
+        beService = srv;
+    }
 }
+
+@if (!beService.DomainPrefix.Equals("www"))
+{
 <div class="row">
     <div class="col">
         <h4>Artiklar</h4>
     </div> 
 </div>
-
-<div class="row">
-    <CardGroup>
-    @foreach(ShopItem si in ShopItems)
-    {
-        if (si.Active)
+    <div class="row">
+        <CardGroup>
+        @foreach(ShopItem si in ShopItems)
         {
-            <ArticleCard Item="@si" />
+            if (si.Active)
+            {
+                <ArticleCard Item="@si" />
+            }
         }
-    }
-    </CardGroup>
-</div>
+        </CardGroup>
+    </div>
+}
+else
+{
+    @* 
+        Det här segmentet är specifikt för "www"-uf-shop:en 
+        Anledningen till det är att en UF-shop inte är en 
+        väldigt speciell "vara" som inte passar in i
+        "ShopItem.cs"-klassen
+
+        Därför "fuskar vi till" en CardGroup med de "varor/tjänster"    
+        som www.ufshop.nu erbjuder.
+
+        Jag tänker mig utseendemässigt ett utseende likt ArticleCard
+        där man kan fylla i ett formulär med nödvändig information
+        för att beställa en ufshop.
+
+        Det formuläret finns i OrderShop.razor
+    *@
+    <div class="row">
+        <CardGroup>
+
+            <Card Class="mb-4" Style="min-width: 16rem; max-width: 20rem;">
+                @* <Image Src="/img/WebbHelp_Logo.jpeg" Alt="WebbHelp Logo" /> *@
+                <CardBody>
+                    <CardTitle>Beställ UF-Shop</CardTitle>
+                    <CardText>
+                        <OrderShop />
+                    </CardText>
+                </CardBody>     
+                <CardFooter>
+                    <p>Fot</p>
+                </CardFooter>
+            </Card>
+
+        </CardGroup>
+    </div>
+
+}

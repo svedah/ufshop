@@ -6,6 +6,9 @@ static public class Constants
     static public string DEFAULTDOMAIN = "www";
 
 
+    
+    static public string ALLOWEDPREFIXREGEX = "[a-z]{16}"; //a-z gemener, 16 tecken
+
     //storlek för logo
     static public int LOGOIMAGEHEIGHT = 400;
     static public int LOGOIMAGEWIDTH = 400;

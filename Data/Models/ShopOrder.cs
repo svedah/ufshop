@@ -12,6 +12,6 @@ public enum ShopOrderStatus
 {
     None = 0,
     Paid = 1,
-    Sent = 2,
+    Shipped = 2,
     Done = 3
 }

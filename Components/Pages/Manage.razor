@@ -56,11 +56,20 @@
                 <ManageEditPage />
             </Content>
         </Tab>
-        <Tab Title="Shop">
+        <Tab Title="Inställningar">
             <Content>
                 <ManageShopSettings />
             </Content>
         </Tab>
+
+        @* <AuthorizeView Roles="Administrator">
+            <Tab Title="Administration" KeepAlive="false">
+                <Content>
+                    <OrderShop />
+                </Content>
+            </Tab>
+        </AuthorizeView> *@
+
 
     </Tabs>
     </div>

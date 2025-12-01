@@ -1,29 +1,17 @@
+@using ufshop.Services
 @using ufshop.Data.Models
 @rendermode InteractiveServer
 @code {
-        [Parameter]
-        public IQueryable<ShopPage> Pages { get; set; } = new HashSet<ShopPage>().AsQueryable();
-        [Parameter]
-        public IQueryable<ShopItem> Items { get; set; } = new HashSet<ShopItem>().AsQueryable();
-    @* [Parameter]
-    public string InputType { get; set; } = "text";
-
     [Parameter]
-    public string Value { get; set; } = string.Empty;
-
+    public IQueryable<ShopPage> Pages { get; set; } = new HashSet<ShopPage>().AsQueryable();
     [Parameter]
-    public string Label { get; set; } = string.Empty;
+    public IQueryable<ShopItem> Items { get; set; } = new HashSet<ShopItem>().AsQueryable();
 
-    [Parameter]
-    public EventCallback<string> ValueChanged { get; set; }
- *@
-    @* private readonly Guid ForId = Guid.NewGuid(); *@
-
-    @* private async Task OnInputChanged(ChangeEventArgs e)
+    private readonly BeService beService;
+    public PagesTabs(BeService srv)
     {
-        Value = e.Value?.ToString() ?? string.Empty;
-        await ValueChanged.InvokeAsync(Value);
-    } *@
+        beService = srv;
+    }
 }
 
 <Tabs NavStyle="NavStyle.Pills">
@@ -45,4 +33,5 @@
             </Content>
         </Tab>
     }
+
 </Tabs>

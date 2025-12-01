@@ -1,0 +1,37 @@
+﻿@page "/adm"
+@rendermode InteractiveServer
+
+@using Microsoft.AspNetCore.Authorization
+
+@attribute [Authorize]
+
+<PageTitle>Administrera</PageTitle>
+
+@* <h1>You are authenticated</h1> *@
+
+<AuthorizeView Roles="Administrator">
+    Hello @context.User.Identity?.Name!
+
+    <Tabs>
+        <Tab Title="Beställningar">
+            <Content>
+                AdmShopOrders
+            </Content>
+        </Tab>
+        <Tab Title="Skapa ny shop">
+            <Content>
+                AdmCreateNewShop
+            </Content>
+        </Tab>
+
+    </Tabs>
+
+
+
+
+
+
+
+
+
+</AuthorizeView>
