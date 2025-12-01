@@ -28,19 +28,19 @@
 @* <AuthorizeView>
     Hello @context.User.Identity?.Name!
 </AuthorizeView> *@
-<div class="row">
-    <div class="col-2">
-        <Image Src="@Service.LogoImageFile" Alt="@Service.LogoImageAltText" />
-    </div>
-    <div class="col-10">
+<div class="row align-items-center mb-4 px-5">
+    <div class="col-9">
         <div class="row">
-            <h1 class="col-12">
+            <h1 class="col-12 fw-bold mb-2">
                 @Service.Title
             </h1>
-            <p class="col-12">
+            <p class="col-12 lead mb-0">
                 @Service.Description
             </p>
         </div>
+    </div>
+    <div class="col-3 mt-3">
+        <Image Src="@Service.LogoImageFile" Alt="@Service.LogoImageAltText" class="img-fluid home-logo rounded" />
     </div>
 </div>
 

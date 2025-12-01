@@ -1,19 +1,64 @@
+@using ufshop.Data.Models
+@using ufshop.Services
+
 @rendermode InteractiveServer
 @code {
-    public GlobalHeader()
+    public readonly BeService beService;
+    public readonly Shop shop;
+
+    public readonly string ShopTitle;
+    public readonly ShopImage ShopLogo;
+
+    public GlobalHeader(BeService srv)
     {
-        ;
+        beService = srv;
+        shop = GetShop();
+        ShopTitle = shop.Settings.Title;
+        ShopLogo = shop.Settings.LogoImage;
     } 
 
+    private Shop GetShop()
+    {
+        Shop output;
+        ShopService ss = new ShopService(beService);
+        if (ss.GetShop(beService.DomainPrefix, out output))
+        {
+            return output;
+        }
+        return default!;
+    }
+
 }
-<header>
-    <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom box-shadow mb-3 p-0">
+<header class="sticky-top">
+    <nav class="navbar navbar-expand-sm navbar-light bg-white shadow-sm mb-3 p-2 px-4">
         <div class="container-fluid">
 
+            @* Byt ut huset mot företagets logga *@
+            @* Skriv företagets namn brevid loggan *@
+
             <NavLink class="navbar-brand" href="/">
-                <Icon Name="IconName.House"/>
+                @if (ShopLogo is not null)
+                {
+                    <p class="d-flex flex-row-reverse justify-content-around align-items-center m-0 fw-bold">
+                        @ShopTitle
+                        @{string imageUrl = "/img/" + ShopLogo.Filename;}
+                        <Image Src="@imageUrl" Alt="" width="60px" class="me-3 rounded" />
+                    </p>
+                }
+                else
+                {
+                    <Icon Name="IconName.House"/>
+                    <p class="d-flex align-items-center m-0">
+                        @ShopTitle
+                    </p>
+                }
             </NavLink>
 
+            @* <p class="d-flex align-items-center m-0">
+                @ShopTitle
+                @{string imageUrl = "/img/" + ShopLogo.Filename;}
+                <Image Src="@imageUrl" Alt="" width="60px" />
+            </p> *@
 
             <AuthorizeView>
                 <Authorized>
@@ -26,7 +71,8 @@
                 </Authorized>
                 <NotAuthorized>
                     <NavLink class="btn btn-primary" href="/login">
-                        <Icon Name="IconName.Person" />
+                        @* <Icon Name="IconName.Person" /> *@
+                        <p class="m-0 fw-bold">Logga In</p>
                     </NavLink>
                 </NotAuthorized>
             </AuthorizeView>

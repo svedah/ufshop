@@ -128,28 +128,36 @@
     </div>
 </div>
 
-<div class="row">
-    <div class="col">
-        <label class="col-form-label" for="@FormItemsAvailableId">Antal tillgängliga</label>
+<div class="d-flex flex-row">
+    <div>
+        <div class="row">
+            <div class="col">
+                <label class="col-form-label" for="@FormItemsAvailableId">Antal tillgängliga</label>
+            </div>
+        </div>    
+        
+        <div class="row">
+            <div class="col">
+                <InputNumber class="form-control" id="@FormItemsAvailableId" @bind-Value="@newShopItem.ItemsAvailable" Min="1" Max="1000" />
+            </div>
+        </div>
     </div>
-</div>
 
-<div class="row">
-    <div class="col">
-        <InputNumber class="form-control" id="@FormItemsAvailableId" @bind-Value="@newShopItem.ItemsAvailable" Min="1" Max="1000" />
+    <div>
+    
     </div>
-</div>
 
 
-<div class="row">
-    <div class="col">
-        <label class="col-form-label" for="@FormItemsPriceId">Pris</label>
+    <div class="row">
+        <div class="col">
+            <label class="col-form-label" for="@FormItemsPriceId">Pris</label>
+        </div>
     </div>
-</div>
 
-<div class="row">
-    <div class="col">
-        <InputNumber class="form-control" id="@FormItemsPriceId" @bind-Value="@newShopItem.Price" Min="0" Max="10000" />
+    <div class="row">
+        <div class="col">
+            <InputNumber class="form-control" id="@FormItemsPriceId" @bind-Value="@newShopItem.Price" Min="0" Max="10000" />
+        </div>
     </div>
 </div>
 
