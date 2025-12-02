@@ -1,4 +1,6 @@
 ﻿@using Microsoft.EntityFrameworkCore.Storage.ValueConversion
+@using ufshop.Data
+@using ufshop.Data.Models
 @using ufshop.Services
 @inject ufshop.Services.BeService BeService
 @code{
@@ -9,6 +11,7 @@
         beService.SetSaneValues();
         ShopExists = new ShopService(beService).ShopExists(beService.DomainPrefix);
     }
+
 }
 <!DOCTYPE html>
 <html lang="sv">
@@ -18,16 +21,10 @@
     @if (!ShopExists)
     {
         @* TODO: REDIRECTA TILL WWW.UFSHOP.NU/DEAUTH *@
-        <meta http-equiv="refresh" content="0; url=https://www.ufshop.nu:5001/">
+        <meta http-equiv="refresh" content="0; url=//www.ufshop.nu:5001/">
     }
     else
     {
-        @* TODO: kolla här om användaren är inloggad.
-            Om användaren är inloggad, kolla att domänprefixet överensstämmer
-            med den shop användaren är administratör över.
-            beService.DomainPrefix inte är samma, redirecta användaren
-            till rätt domännamn
-         *@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <base href="/" />
@@ -47,7 +44,6 @@
 
         <link rel="stylesheet" href="/app.css" />
         <link rel="stylesheet" href="/ufshop.styles.css" />
-
 
         <ImportMap />
         <link rel="icon" type="image/png" href="favicon.png" />

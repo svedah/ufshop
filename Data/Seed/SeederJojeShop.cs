@@ -6,10 +6,10 @@ using ufshop.Services;
 
 
 namespace ufshop.Data.Seed;
-public class SeederIsacShop
+public class SeederJojeShop
 {
     readonly DbContext DbContext;
-    public SeederIsacShop(DbContext dbContext)
+    public SeederJojeShop(DbContext dbContext)
     {
         DbContext = dbContext;
     }
@@ -25,7 +25,7 @@ public class SeederIsacShop
         var shop = new Shop
         {
             Id = Guid.NewGuid(),
-            Prefix = "isac",
+            Prefix = "joje",
             Owner = user,
             Settings = settings,
             Images = new HashSet<ShopImage>(),
@@ -44,8 +44,8 @@ public class SeederIsacShop
         {
             Id = Guid.NewGuid(),
             Created = DateTime.Now,
-            Filename = "IsacShop.jpeg",
-            AltText = "Isacshoppens Logo"
+            Filename = "JojeShop.jpeg",
+            AltText = "Jojeshoppens Logo"
         };
     }
 
@@ -53,11 +53,11 @@ public class SeederIsacShop
     {
         return new ShopSocialMedia
         {
-            Facebook = "https://www.facebook.com/isac",
-            Instagram = "https://instagram.com/isac",
-            LinkedIn = "https://linkedin.com/isac",
-            TikTok = "https://tiktok.com/isac",
-            YouTube = "https://youtube.com/isac"
+            Facebook = "https://www.facebook.com/joje",
+            Instagram = "https://instagram.com/joje",
+            LinkedIn = "https://linkedin.com/joje",
+            TikTok = "https://tiktok.com/joje",
+            YouTube = "https://youtube.com/joje"
         };
     }
 
@@ -66,7 +66,7 @@ public class SeederIsacShop
         return new ShopContactInfo
         {
             Id = Guid.NewGuid(),
-            Email = "isac@webbhelp.se",
+            Email = "joje@webbhelp.se",
             MobileNumber = "+46123456789",
             SocialMedia = socialmedia
         };
@@ -77,10 +77,10 @@ public class SeederIsacShop
         return new ShopSetting
         {
             Id = Guid.NewGuid(),
-            Title = "IsacShop UF",
+            Title = "JojeShop UF",
             SwishNumber = "+461234567890",
             BaseShippingPrice = 100,
-            Description = "Isac Shop Beskrivning",
+            Description = "Joje Shop Beskrivning",
             Layout = "Standard",
             Theme = "Standard",
             ContactInfo = contactinfo,
@@ -94,19 +94,19 @@ public class SeederIsacShop
         {
             new ShopPageFragment{
                 Id = Guid.NewGuid(),
-                Header = "Isac Sida Titel 1",
+                Header = "Joje Sida Titel 1",
                 Paragraph = "Isac Sida Paragraf 1",
                 Order = 1
             },
             new ShopPageFragment{
                 Id = Guid.NewGuid(),
-                Header = "Isac Sida Titel 2",
+                Header = "Joje Sida Titel 2",
                 Paragraph = "Isac Sida Paragraf 2",
                 Order = 2
             },
             new ShopPageFragment{
                 Id = Guid.NewGuid(),
-                Header = "Isac Sida Titel 3",
+                Header = "Joje Sida Titel 3",
                 Paragraph = "Isac Sida Paragraf 3",
                 Order = 3
             }
@@ -117,7 +117,7 @@ public class SeederIsacShop
             new ShopPage
             {
                 Id = Guid.NewGuid(),
-                Header = "Isacs sida",
+                Header = "Jojes sida",
                 Order = 1,
                 ShopPageFragments = spf1
             }

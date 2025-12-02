@@ -4,8 +4,10 @@
 @using Microsoft.AspNetCore.Authentication
 @using Microsoft.AspNetCore.Identity
 @using ufshop.Data
+@using ufshop.Data.Models
 @using ufshop.Components.Account
 @using ufshop.Components.Account.Shared
+@using ufshop.Services
 
 
 @inject SignInManager<ApplicationUser> SignInManager
@@ -33,6 +35,7 @@
             </EditForm>
 
 @code {
+    public readonly BeService beService;
     private string? errorMessage;
 
     [CascadingParameter]
@@ -43,6 +46,11 @@
 
     [SupplyParameterFromQuery]
     private string? ReturnUrl { get; set; }
+
+    public Login(BeService srv)
+    {
+        beService = srv;
+    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -55,18 +63,50 @@
 
     public async Task LoginUser()
     {
-        // This doesn't count login failures towards account lockout
-        // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-        var result = await SignInManager.PasswordSignInAsync(Input.Email, Input.Password, true, lockoutOnFailure: false);
-        if (result.Succeeded)
+
+        //TODO: vi måste matcha domänprefix med user också
+        //TODO: exempel: försöker joje logga in på isac.ufshop.nu
+        //TODO: måste inloggningen fail:a
+
+        bool userIsOnCorrectDomain = ValidateUserWithPrefix(Input.Email);
+
+        if (userIsOnCorrectDomain)
         {
-            @* Logger.LogInformation("User logged in."); *@
-            RedirectManager.RedirectTo(ReturnUrl);
+            // This doesn't count login failures towards account lockout
+            // To enable password failures to trigger account lockout, set lockoutOnFailure: true
+            var result = await SignInManager.PasswordSignInAsync(Input.Email, Input.Password, true, lockoutOnFailure: false);
+            if (result.Succeeded)
+            {
+                @* Logger.LogInformation("User logged in."); *@
+                RedirectManager.RedirectTo(ReturnUrl);
+            }
+            else
+            {
+                errorMessage = "Fel: ogiltiga loginuppgifter";
+            }
         }
         else
         {
-            errorMessage = "Error: Invalid login attempt.";
+            errorMessage = "Fel: användaren finns inte på domänen";
         }
+    }
+
+    private bool ValidateUserWithPrefix(string name)
+    {
+        bool output = false;
+
+        ApplicationUser user = beService.UserManager.FindByEmailAsync(name).Result!;
+
+        if (user is not null)
+        {
+            if (beService.DbContext.Shops.Where(e => e.Owner.Equals(user)).Any())
+            {
+                Shop shop = beService.DbContext.Shops.Where(e => e.Owner.Equals(user)).First();
+                output = beService.DomainPrefix.Equals(shop.Prefix);
+            }
+        }
+
+        return output;
     }
 
     private sealed class InputModel

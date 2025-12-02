@@ -1,5 +1,6 @@
 using System.Diagnostics.Contracts;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration.UserSecrets;
 using ufshop.Data;
 using ufshop.Data.Models;
 using ufshop.Helpers;
@@ -75,5 +76,19 @@ public class ShopService
         //         .Include(e=>e.Pages)
 
         return true;
+    }
+
+    public bool GetShopByOwner(ApplicationUser user, out Shop shop)
+    {
+        Contract.Assert(user is not null);
+
+        if (beService.DbContext.Shops.Where(e => e.Owner == user).Any())
+        {
+            shop = beService.DbContext.Shops.Where(e => e.Owner == user).First();
+            return true;
+        }
+
+        shop = null!;
+        return false;
     }
 }
