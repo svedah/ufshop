@@ -1,0 +1,47 @@
+@using ufshop.Data.Models
+@using ufshop.Services
+@rendermode InteractiveServer
+@code {
+    public readonly BeService beService;
+    public readonly CartService cartService;
+    public List<KeyValuePair<ShopItem, int>> CartContent;
+    
+    public CartEditor(BeService srv)
+    {
+        beService = srv;
+        cartService = new CartService(beService);
+        CartContent = new List<KeyValuePair<ShopItem, int>>();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            CartContent = await cartService.GetCartContent();
+        }
+        StateHasChanged();
+    }
+
+    private async Task HandleDeleteItem()
+    {
+        var cartContent = await cartService.GetCartContent();
+        CartContent = cartContent;
+        await InvokeAsync(StateHasChanged);
+    }
+
+}
+<h2 class="d-flex justify-content-between align-items-center mb-3">
+    <span>Varukorgen</span>
+    <span>@CartContent.Count</span>
+</h2>
+
+<ul class="list-group mb-3">
+    @foreach(KeyValuePair<ShopItem, int> kvp in CartContent)
+    {
+        <li class="list-group-item lh-condensed"> @* class="list-group-item d-flex justify-content-between lh-condensed"> *@
+            <CartEditorItem @key="@kvp.Key.Id" Id="@kvp.Key.Id" OnDelete="HandleDeleteItem" />
+        </li>
+    }
+</ul>
+
+

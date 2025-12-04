@@ -1,0 +1,80 @@
+@using ufshop.Data.Models
+@using ufshop.Services
+@rendermode InteractiveServer
+@code {
+    public readonly BeService beService;
+    public readonly CartService cartService;
+
+    [Parameter]
+    public Guid Id { get; set; }
+    [Parameter]
+    public EventCallback<Guid> OnDelete { get; set; }
+    public ShopItem Item { get; set; }
+    public int Amount { get; set; }
+
+    public CartEditorItem(BeService srv)
+    {
+        beService = srv;
+        cartService = new CartService(beService);
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            KeyValuePair<ShopItem, int> cartItem = await cartService.GetCartContentItem(Id);
+            Item = cartItem.Key;
+            Amount = cartItem.Value;
+        }
+        StateHasChanged();
+    }
+
+    private void DecrementAmount()
+    {
+        Amount = Math.Max(1, Amount - 1);
+        cartService.AddOrUpdateAsync(Item, Amount);
+    }
+
+    private void IncrementAmount()
+    {
+        Amount = Math.Min(Item.ItemsAvailable, Amount + 1);
+        cartService.AddOrUpdateAsync(Item, Amount);
+    }
+
+    private async Task DeleteItem()
+    {
+        await cartService.DeleteAsync(Item);
+        OnDelete.InvokeAsync();
+        await InvokeAsync(StateHasChanged);
+    }
+
+}
+@if (Item is not null)
+{
+    <div class="d-flex justify-content-between" style="max-height: 2.5rem;">
+        <div>
+            <div class="d-flex">
+                @{
+                    string imageUrl = "/img/t/" + Item.PrimaryImage.Filename;
+                    string imageAlt = Item.PrimaryImage.AltText;
+                }
+                <Image Src="@imageUrl" Alt="@imageAlt" style="height: 2rem;margin-right: 0.5rem;" />
+                <p style="overflow: hidden;text-overflow: ellipsis;">
+                    @Item.Title
+                </p>
+            </div>
+        </div>
+        <div>
+            <Button Color="ButtonColor.Primary" Size="ButtonSize.ExtraSmall" @onclick="DecrementAmount">
+                <Icon Name="IconName.Dash" />
+            </Button>
+            <InputNumber @bind-Value="@Amount" min="1" max="@Item.ItemsAvailable" style="width:3rem;text-align:right;" /> 
+            <Button Color="ButtonColor.Primary" Size="ButtonSize.ExtraSmall" @onclick="IncrementAmount">
+                <Icon Name="IconName.Plus" />
+            </Button>
+            <Button Color="ButtonColor.Danger" Size="ButtonSize.ExtraSmall" @onclick="DeleteItem">
+                <Icon Name="IconName.Trash" />
+            </Button>
+        </div>
+    </div>
+}

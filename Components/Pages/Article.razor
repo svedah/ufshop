@@ -63,26 +63,37 @@
         }
     }
 
-    private async Task AddToBasket()
+    private async Task AddToCart()
+    {
+        if (!id.Equals(Guid.Empty) && shopItem is not null && BuyNumItems > 0 && BuyNumItems <= shopItem.ItemsAvailable)
+        {
+            CartService cartService = new CartService(this.BeService);
+            await cartService.AddOrUpdateAsync(shopItem, BuyNumItems);
+        }
+    }
+
+    private async Task ClearCart()
     {
         CartService cartService = new CartService(this.BeService);
+        await cartService.ClearAsync();
+    }
 
-        throw new Exception("BUG");
-        //should we push shopitem with amount
-        //instead of cartitems?
-        //seems simpler
+    private async Task NumItemsChange()
+    {
+        if (!id.Equals(Guid.Empty))
+        {
+            if (BeService.DbContext.ShopItems.Where(e => e.Id.Equals(id)).Any())
+            {
+                shopItem = BeService.DbContext.ShopItems.Where(e => e.Id.Equals(id)).First();
+                BuyNumItems = Math.Min(shopItem.ItemsAvailable, BuyNumItems);
+                BuyNumItems = Math.Max(0, BuyNumItems);
+            }
+        }
+    }
 
-        CartItem cartItem = new CartItem {
-            Id = Guid.Empty,//use Id from shopItem
-            Amount = BuyNumItems,
-            ShopItem = shopItem
-        };
-
-        await cartService.AddOrUpdateAsync(cartItem);
-
-
-
-
+    private async Task NavigateBack()
+    {
+        await BeService.JsRuntime.InvokeVoidAsync("history.back");
     }
 }
 
@@ -91,11 +102,15 @@
     <PageTitle>Hämtar artikel</PageTitle>
     <Spinner />
     <p>Hämtar...</p>
-    <p>@id</p>
+    @* <p>@id</p> *@
 }
 else
 {
     <PageTitle>Visar artikel "@shopItem.Title"</PageTitle>
+
+    <Button Color="ButtonColor.Primary" @onclick="NavigateBack">
+        <Icon Name="IconName.ArrowLeft" />
+    </Button>
 
     <p>Titel: @shopItem.Title</p>
     <p>Antal tillgängliga: @shopItem.ItemsAvailable</p>
@@ -118,12 +133,13 @@ else
     </p>
 
     <p>
-        <InputNumber @bind-value="BuyNumItems" min="1" max="@shopItem.ItemsAvailable" />
+        <InputNumber @bind-value="BuyNumItems" min="1" max="@shopItem.ItemsAvailable" @onchange="NumItemsChange" />
     </p>
     <p>
-        @if (shopItem.Active)
+        @if (shopItem.Active && shopItem.ItemsAvailable > 0)
         {
-            <Button Color="ButtonColor.Primary" @onclick="AddToBasket">Lägg till i varukorg</Button>
+            <Button Color="ButtonColor.Primary" @onclick="AddToCart">Lägg till i varukorg</Button>
         }
     </p>
+    @* <Button Color="ButtonColor.Primary" @onclick="ClearCart">Töm varukorg</Button> *@
 }

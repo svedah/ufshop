@@ -1,0 +1,50 @@
+@page "/checkout"
+@using ufshop.Services
+@using ufshop.Data.Models
+@rendermode InteractiveServer
+@* @inject ufshop.Services.BeService BeService *@
+@code {
+    private readonly BeService beService;
+    private readonly CartService cartService;
+    private readonly CustomerInfoService customerInfoService;
+
+    //cart i localstorage
+    //adress i localstorage
+    public Checkout(ufshop.Services.BeService svc)
+    {
+        beService = svc;
+        cartService = new CartService(svc);
+        customerInfoService = new CustomerInfoService(svc);
+    }
+
+    private async Task NavigateBack()
+    {
+        await beService.JsRuntime.InvokeVoidAsync("history.back");
+    }
+
+    private void DoCheckOut()
+    {
+        @* var cart = cartService.GetCart(); *@
+        @* var address = customerAddressService.GetAddress(); *@
+    }
+}
+<PageTitle>Checka Ut</PageTitle>
+<HeadContent>
+    @* <meta name="headcontent" description="lol yep!" /> *@
+</HeadContent>
+
+<Button Color="ButtonColor.Primary" @onclick="NavigateBack">
+    <Icon Name="IconName.ArrowLeft" />
+</Button>
+
+@* stjäl grund från https://getbootstrap.com/docs/4.0/examples/checkout/ *@
+
+<h1>Checka ut</h1>
+<div class="row">
+    <div class="col-md-6 order-md-2 mb-4">
+        <CartEditor />
+    </div>
+    <div class="col-md-6 order-md-1">
+        <CustomerInfoEditor />
+    </div>
+</div>

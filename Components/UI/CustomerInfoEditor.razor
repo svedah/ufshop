@@ -1,0 +1,15 @@
+@using ufshop.Data.Models
+@using ufshop.Services
+@rendermode InteractiveServer
+@code {
+    public readonly BeService beService;
+    public readonly CustomerInfoService addressService;
+
+    public CustomerInfo Address { get; set; }
+    public CustomerInfoEditor(BeService srv)
+    {
+        beService = srv;
+        addressService = new CustomerInfoService(beService);
+    }
+}
+<h1>CustomerInfoEditor</h1>
