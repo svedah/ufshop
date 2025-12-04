@@ -5,12 +5,39 @@
     public readonly BeService beService;
     public readonly CartService cartService;
     public List<KeyValuePair<ShopItem, int>> CartContent;
+    public readonly int ShippingPrice = -1;
+
+    public int CartContentSum
+    {
+        get
+        {
+            int output = 0;
+            foreach(KeyValuePair<ShopItem, int> kvp in CartContent)
+            {
+                output += kvp.Key.Price * kvp.Value;
+            }
+            return output;
+        }
+    }
+
     
     public CartEditor(BeService srv)
     {
         beService = srv;
         cartService = new CartService(beService);
         CartContent = new List<KeyValuePair<ShopItem, int>>();
+        ShippingPrice = GetShippingPrice();
+    }
+
+    private int GetShippingPrice()
+    {
+        Shop shop;
+        ShopService ss = new ShopService(beService);
+        if (ss.GetShop(beService.DomainPrefix, out shop))
+        {
+            return shop.Settings.BaseShippingPrice;
+        }
+        return ufshop.Shared.Constants.BASESHIPPINGPRICE;
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -43,5 +70,21 @@
         </li>
     }
 </ul>
+
+@if (CartContent.Count > 0)
+{
+    <p>
+    Varupris: @CartContentSum
+    </p>
+    <p>
+    Fraktpris: @ShippingPrice
+    </p>
+
+    <p>
+    Totalt: @CartContentSum + @ShippingPrice
+    </p>
+
+    <Button Color="ButtonColor.Primary">Köp</Button>
+}
 
 
