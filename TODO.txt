@@ -1,9 +1,0 @@
-1. seeda www.ufshop.nu med EVENTUELLT en artikel/tjänst och 2 sidor i databasen
-2. seeda isac.ufshop.nu med tre artiklar och 2 sidor i databasen
-seeda lara som administratör för ufshop - kan redigera ALLA sajter
-seeda isac som användare för isac.ufshop.nu - kan redigera isac.ufshop.nu
-
-
-
-DONE
-https://docs.blazorbootstrap.com/getting-started/blazor-webassembly-net-8 

@@ -64,11 +64,12 @@
                 </p>
             </div>
         </div>
+        @* <div> TODO: ifall en beställning kräver uppladdning skall det synas en knapp för det här. IconName.CloudArrowUp IconName.CloudCheck </div>*@
         <div>
             <Button Color="ButtonColor.Primary" Size="ButtonSize.ExtraSmall" @onclick="DecrementAmount">
                 <Icon Name="IconName.Dash" />
             </Button>
-            <InputNumber @bind-Value="@Amount" min="1" max="@Item.ItemsAvailable" style="width:3rem;text-align:right;" /> 
+            <InputNumber @bind-Value="@Amount" min="1" max="@Item.ItemsAvailable" Disabled="true" style="width:3rem;text-align:right;" /> 
             <Button Color="ButtonColor.Primary" Size="ButtonSize.ExtraSmall" @onclick="IncrementAmount">
                 <Icon Name="IconName.Plus" />
             </Button>

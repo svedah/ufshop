@@ -7,6 +7,15 @@
     public List<KeyValuePair<ShopItem, int>> CartContent;
     public readonly int ShippingPrice = -1;
 
+    //TODO: this reports to parent whether cartcontent is valid (eg all uploadables have been satisified)
+    public bool CartIsValid
+    {
+        get
+        {
+            return false;
+        }
+    }
+
     public int CartContentSum
     {
         get
@@ -81,10 +90,11 @@
     </p>
 
     <p>
-    Totalt: @CartContentSum + @ShippingPrice
+    @{
+        int total = CartContentSum + ShippingPrice;
+    }
+    Totalt: @total SEK
     </p>
-
-    <Button Color="ButtonColor.Primary">Köp</Button>
 }
 
 
