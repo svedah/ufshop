@@ -8,9 +8,8 @@
     [Parameter]
     public Guid Id { get; set; }
     [Parameter]
-    public EventCallback<Guid> OnDelete { get; set; }
-    public ShopItem Item { get; set; }
-    public int Amount { get; set; }
+    public EventCallback<Guid> OnChange { get; set; }
+    public CartItem Item { get; set; }
 
     public CartEditorItem(BeService srv)
     {
@@ -22,29 +21,32 @@
     {
         if (firstRender)
         {
-            KeyValuePair<ShopItem, int> cartItem = await cartService.GetCartContentItem(Id);
-            Item = cartItem.Key;
-            Amount = cartItem.Value;
+            CartItem cartItem = await cartService.GetCartContentItem(Id);
+            Item = cartItem;
         }
         StateHasChanged();
     }
 
-    private void DecrementAmount()
+    private async Task DecrementAmount()
     {
-        Amount = Math.Max(1, Amount - 1);
-        cartService.AddOrUpdateAsync(Item, Amount);
+        Item.Amount = Math.Max(1, Item.Amount - 1);
+        cartService.AddOrUpdateAsync(Item);
+        OnChange.InvokeAsync();
+        await InvokeAsync(StateHasChanged);
     }
 
-    private void IncrementAmount()
+    private async Task IncrementAmount()
     {
-        Amount = Math.Min(Item.ItemsAvailable, Amount + 1);
-        cartService.AddOrUpdateAsync(Item, Amount);
+        Item.Amount = Math.Min(Item.ShopItem.ItemsAvailable, Item.Amount + 1);
+        cartService.AddOrUpdateAsync(Item);
+        OnChange.InvokeAsync();
+        await InvokeAsync(StateHasChanged);
     }
 
     private async Task DeleteItem()
     {
         await cartService.DeleteAsync(Item);
-        OnDelete.InvokeAsync();
+        OnChange.InvokeAsync();
         await InvokeAsync(StateHasChanged);
     }
 
@@ -55,12 +57,12 @@
         <div>
             <div class="d-flex">
                 @{
-                    string imageUrl = "/img/t/" + Item.PrimaryImage.Filename;
-                    string imageAlt = Item.PrimaryImage.AltText;
+                    string imageUrl = "/img/t/" + Item.ShopItem.PrimaryImage.Filename;
+                    string imageAlt = Item.ShopItem.PrimaryImage.AltText;
                 }
                 <Image Src="@imageUrl" Alt="@imageAlt" style="height: 2rem;margin-right: 0.5rem;" />
                 <p style="overflow: hidden;text-overflow: ellipsis;">
-                    @Item.Title
+                    @Item.ShopItem.Title
                 </p>
             </div>
         </div>
@@ -69,7 +71,7 @@
             <Button Color="ButtonColor.Primary" Size="ButtonSize.ExtraSmall" @onclick="DecrementAmount">
                 <Icon Name="IconName.Dash" />
             </Button>
-            <InputNumber @bind-Value="@Amount" min="1" max="@Item.ItemsAvailable" Disabled="true" style="width:3rem;text-align:right;" /> 
+            <InputNumber @bind-Value="@Item.Amount" min="1" max="@Item.ShopItem.ItemsAvailable" Disabled="true" style="width:3rem;text-align:right;" /> 
             <Button Color="ButtonColor.Primary" Size="ButtonSize.ExtraSmall" @onclick="IncrementAmount">
                 <Icon Name="IconName.Plus" />
             </Button>

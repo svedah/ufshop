@@ -4,26 +4,20 @@
 @code {
     public readonly BeService beService;
     public readonly CartService cartService;
-    public List<KeyValuePair<ShopItem, int>> CartContent;
+    public List<CartItem> CartContent;
     public readonly int ShippingPrice = -1;
 
-    //TODO: this reports to parent whether cartcontent is valid (eg all uploadables have been satisified)
-    public bool CartIsValid
-    {
-        get
-        {
-            return false;
-        }
-    }
+    [Parameter]
+    public EventCallback<bool> OnValidityChanged { get; set; }
 
     public int CartContentSum
     {
         get
         {
             int output = 0;
-            foreach(KeyValuePair<ShopItem, int> kvp in CartContent)
+            foreach(CartItem cartItem in CartContent)
             {
-                output += kvp.Key.Price * kvp.Value;
+                output += cartItem.ShopItem.Price * cartItem.Amount;
             }
             return output;
         }
@@ -34,7 +28,7 @@
     {
         beService = srv;
         cartService = new CartService(beService);
-        CartContent = new List<KeyValuePair<ShopItem, int>>();
+        CartContent = new List<CartItem>();
         ShippingPrice = GetShippingPrice();
     }
 
@@ -51,17 +45,26 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
+        @* if (firstRender)
         {
             CartContent = await cartService.GetCartContent();
-        }
+        } *@
+        CartContent = await cartService.GetCartContent();
+        ValidityChanged();
         StateHasChanged();
     }
+    
+    public async Task ValidityChanged()
+    {
+        bool result = true;//cartService.IsValid();
+        await OnValidityChanged.InvokeAsync(result);
+    }
 
-    private async Task HandleDeleteItem()
+    private async Task HandleChangeItem()
     {
         var cartContent = await cartService.GetCartContent();
         CartContent = cartContent;
+        await ValidityChanged();
         await InvokeAsync(StateHasChanged);
     }
 
@@ -72,10 +75,10 @@
 </h2>
 
 <ul class="list-group mb-3">
-    @foreach(KeyValuePair<ShopItem, int> kvp in CartContent)
+    @foreach(CartItem cartItem in CartContent)
     {
         <li class="list-group-item lh-condensed"> @* class="list-group-item d-flex justify-content-between lh-condensed"> *@
-            <CartEditorItem @key="@kvp.Key.Id" Id="@kvp.Key.Id" OnDelete="HandleDeleteItem" />
+            <CartEditorItem @key="@cartItem.Id" Id="@cartItem.Id" OnChange="HandleChangeItem" />
         </li>
     }
 </ul>

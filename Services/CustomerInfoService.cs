@@ -25,12 +25,12 @@ public class CustomerInfoService
         return "customerinfo_" + beService.DomainPrefix;
     }
 
-    public async Task AddOrUpdateAsync()
-    {
-        // Contract.Assert(item is not null);
-        // Contract.Assert(count > 0 && count <= item.ItemsAvailable);
-        await SaveAsync();
-    }
+    // public async Task AddOrUpdateAsync()
+    // {
+    //     // Contract.Assert(item is not null);
+    //     // Contract.Assert(count > 0 && count <= item.ItemsAvailable);
+    //     await SaveAsync();
+    // }
 
     public async Task ClearAsync()
     {
@@ -54,13 +54,13 @@ public class CustomerInfoService
         return output;        
     }
 
-    private async Task SaveAsync()
+    public async Task SaveAsync(CustomerInfo input)
     {
-        // var json = JsonSerializer.Serialize(input);
-        // await _jsRuntime.InvokeVoidAsync("localStorage.setItem", _shopKey, json);
+        var json = JsonSerializer.Serialize(input);
+        await _jsRuntime.InvokeVoidAsync("localStorage.setItem", _localStorageKey, json);
     }
 
-    private CustomerInfo Empty()
+    public CustomerInfo Empty()
     {
         return new CustomerInfo
         {

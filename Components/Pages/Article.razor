@@ -68,15 +68,22 @@
         if (!id.Equals(Guid.Empty) && shopItem is not null && BuyNumItems > 0 && BuyNumItems <= shopItem.ItemsAvailable)
         {
             CartService cartService = new CartService(this.BeService);
-            await cartService.AddOrUpdateAsync(shopItem, BuyNumItems);
+            CartItem newCartItem = new CartItem
+            {
+                Id = Guid.NewGuid(),
+                ShopItem = shopItem,
+                Properties = new HashSet<CartItemProperty>(),//TODO: copy all properties
+                Amount = BuyNumItems
+            };
+            await cartService.AddOrUpdateAsync(newCartItem);
         }
     }
 
-    private async Task ClearCart()
+    @* private async Task ClearCart()
     {
         CartService cartService = new CartService(this.BeService);
         await cartService.ClearAsync();
-    }
+    } *@
 
     private async Task NumItemsChange()
     {

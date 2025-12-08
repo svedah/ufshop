@@ -8,20 +8,32 @@
     public CustomerInfo Address { get; set; }
 
 
-    //this reports to parent whether customerinfo is valid
-    public bool CustomerInfoIsValid
+    //TODO: this reports to parent whether customerinfo is valid
+    @* public bool CustomerInfoIsValid
     {
         get
         {
-            return Service.Valid(Address);
+            bool result = Service.Valid(Address);
+            return result;
         }
     }
+
+    public async Task<bool> CustomerInfoValid()
+    {
+        bool result = Service.Valid(Address);
+        return result;
+    } *@
+
+    [Parameter]
+    public EventCallback<bool> OnValidityChanged { get; set; }
+
 
 
     public CustomerInfoEditor(BeService srv)
     {
         beService = srv;
         Service = new CustomerInfoService(beService);
+        Address = Service.Empty();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -30,10 +42,31 @@
         {
             Address = await Service.LoadAsync();
         }
+        TextboxChanged();//just in case address is valid from the get go
         StateHasChanged();
     }
+
+    public async Task TextboxChanged()
+    {
+        bool result = Service.Valid(Address);
+        if (result)
+        {
+            await Service.SaveAsync(Address);
+        }
+        await OnValidityChanged.InvokeAsync(result);
+    }
+
+
+    @* private async Task ForceValidate(bool b)
+    {
+        await OnValidityChanged.InvokeAsync(b);
+    } *@
+
 }
 <h2>Adressuppgifter</h2>
+@* <Button @onclick="() => ForceValidate(true)">OK</Button>
+<Button @onclick="() => ForceValidate(false)">NOTOK</Button>
+<p>valid customerinfo: @Service.Valid(Address)</p> *@
 @if (Address is null)
 {
     <Spinner />
@@ -54,7 +87,8 @@ else
                     <Icon Name="IconName.Asterisk" Color="IconColor.Danger"></Icon>
                 }
             </label>
-            <InputText @bind-Value="Address.FirstName" type="text" class="form-control" id="cifn" />
+            @* <TextInput Value="@Address.FirstName" ValueExpression="() => Address.FirstName" ValueChanged="() => TextboxChanged()" type="text" class="form-control" id="cifn" /> *@
+            <TextInput @bind-Value="Address.FirstName" type="text" class="form-control" id="cifn" @onblur="TextboxChanged" />
         </div>
         <div class="col-md-6 mb-3">
             <label class="form-label" for="ciln">
@@ -68,7 +102,7 @@ else
                     <Icon Name="IconName.Asterisk" Color="IconColor.Danger"></Icon>
                 }
             </label>
-            <InputText @bind-Value="Address.LastName" type="text" class="form-control" id="ciln" />
+            <TextInput @bind-Value="Address.LastName" type="text" class="form-control" id="ciln" @onblur="TextboxChanged" />
         </div>
     </div>
 
@@ -86,7 +120,7 @@ else
                     <Icon Name="IconName.Asterisk" Color="IconColor.Danger"></Icon>
                 }
             </label>
-            <InputText @bind-Value="Address.StreetName" type="text" class="form-control" id="cisn" />
+            <TextInput @bind-Value="Address.StreetName" type="text" class="form-control" id="cisn" @onblur="TextboxChanged" />
         </div>
     </div>
 
@@ -104,7 +138,7 @@ else
                     <Icon Name="IconName.Asterisk" Color="IconColor.Danger"></Icon>
                 }
             </label>
-            <InputText @bind-Value="Address.ZipCode" type="text" class="form-control" id="cizc" />
+            <TextInput @bind-Value="Address.ZipCode" type="text" class="form-control" id="cizc" @onblur="TextboxChanged" />
         </div>
         <div class="col-md-9 mb-3">
             <label class="form-label" for="cici">
@@ -118,7 +152,7 @@ else
                     <Icon Name="IconName.Asterisk" Color="IconColor.Danger"></Icon>
                 }
             </label>
-            <InputText @bind-Value="Address.City" type="text" class="form-control" id="cici" />
+            <TextInput @bind-Value="Address.City" type="text" class="form-control" id="cici" @onblur="TextboxChanged" />
         </div>
     </div>
 
@@ -136,7 +170,7 @@ else
                     <Icon Name="IconName.Asterisk" Color="IconColor.Danger"></Icon>
                 }
             </label>
-            <InputText @bind-Value="Address.Email" type="text" class="form-control" id="ciem" />
+            <TextInput @bind-Value="Address.Email" type="text" class="form-control" id="ciem" @onblur="TextboxChanged" />
         </div>
         <div class="col-md-6 mb-3">
             <label class="form-label" for="cipn">
@@ -150,7 +184,7 @@ else
                     <Icon Name="IconName.Asterisk" Color="IconColor.Danger"></Icon>
                 }
             </label>
-            <InputText @bind-Value="Address.Phone" type="text" class="form-control" id="cipn" />
+            <TextInput @bind-Value="Address.Phone" type="text" class="form-control" id="cipn" @onblur="TextboxChanged" />
         </div>
     </div>
 
@@ -168,7 +202,7 @@ else
                     <Icon Name="IconName.Asterisk" Color="IconColor.Danger"></Icon>
                 }
             </label>
-            <InputText @bind-Value="Address.FirstName" type="text" class="form-control" id="ciin" />
+            <TextInput @bind-Value="Address.Info" type="text" class="form-control" id="ciin" @onblur="TextboxChanged" />
         </div>
     </div>
 }

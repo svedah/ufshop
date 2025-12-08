@@ -5,15 +5,30 @@
 @* @inject ufshop.Services.BeService BeService *@
 @code {
     private readonly BeService beService;
-    private readonly CartService cartService;
+    @* private readonly CartService cartService; *@
     private readonly CustomerInfoService customerInfoService;
 
     //cart i localstorage
     //adress i localstorage
+
+    private bool cartValid { get; set; }
+    private async Task UpdateCartValid(bool isValid)
+    {
+        cartValid = isValid;
+        StateHasChanged();
+    }
+    private bool customerInfoValid { get; set; }
+    private async Task UpdateCustomerInfoValid(bool isValid)
+    {
+        customerInfoValid = isValid;
+        StateHasChanged();
+    }
+
+
     public Checkout(ufshop.Services.BeService svc)
     {
         beService = svc;
-        cartService = new CartService(svc);
+        @* cartService = new CartService(svc); *@
         customerInfoService = new CustomerInfoService(svc);
     }
 
@@ -22,10 +37,17 @@
         await beService.JsRuntime.InvokeVoidAsync("history.back");
     }
 
-    private void DoCheckOut()
+    private async Task DoCheckout()
     {
-        @* var cart = cartService.GetCart(); *@
-        @* var address = customerAddressService.GetAddress(); *@
+        CartService cartService = new CartService(beService);
+        List<CartItem> cart = await cartService.GetCartContent();
+        CustomerInfo address = await customerInfoService.LoadAsync();
+
+
+        while(true)
+        {
+            ;
+        }
     }
 }
 <PageTitle>Checka Ut</PageTitle>
@@ -37,15 +59,27 @@
     <Icon Name="IconName.ArrowLeft" />
 </Button>
 
-@* stjäl grund från https://getbootstrap.com/docs/4.0/examples/checkout/ *@
-
 <h1>Checka ut</h1>
+<p>
+    cartValid: @cartValid
+</p>
+<p>
+    customerInfoValid: @customerInfoValid
+</p>
 <div class="row">
     <div class="col-md-6 order-md-2 mb-4">
-        <CartEditor />
+        <CartEditor OnValidityChanged="UpdateCartValid" />
     </div>
     <div class="col-md-6 order-md-1">
-        <CustomerInfoEditor />
+        <CustomerInfoEditor OnValidityChanged="UpdateCustomerInfoValid" />
     </div>
 </div>
-    <Button Color="ButtonColor.Primary">Genomför beställning</Button>
+@if (cartValid && customerInfoValid)
+{
+    <Button Color="ButtonColor.Primary" @onclick="DoCheckout">Genomför beställning</Button>
+}
+else
+{
+    <Button Color="ButtonColor.Danger" Disabled="true" style="text-decoration:line-through">Genomför beställning</Button>
+}
+

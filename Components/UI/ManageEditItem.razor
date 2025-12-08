@@ -118,7 +118,7 @@
     public List<ShopItem> AllShopItems = new List<ShopItem>();
     public void UpdateAllShopItems()
     {
-        AllShopItems = Service.AllShopItems().ToList();
+        AllShopItems = Service.AllShopItems().Where(e => e.Active).ToList();
     }
 
 
