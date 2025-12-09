@@ -11,9 +11,10 @@ public class ShopItem
     public required bool Active { get; set; }//published on site or not
     // public required bool Deleted { get; set; }//shopitems can never be deleted once a cart contains it
     // public required virtual Shop Shop { get; set; }
+    public required bool Uploadable { get; set; }
     public required virtual ShopImage PrimaryImage { get; set; }
     public required virtual HashSet<ShopImage> Images { get; set; }
 
-    public required virtual HashSet<ShopItemProperty> Properties { get; set; }
+    // public required virtual HashSet<ShopItemProperty> Properties { get; set; }
 }
 

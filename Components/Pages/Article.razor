@@ -67,14 +67,13 @@
     {
         if (!id.Equals(Guid.Empty) && shopItem is not null && BuyNumItems > 0 && BuyNumItems <= shopItem.ItemsAvailable)
         {
+
+            //TODO
+            @* HashSet<CartItemProperty> cartItemProperties = new HashSet<CartItemProperty>(); *@
+
+            CartItem newCartItem = CartService.BuildCartItem(shopItem, BuyNumItems);//, cartItemProperties);
+
             CartService cartService = new CartService(this.BeService);
-            CartItem newCartItem = new CartItem
-            {
-                Id = Guid.NewGuid(),
-                ShopItem = shopItem,
-                Properties = new HashSet<CartItemProperty>(),//TODO: copy all properties
-                Amount = BuyNumItems
-            };
             await cartService.AddOrUpdateAsync(newCartItem);
         }
     }

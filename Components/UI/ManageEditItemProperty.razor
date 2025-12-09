@@ -1,0 +1,52 @@
+@* @using System.Collections.Immutable
+@using System.Reflection.Metadata
+@using ufshop.Data.Models
+@using ufshop.Services
+@using ufshop.Shared
+@namespace ufshop.Components.UI
+@rendermode InteractiveServer
+
+@code {
+
+    public readonly BeService beService;
+    public readonly ShopItemPropertyService Service;
+
+
+    [Parameter]
+    public Guid Id { get; set; }
+
+    public ShopItemProperty shopItemProperty { get; set; }
+
+    public ManageEditItemProperty(BeService srv)
+    {
+        beService = srv;
+        Service = new ShopItemPropertyService(srv);
+        shopItemProperty = Service.Empty();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            ShopItemProperty sip;
+            if (Service.GetShopItemProperty(Id, out sip))
+            {
+                shopItemProperty = sip;
+            }
+            shopItemProperty = sip;
+        }
+        StateHasChanged();
+    }
+}
+
+
+@if (shopItemProperty is null)
+{
+    <Spinner />
+}
+else
+{
+    <p>
+        @shopItemProperty.Id
+    </p>
+} *@

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ufshop.Data;
 
@@ -10,9 +11,11 @@ using ufshop.Data;
 namespace ufshop.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251208130820_202512081408")]
+    partial class _202512081408
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.3");
@@ -224,6 +227,9 @@ namespace ufshop.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
                     b.ToTable("Carts");
@@ -275,9 +281,6 @@ namespace ufshop.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("Uploadable")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CartId");
@@ -285,6 +288,27 @@ namespace ufshop.Migrations
                     b.HasIndex("ShopItemId");
 
                     b.ToTable("CartItems");
+                });
+
+            modelBuilder.Entity("ufshop.Data.Models.Customer", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("CartId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("CustomerInfoId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CartId");
+
+                    b.HasIndex("CustomerInfoId");
+
+                    b.ToTable("Customer");
                 });
 
             modelBuilder.Entity("ufshop.Data.Models.CustomerInfo", b =>
@@ -466,26 +490,18 @@ namespace ufshop.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("CartId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("CustomerInfoId")
+                    b.Property<Guid>("CustomerId")
                         .HasColumnType("TEXT");
 
                     b.Property<Guid?>("ShopId")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("Status")
+                    b.Property<int>("ShopOrderStatus")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CartId");
-
-                    b.HasIndex("CustomerInfoId");
+                    b.HasIndex("CustomerId");
 
                     b.HasIndex("ShopId");
 
@@ -740,6 +756,25 @@ namespace ufshop.Migrations
                     b.Navigation("ShopItem");
                 });
 
+            modelBuilder.Entity("ufshop.Data.Models.Customer", b =>
+                {
+                    b.HasOne("ufshop.Data.Models.Cart", "Cart")
+                        .WithMany()
+                        .HasForeignKey("CartId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ufshop.Data.Models.CustomerInfo", "CustomerInfo")
+                        .WithMany()
+                        .HasForeignKey("CustomerInfoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Cart");
+
+                    b.Navigation("CustomerInfo");
+                });
+
             modelBuilder.Entity("ufshop.Data.Models.Shop", b =>
                 {
                     b.HasOne("ufshop.Data.ApplicationUser", "Owner")
@@ -798,15 +833,9 @@ namespace ufshop.Migrations
 
             modelBuilder.Entity("ufshop.Data.Models.ShopOrder", b =>
                 {
-                    b.HasOne("ufshop.Data.Models.Cart", "Cart")
+                    b.HasOne("ufshop.Data.Models.Customer", "Customer")
                         .WithMany()
-                        .HasForeignKey("CartId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ufshop.Data.Models.CustomerInfo", "CustomerInfo")
-                        .WithMany()
-                        .HasForeignKey("CustomerInfoId")
+                        .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -814,9 +843,7 @@ namespace ufshop.Migrations
                         .WithMany("Orders")
                         .HasForeignKey("ShopId");
 
-                    b.Navigation("Cart");
-
-                    b.Navigation("CustomerInfo");
+                    b.Navigation("Customer");
                 });
 
             modelBuilder.Entity("ufshop.Data.Models.ShopPage", b =>

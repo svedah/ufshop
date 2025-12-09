@@ -34,4 +34,9 @@ static public class Constants
 
 
     static public int BASESHIPPINGPRICE = 150; //backup pris om vi inte klarar hämta shop (carteditor)
+
+    static public string UPLOADPATH = Path.DirectorySeparatorChar + "uploads" + Path.DirectorySeparatorChar;
+    static public string WWWUPLOADPATH = "/uploads/";
+
+    static public string LOCALSTORAGESECRET = "adcbb20e-80c1-45d9-99b4-52f7b04ed70d";
 }

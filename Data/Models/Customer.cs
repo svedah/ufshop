@@ -1,10 +1,10 @@
-namespace ufshop.Data.Models;
+// namespace ufshop.Data.Models;
 
-public class Customer
-{
-    public required Guid Id { get; set; }
+// public class Customer
+// {
+//     public required Guid Id { get; set; }
 
-    public required virtual Cart Cart { get; set; }
-    public required virtual CustomerInfo CustomerInfo { get; set; }
-}
+//     public required virtual Cart Cart { get; set; }
+//     public required virtual CustomerInfo CustomerInfo { get; set; }
+// }
 

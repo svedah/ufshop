@@ -59,7 +59,8 @@ public class ManageCreateItemService
             Active = input.Active,
             PrimaryImage = input.PrimaryImage,
             Images = input.Images,
-            Properties = input.Properties
+            Uploadable = input.Uploadable
+            // Properties = input.Properties
         };
 
         Shop shop;
@@ -72,6 +73,29 @@ public class ManageCreateItemService
         beService.DbContext.Shops.Update(shop);
 
         beService.DbContext.SaveChanges();
+    }
+
+    public ShopItem Empty()
+    {
+        return new ShopItem
+        {
+            Id = Guid.Empty,
+            Active = false,
+            Title = string.Empty,
+            Description = string.Empty,
+            ItemsAvailable = 0,
+            Price = 0,
+            Order = 0,
+            PrimaryImage = new ShopImage
+            {
+                Id = Guid.Empty,
+                Created = DateTime.Now,
+                Filename = Constants.EMPTYIMAGEFILENAME,
+                AltText = "Bildbeskrivning"
+            },
+            Images = new HashSet<ShopImage>(),
+            Uploadable = false
+        };
     }
 
 

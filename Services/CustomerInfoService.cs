@@ -54,6 +54,23 @@ public class CustomerInfoService
         return output;        
     }
 
+    public CustomerInfo RemoveWhiteSpace(CustomerInfo customerInfo)
+    {
+        return new CustomerInfo
+        {
+            Id = customerInfo.Id,
+            FirstName = customerInfo.FirstName.Trim(),
+            LastName = customerInfo.LastName.Trim(),
+            StreetName = customerInfo.StreetName.Trim(),
+            StreetNo = customerInfo.StreetNo.Trim(),
+            ZipCode = customerInfo.ZipCode.Trim(),
+            City = customerInfo.City.Trim(),
+            Email = customerInfo.Email.Trim(),
+            Phone = customerInfo.Phone.Trim(),
+            Info = customerInfo.Info.Trim()
+        };
+    }
+
     public async Task SaveAsync(CustomerInfo input)
     {
         var json = JsonSerializer.Serialize(input);
@@ -153,7 +170,20 @@ public class CustomerInfoService
         return true;
     }
 
+    public void Save(CustomerInfo customerInfo)
+    {
+        bool exists = beService.DbContext.CustomerInfos.Where(e => e.Id.Equals(customerInfo.Id)).Any();
 
+        if (exists)
+        {
+            beService.DbContext.CustomerInfos.Update(customerInfo);
+        }
+        else
+        {
+            beService.DbContext.CustomerInfos.Update(customerInfo);
+        }
+        beService.DbContext.SaveChanges();
+    }
 
 
 

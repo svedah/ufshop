@@ -98,6 +98,23 @@ public class CartService
         await SaveCartAsync(cart);
     }
 
+    static public CartItem BuildCartItem(ShopItem input, int amount)//, HashSet<CartItemProperty> cartItemProperties)
+    {
+
+
+        CartItem output = new CartItem
+        {
+            Id = Guid.NewGuid(),
+            Title = input.Title,
+            Price = input.Price,
+            Amount = amount,
+            ShopItem = input,
+            Uploadable = input.Uploadable,
+            Uploads = new HashSet<CartFile>(),
+        };
+        return output;
+    }
+
     public async Task ClearAsync()
     {
         await _jsRuntime.InvokeVoidAsync("localStorage.removeItem", _shopKey);
@@ -115,12 +132,15 @@ public class CartService
         await SaveCartAsync(cart);
     }
 
+
+    //TODO: sign cart to protect from tampering
     private async Task<List<CartItem>> LoadCartAsync()
     {
         // Dictionary<Guid, int> output = new Dictionary<Guid, int>();
         List<CartItem> output = new List<CartItem>();
 
         var json = await _jsRuntime.InvokeAsync<string>("localStorage.getItem", _shopKey);
+        //TODO: decrypt
         if (!string.IsNullOrEmpty(json))
         {
             output = JsonSerializer.Deserialize<List<CartItem>>(json) ?? output;
@@ -132,7 +152,27 @@ public class CartService
     private async Task SaveCartAsync(List<CartItem> input)
     {
         var json = JsonSerializer.Serialize(input);
+        //TODO:encrypt
         await _jsRuntime.InvokeVoidAsync("localStorage.setItem", _shopKey, json);
+    }
+
+    public void Save(Cart cart)
+    {
+        CartItemService cartItemService = new CartItemService(beService);
+        cartItemService.Save(cart.CartItems.ToList());
+
+        bool exists = beService.DbContext.Carts.Where(e => e.Id.Equals(cart.Id)).Any();
+
+        if (exists)
+        {
+            beService.DbContext.Carts.Update(cart);
+        }
+        else
+        {
+            beService.DbContext.Carts.Add(cart);
+        }
+        
+        beService.DbContext.SaveChanges();
     }
 
 }

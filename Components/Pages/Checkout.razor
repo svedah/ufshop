@@ -39,14 +39,24 @@
 
     private async Task DoCheckout()
     {
-        CartService cartService = new CartService(beService);
-        List<CartItem> cart = await cartService.GetCartContent();
-        CustomerInfo address = await customerInfoService.LoadAsync();
-
-
-        while(true)
+        if (cartValid && customerInfoValid)
         {
-            ;
+            CartService cartService = new CartService(beService);
+            List<CartItem> cart = await cartService.GetCartContent();
+            CustomerInfo customerInfo = await customerInfoService.LoadAsync();
+
+            OrderService orderService = new OrderService(beService);
+
+            if (orderService.MakeOrder(cart, customerInfo))
+            {
+                //stored OK, navigate to payment page
+            }
+            else
+            {
+                //sum thin won
+            }
+
+            
         }
     }
 }

@@ -11,14 +11,14 @@ namespace ufshop.Data
         // public DbSet<ApplicationUser> Carts { get; set; }
         public DbSet<Cart> Carts { get; set; }
         public DbSet<CartItem> CartItems { get; set; }
-        public DbSet<Customer> Customer { get; set; }
+        // public DbSet<Customer> Customer { get; set; }
         public DbSet<CustomerInfo> CustomerInfos { get; set; }
         public DbSet<Shop> Shops { get; set; }
         public DbSet<ShopContactInfo> ShopContactInfos { get; set; }
         public DbSet<ShopImage> ShopImages { get; set; }
         public DbSet<ShopItem> ShopItems { get; set; }
-        public DbSet<ShopItemProperty> ShopItemProperties { get; set; }
-        public DbSet<ShopItemPropertyOption> ShopItemPropertyOptions { get; set; }
+        // public DbSet<ShopItemProperty> ShopItemProperties { get; set; }
+        // public DbSet<ShopItemPropertyOption> ShopItemPropertyOptions { get; set; }
         public DbSet<ShopOrder> ShopOrders { get; set; }
         public DbSet<ShopPage> ShopPages { get; set; }
         public DbSet<ShopPageFragment> ShopPageFragments { get; set; }

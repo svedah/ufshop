@@ -19,9 +19,12 @@
     public readonly string FormPrimaryImageId = Guid.NewGuid().ToString();
     public readonly string FormImagesId = Guid.NewGuid().ToString();
     public readonly string FormActiveId = Guid.NewGuid().ToString();
+    public readonly string FormUploadableId = Guid.NewGuid().ToString();
 
 
-    ShopItem newShopItem = new ShopItem
+    ShopItem newShopItem { get; set; }
+
+    @* ShopItem newShopItem = new ShopItem
     {
         Id = Guid.Empty,
         Active = false,
@@ -38,13 +41,14 @@
             AltText = "BildBeskrivning"
         },
         Images = new HashSet<ShopImage>(),
-        Properties = new HashSet<ShopItemProperty>()
-    };
+        Uploadable = false
+    }; *@
 
     public ManageCreateItem(BeService srv)
     {
         beService = srv;
         Service = new ManageCreateItemService(srv);
+        newShopItem = Service.Empty();
     }
 
     private void HandleSelectedPrimaryImage(string value)
@@ -94,6 +98,7 @@
             return Service.CanCreateNew(newShopItem);
         }
     }
+
 }
 
 <div class="row">
@@ -220,11 +225,12 @@
     </div>
 </div>
 
-@* <div class="row">
+<div class="row">
     <div class="col">
-        <label class="col-form-label" for="@FormActiveId">Publicera</label>
+        <CheckboxInput id="FormUploadableId" Label="Tillåter uppladdningar från kund" @bind-Value="@newShopItem.Uploadable" />
     </div>
-</div> *@
+</div>
+
 <div class="row">
     <div class="col">
         <CheckboxInput id="FormActiveId" Label="Publicera" @bind-Value="@newShopItem.Active" />
