@@ -15,26 +15,28 @@ public class OrderService
         beService = srv;
     }
 
-    public bool MakeOrder(List<CartItem> cartItems, CustomerInfo customerInfo)
+    public async Task<bool> MakeOrderAsync(List<CartItem> cartItems, CustomerInfo customerInfo)
     {
         //spara alla cartItems
         CartItemService cartItemService = new CartItemService(beService);
-        cartItemService.Save(cartItems);
+        await cartItemService.SaveAsync(cartItems);
 
+        //skapa och spara cart
         Cart cart = new Cart
         {
             Id = Guid.NewGuid(),
             CartItems = cartItems.ToHashSet()
         };
-
-        //spara cart
         CartService cartService = new CartService(beService);
-        cartService.Save(cart);
+        await cartService.SaveAsync(cart);
+
 
         //spara customer
         CustomerInfoService customerInfoService = new CustomerInfoService(beService);
-        customerInfoService.Save(customerInfo);
+        await customerInfoService.SaveDBAsync(customerInfo);
 
+
+        //skapa och spara shopOrder
         ShopOrder shopOrder = new ShopOrder
         {
             Id = Guid.NewGuid(),
@@ -43,20 +45,11 @@ public class OrderService
             CustomerInfo = customerInfo,
             Status = ShopOrderStatus.Unpaid,
         };
-
-        //spara shopOrder
         ShopOrderService shopOrderService = new ShopOrderService(beService);
-        shopOrderService.Save(shopOrder);
+        await shopOrderService.SaveAsync(shopOrder);
 
         return true;
 
-
-
-
-
-
-        
-        return false;        
     }
 
 

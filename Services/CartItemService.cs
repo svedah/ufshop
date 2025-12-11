@@ -34,12 +34,61 @@ public class CartItemService
         beService.DbContext.SaveChanges();
     }
 
+    public async Task SaveAsync(CartItem item)
+    {
+        
+        bool exists = beService.DbContext.CartItems.Where(e => e.Id.Equals(item.Id)).Any();
+
+        if (!exists)
+        {
+            beService.DbContext.CartItems.Add(item);
+        }
+        else
+        {
+            beService.DbContext.CartItems.Update(item);
+        }
+        await beService.DbContext.SaveChangesAsync();
+    }
+
     public void Save(List<CartItem> items)
     {
         foreach(CartItem item in items)
         {
             Save(item);
         }
+    }
+
+    public async Task SaveAsync(List<CartItem> items)
+    {
+
+
+        foreach(CartItem item in items)
+        {
+            //fetch item.ShopItem from DB to avoid tracking issues
+            Guid shopItemId = item.ShopItem.Id;
+            item.ShopItem = beService.DbContext.ShopItems.Where(e => e.Id.Equals(shopItemId)).First();
+
+            // await SaveAsync(item);
+            bool exists = beService.DbContext.CartItems.Where(e => e.Id.Equals(item.Id)).Any();
+
+            if (!exists)
+            {
+                try
+                {
+                    await beService.DbContext.CartItems.AddAsync(item);
+                }
+                catch(Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    throw;
+                }
+            }
+            else
+            {
+                beService.DbContext.CartItems.Update(item);
+            }
+        }
+        await beService.DbContext.SaveChangesAsync();
     }
 
 

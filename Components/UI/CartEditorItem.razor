@@ -22,7 +22,10 @@
         if (firstRender)
         {
             CartItem cartItem = await cartService.GetCartContentItem(Id);
-            Item = cartItem;
+            if (cartItem is not null)
+            {
+                Item = cartItem;
+            }
         }
         StateHasChanged();
     }

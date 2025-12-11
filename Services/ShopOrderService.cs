@@ -30,4 +30,21 @@ public class ShopOrderService
         
         beService.DbContext.SaveChanges();
     }
+
+    public async Task SaveAsync(ShopOrder input)
+    {
+        bool exists = beService.DbContext.ShopOrders.Where(e => e.Id.Equals(input.Id)).Any();
+
+        if (exists)
+        {
+            beService.DbContext.ShopOrders.Update(input);
+        }
+        else
+        {
+            beService.DbContext.ShopOrders.Add(input);
+        }
+        
+        await beService.DbContext.SaveChangesAsync();
+    }
+
 }

@@ -1,4 +1,5 @@
 @page "/checkout"
+@using Microsoft.AspNetCore.SignalR
 @using ufshop.Services
 @using ufshop.Data.Models
 @rendermode InteractiveServer
@@ -37,6 +38,8 @@
         await beService.JsRuntime.InvokeVoidAsync("history.back");
     }
 
+    private bool checkoutSuccess { get; set; } = false;
+
     private async Task DoCheckout()
     {
         if (cartValid && customerInfoValid)
@@ -47,9 +50,12 @@
 
             OrderService orderService = new OrderService(beService);
 
-            if (orderService.MakeOrder(cart, customerInfo))
+            bool orderResult = await orderService.MakeOrderAsync(cart, customerInfo);
+
+            if (orderResult)
             {
                 //stored OK, navigate to payment page
+                checkoutSuccess = true;
             }
             else
             {
@@ -64,6 +70,8 @@
 <HeadContent>
     @* <meta name="headcontent" description="lol yep!" /> *@
 </HeadContent>
+
+<p>@checkoutSuccess</p>
 
 <Button Color="ButtonColor.Primary" @onclick="NavigateBack">
     <Icon Name="IconName.ArrowLeft" />
@@ -86,7 +94,7 @@
 </div>
 @if (cartValid && customerInfoValid)
 {
-    <Button Color="ButtonColor.Primary" @onclick="DoCheckout">Genomför beställning</Button>
+    <Button Color="ButtonColor.Primary" @onclick="() => DoCheckout()">Genomför beställning</Button>
 }
 else
 {

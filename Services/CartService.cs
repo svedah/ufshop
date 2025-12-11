@@ -158,8 +158,8 @@ public class CartService
 
     public void Save(Cart cart)
     {
-        CartItemService cartItemService = new CartItemService(beService);
-        cartItemService.Save(cart.CartItems.ToList());
+        // CartItemService cartItemService = new CartItemService(beService);
+        // cartItemService.Save(cart.CartItems.ToList());
 
         bool exists = beService.DbContext.Carts.Where(e => e.Id.Equals(cart.Id)).Any();
 
@@ -169,10 +169,36 @@ public class CartService
         }
         else
         {
-            beService.DbContext.Carts.Add(cart);
+            try
+            {
+                beService.DbContext.Carts.Add(cart);
+            }
+            catch(Exception ex)
+            {
+                ;
+            }
         }
         
         beService.DbContext.SaveChanges();
+    }
+
+    public async Task SaveAsync(Cart cart)
+    {
+        CartItemService cartItemService = new CartItemService(beService);
+        await cartItemService.SaveAsync(cart.CartItems.ToList());
+
+        bool exists = beService.DbContext.Carts.Where(e => e.Id.Equals(cart.Id)).Any();
+
+        if (exists)
+        {
+            beService.DbContext.Carts.Update(cart);
+        }
+        else
+        {
+            await beService.DbContext.Carts.AddAsync(cart);
+        }
+        
+        await beService.DbContext.SaveChangesAsync();
     }
 
 }

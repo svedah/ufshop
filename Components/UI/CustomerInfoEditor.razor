@@ -52,7 +52,7 @@
         bool result = Service.Valid(Address);
         if (result)
         {
-            await Service.SaveAsync(Address);
+            await Service.SaveLSAsync(Address);
         }
         await OnValidityChanged.InvokeAsync(result);
     }

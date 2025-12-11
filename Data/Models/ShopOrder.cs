@@ -7,7 +7,6 @@ public class ShopOrder
     public required virtual Cart Cart { get; set; }
     public required virtual CustomerInfo CustomerInfo { get; set; }
     public required virtual ShopOrderStatus Status { get; set; }
-
 }
 
 public enum ShopOrderStatus
@@ -15,5 +14,5 @@ public enum ShopOrderStatus
     Unpaid = 0,
     Paid = 1,
     Shipped = 2,
-    Done = 3
+    Rejected = 3,
 }

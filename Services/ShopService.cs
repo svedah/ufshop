@@ -53,7 +53,7 @@ public class ShopService
                         .Include(e => e.Orders).ThenInclude(e => e.Cart)
                         .Include(e => e.Orders).ThenInclude(e => e.Cart).ThenInclude(e => e.CartItems)
                         .Include(e => e.Orders).ThenInclude(e => e.CustomerInfo)
-                        .Include(e => e.Orders).ThenInclude(e => e.Status)
+                        // .Include(e => e.Orders).ThenInclude(e => e.Status)
 
                         .Include(e => e.Pages)
                         .Include(e => e.Pages).ThenInclude(e => e.ShopPageFragments)

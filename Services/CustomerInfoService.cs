@@ -71,7 +71,7 @@ public class CustomerInfoService
         };
     }
 
-    public async Task SaveAsync(CustomerInfo input)
+    public async Task SaveLSAsync(CustomerInfo input)
     {
         var json = JsonSerializer.Serialize(input);
         await _jsRuntime.InvokeVoidAsync("localStorage.setItem", _localStorageKey, json);
@@ -170,7 +170,7 @@ public class CustomerInfoService
         return true;
     }
 
-    public void Save(CustomerInfo customerInfo)
+    public async Task SaveDBAsync(CustomerInfo customerInfo)
     {
         bool exists = beService.DbContext.CustomerInfos.Where(e => e.Id.Equals(customerInfo.Id)).Any();
 
@@ -180,7 +180,7 @@ public class CustomerInfoService
         }
         else
         {
-            beService.DbContext.CustomerInfos.Update(customerInfo);
+            await beService.DbContext.CustomerInfos.AddAsync(customerInfo);
         }
         beService.DbContext.SaveChanges();
     }
