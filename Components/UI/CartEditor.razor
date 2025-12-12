@@ -56,7 +56,7 @@
     
     public async Task ValidityChanged()
     {
-        bool result = true;//cartService.IsValid();
+        bool result = cartService.IsValid(CartContent);
         await OnValidityChanged.InvokeAsync(result);
     }
 

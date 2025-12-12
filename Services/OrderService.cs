@@ -33,6 +33,9 @@ public class OrderService
 
         //spara customer
         CustomerInfoService customerInfoService = new CustomerInfoService(beService);
+        //every order might have unique info's but same addressee
+        //force new id, dont reuse customerinfo for many orders
+        customerInfo.Id = Guid.NewGuid();
         await customerInfoService.SaveDBAsync(customerInfo);
 
 

@@ -100,8 +100,6 @@ public class CartService
 
     static public CartItem BuildCartItem(ShopItem input, int amount)//, HashSet<CartItemProperty> cartItemProperties)
     {
-
-
         CartItem output = new CartItem
         {
             Id = Guid.NewGuid(),
@@ -199,6 +197,34 @@ public class CartService
         }
         
         await beService.DbContext.SaveChangesAsync();
+    }
+
+    public bool IsValid(List<CartItem> input)
+    {
+        bool numItemsIsOk = true;
+        bool countIsOk = input.Count > 0;
+        bool allItemsExist = true;
+
+        // causes constant db read thrashing... why?
+        // foreach(CartItem cartItem in input)
+        // {
+        //     bool shopItemExists = beService.DbContext.ShopItems.Where(e=>e.Id.Equals(cartItem.ShopItem.Id)).Any();
+
+        //     if (shopItemExists)
+        //     {
+        //         ShopItem shopItem = beService.DbContext.ShopItems.Where(e=>e.Id.Equals(cartItem.ShopItem.Id)).First();
+        //         if (shopItem.ItemsAvailable < cartItem.Amount)
+        //         {
+        //             numItemsIsOk = false;
+        //         }
+        //     }
+        //     else
+        //     {
+        //         allItemsExist = false;
+        //     }
+        // }
+
+        return numItemsIsOk && countIsOk && allItemsExist;
     }
 
 }

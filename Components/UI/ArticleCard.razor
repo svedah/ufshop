@@ -3,7 +3,7 @@
 @rendermode InteractiveServer
 @code {
     [Parameter]
-    public ShopItem Item { get; set; }
+    public ShopItem? Item { get; set; }
 
     public readonly BeService beService;
 
@@ -32,23 +32,31 @@
  TODO: ersätt Image Med Carousel 
  https://demos.blazorbootstrap.com/carousel
 *@
-@{ string articleUrl = "/article/" + Item.Id.ToString(); }
-<Card Class="mb-4" Style="max-width:12rem;">
-    <a href=@articleUrl style="text-decoration: inherit;color:inherit;">
-        <Image Src="@ImageUrl" Alt="@Item.PrimaryImage.AltText" />
-        <CardBody>
-            <CardTitle>
-                @Item.Title
-            </CardTitle>
-            <CardText>
-                @Item.Description
-            </CardText>
-        </CardBody>
-    </a>
-        <CardFooter>
-            Pris: @Item.Price
-            @* <Button Color="ButtonColor.Primary" @onclick="AddToBasket">Lägg i varukorg</Button> *@
-            Antal kvar: @Item.ItemsAvailable
-        </CardFooter>
-        <p>hej</p>
-</Card>
+
+@if (Item is null)
+{
+    <Spinner />
+}
+else
+{
+    string articleUrl = "/article/" + Item.Id.ToString();
+    
+    <Card Class="mb-4" Style="max-width:12rem;">
+        <a href=@articleUrl style="text-decoration: inherit;color:inherit;">
+            <Image Src="@ImageUrl" Alt="@Item.PrimaryImage.AltText" />
+            <CardBody>
+                <CardTitle>
+                    @Item.Title
+                </CardTitle>
+                <CardText>
+                    @Item.Description
+                </CardText>
+            </CardBody>
+        </a>
+            <CardFooter>
+                Pris: @Item.Price
+                @* <Button Color="ButtonColor.Primary" @onclick="AddToBasket">Lägg i varukorg</Button> *@
+                Antal kvar: @Item.ItemsAvailable
+            </CardFooter>
+    </Card>
+}

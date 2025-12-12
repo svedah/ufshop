@@ -42,7 +42,7 @@
         {
             Address = await Service.LoadAsync();
         }
-        TextboxChanged();//just in case address is valid from the get go
+        await TextboxChanged();//just in case address is valid from the get go
         StateHasChanged();
     }
 

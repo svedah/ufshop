@@ -50,12 +50,22 @@
 
             OrderService orderService = new OrderService(beService);
 
+
+            //should return orderResult GUID
             bool orderResult = await orderService.MakeOrderAsync(cart, customerInfo);
 
             if (orderResult)
             {
                 //stored OK, navigate to payment page
                 checkoutSuccess = true;
+
+                //TODO: clean cart from localStorage
+                await cartService.ClearAsync();
+
+                //do NOT clean customerinfo in localStorage
+
+                //TODO: navigate to payment page with shoporder id
+
             }
             else
             {

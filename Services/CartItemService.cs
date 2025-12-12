@@ -69,24 +69,28 @@ public class CartItemService
             item.ShopItem = beService.DbContext.ShopItems.Where(e => e.Id.Equals(shopItemId)).First();
 
             // await SaveAsync(item);
-            bool exists = beService.DbContext.CartItems.Where(e => e.Id.Equals(item.Id)).Any();
+            // bool exists = beService.DbContext.CartItems.Where(e => e.Id.Equals(item.Id)).Any();
 
-            if (!exists)
+            //BUG: reuse of cartitems might happen if same user places two separate orders
+            //create new id
+            item.Id = Guid.NewGuid();
+
+            // if (!exists)
+            // {
+            try
             {
-                try
-                {
-                    await beService.DbContext.CartItems.AddAsync(item);
-                }
-                catch(Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                    throw;
-                }
+                await beService.DbContext.CartItems.AddAsync(item);
             }
-            else
+            catch(Exception ex)
             {
-                beService.DbContext.CartItems.Update(item);
+                Console.WriteLine(ex.Message);
+                throw;
             }
+            // }
+            // else
+            // {
+            //     beService.DbContext.CartItems.Update(item);
+            // }
         }
         await beService.DbContext.SaveChangesAsync();
     }

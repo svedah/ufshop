@@ -1,4 +1,5 @@
 ﻿@page "/article/{id:guid}"
+@using Microsoft.EntityFrameworkCore
 @using ufshop.Data.Models
 @using ufshop.Services
 @using ufshop.Shared
@@ -90,7 +91,7 @@
         {
             if (BeService.DbContext.ShopItems.Where(e => e.Id.Equals(id)).Any())
             {
-                shopItem = BeService.DbContext.ShopItems.Where(e => e.Id.Equals(id)).First();
+                shopItem = await BeService.DbContext.ShopItems.Where(e => e.Id.Equals(id)).FirstAsync();
                 BuyNumItems = Math.Min(shopItem.ItemsAvailable, BuyNumItems);
                 BuyNumItems = Math.Max(0, BuyNumItems);
             }

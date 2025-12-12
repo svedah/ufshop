@@ -33,23 +33,23 @@
     private async Task DecrementAmount()
     {
         Item.Amount = Math.Max(1, Item.Amount - 1);
-        cartService.AddOrUpdateAsync(Item);
-        OnChange.InvokeAsync();
+        await cartService.AddOrUpdateAsync(Item);
+        await OnChange.InvokeAsync();
         await InvokeAsync(StateHasChanged);
     }
 
     private async Task IncrementAmount()
     {
         Item.Amount = Math.Min(Item.ShopItem.ItemsAvailable, Item.Amount + 1);
-        cartService.AddOrUpdateAsync(Item);
-        OnChange.InvokeAsync();
+        await cartService.AddOrUpdateAsync(Item);
+        await OnChange.InvokeAsync();
         await InvokeAsync(StateHasChanged);
     }
 
     private async Task DeleteItem()
     {
         await cartService.DeleteAsync(Item);
-        OnChange.InvokeAsync();
+        await OnChange.InvokeAsync();
         await InvokeAsync(StateHasChanged);
     }
 
