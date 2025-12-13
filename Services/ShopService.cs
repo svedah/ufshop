@@ -81,4 +81,16 @@ public class ShopService
         shop = null!;
         return false;
     }
+
+    public void Add(ShopOrder input)
+    {
+        //TODO
+        Shop shop;
+        if (GetShop(beService.DomainPrefix, out shop))
+        {
+            shop.Orders.Add(input);
+            beService.DbContext.Shops.Update(shop);
+            beService.DbContext.SaveChanges();
+        } 
+    }
 }

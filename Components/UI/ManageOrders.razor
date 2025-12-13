@@ -1,0 +1,73 @@
+@using System.Collections.Immutable
+@using System.Reflection.Metadata
+@using ufshop.Data.Models
+@using ufshop.Services
+@using ufshop.Shared
+@namespace ufshop.Components.UI
+@rendermode InteractiveServer
+
+@code {
+
+    private readonly ManageOrdersService Service;
+
+    private IEnumerable<ShopOrder> ShopOrders { get; set; } = new List<ShopOrder>();
+
+    public ManageOrders(BeService srv)
+    {
+        Service = new ManageOrdersService(srv);
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        @* await Reload(); *@
+        ShopOrders = Service.GetAllShopOrders();
+    }
+
+    private async Task Reload()
+    {   
+        ShopOrders = Service.GetAllShopOrders();
+        StateHasChanged();
+    }
+
+}
+<div class="row">
+    <div class="col">
+        <Button Color="ButtonColor.Primary" @onclick="Reload">
+            <Icon Name="IconName.ArrowClockwise" />
+        </Button>
+    </div>
+</div>
+@if (ShopOrders is null)
+{
+    <Spinner />
+}
+else if (ShopOrders.Count() == 0)
+{
+    <p>Inga ordrar registrerade</p>
+}
+else
+{
+
+    <div class="row">
+        lol
+    </div>
+}
+
+
+
+@* 
+
+    <Dropdown Color="DropdownColor.Secondary" Size="DropdownSize.Large">
+        <DropdownToggleButton>Large button</DropdownToggleButton>
+        <DropdownMenu>
+            <DropdownItem To="#" Type="DropdownItemType.Link">Action</DropdownItem>
+            <DropdownItem To="#" Type="DropdownItemType.Link">Another action</DropdownItem>
+            <DropdownItem To="#" Type="DropdownItemType.Link">Something else here</DropdownItem>
+            <p>Hej</p>
+            <p>Då</p>
+            <code>
+                rad1
+                rad2
+            </code>
+        </DropdownMenu>
+    </Dropdown> *@

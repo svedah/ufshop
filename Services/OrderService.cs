@@ -18,8 +18,8 @@ public class OrderService
     public async Task<bool> MakeOrderAsync(List<CartItem> cartItems, CustomerInfo customerInfo)
     {
         //spara alla cartItems
-        CartItemService cartItemService = new CartItemService(beService);
-        await cartItemService.SaveAsync(cartItems);
+        // CartItemService cartItemService = new CartItemService(beService);
+        // await cartItemService.SaveAsync(cartItems);
 
         //skapa och spara cart
         Cart cart = new Cart
@@ -47,9 +47,16 @@ public class OrderService
             Cart = cart,
             CustomerInfo = customerInfo,
             Status = ShopOrderStatus.Unpaid,
+            
         };
         ShopOrderService shopOrderService = new ShopOrderService(beService);
         await shopOrderService.SaveAsync(shopOrder);
+
+        //TODO: add shoporder to shop
+        ShopService shopService = new ShopService(beService);
+        shopService.Add(shopOrder);
+
+
 
         return true;
 
