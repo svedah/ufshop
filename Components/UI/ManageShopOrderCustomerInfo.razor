@@ -1,0 +1,53 @@
+@using System.Collections.Immutable
+@using System.Reflection.Metadata
+@using ufshop.Components.Account.Pages
+@using ufshop.Data.Models
+@using ufshop.Services
+@using ufshop.Shared
+@namespace ufshop.Components.UI
+@rendermode InteractiveServer
+
+@code {
+
+    [Parameter]
+    public Guid Id { get; set; }
+
+    [Parameter]
+    public CustomerInfo CustomerInfo { get; set; }
+
+    public ManageShopOrderCustomerInfo(BeService srv)
+    {
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+    }
+
+}
+@if (CustomerInfo is null)
+{
+    <Spinner />
+}
+else
+{
+    <address>
+        <div>
+            @CustomerInfo.FirstName @CustomerInfo.LastName
+        </div>
+        <div>
+            @CustomerInfo.StreetName
+        </div>
+        <div>
+            @CustomerInfo.ZipCode @CustomerInfo.City
+        </div>
+        <div>
+            @{string phonelink = "tel:"+@CustomerInfo.Phone;}
+            tel: <a href="@phonelink" target="_blank">@CustomerInfo.Phone</a>
+        </div>
+        <div>
+            @{string maillink = "mailto:"+@CustomerInfo.Email;}
+            e-post: <a href="@maillink" target="_blank">@CustomerInfo.Email</a>
+        </div>
+    </address>
+
+}

@@ -227,4 +227,13 @@ public class CartService
         return numItemsIsOk && countIsOk && allItemsExist;
     }
 
+    public Cart Empty()
+    {
+        return new Cart
+        {
+            Id = Guid.Empty,
+            CartItems = new HashSet<CartItem>()
+        };
+    }
+
 }

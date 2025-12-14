@@ -1,0 +1,35 @@
+@using System.Collections.Immutable
+@using System.Reflection.Metadata
+@using ufshop.Components.Account.Pages
+@using ufshop.Data.Models
+@using ufshop.Services
+@using ufshop.Shared
+@namespace ufshop.Components.UI
+@rendermode InteractiveServer
+
+@code {
+
+    [Parameter]
+    public Guid Id { get; set; }
+
+    [Parameter]
+    public ShopOrderStatus? Status { get; set; }
+
+    public ManageShopOrderStatus(BeService srv)
+    {
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+    }
+
+}
+@if (Status is null)
+{
+    <Spinner />
+}
+else
+{
+    <p>@Id</p>
+    <p>@Status</p>
+}

@@ -1,5 +1,6 @@
 @using System.Collections.Immutable
 @using System.Reflection.Metadata
+@using SQLitePCL
 @using ufshop.Data.Models
 @using ufshop.Services
 @using ufshop.Shared
@@ -8,13 +9,15 @@
 
 @code {
 
-    private readonly ManageOrdersService Service;
+    private readonly ManageShopOrdersService Service;
 
     private IEnumerable<ShopOrder> ShopOrders { get; set; } = new List<ShopOrder>();
+    private int SelectedFilter { get; set; }
 
-    public ManageOrders(BeService srv)
+    public ManageShopOrders(BeService srv)
     {
-        Service = new ManageOrdersService(srv);
+        Service = new ManageShopOrdersService(srv);
+        SelectedFilter = 5;
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -28,6 +31,8 @@
         ShopOrders = Service.GetAllShopOrders();
         StateHasChanged();
     }
+
+    private bool CountZeroReload = false;
 
 }
 <div class="row">
@@ -43,14 +48,37 @@
 }
 else if (ShopOrders.Count() == 0)
 {
+    if (!CountZeroReload)
+    {//ugly hack
+        CountZeroReload = true;
+        Reload().Wait();
+    }
     <p>Inga ordrar registrerade</p>
 }
 else
 {
+    <h2>Ordrar</h2>
+    
+    <select class="form-select">
+        <option selected disabled>Visa</option>
+        <option value="1">Obetalda</option>
+        <option value="2">Betalda</option>
+        <option value="3">Skickade</option>
+        <option value="4">Avvisade</option>
+        <option value="5">Alla</option>
+    </select>
 
-    <div class="row">
-        lol
-    </div>
+    <Accordion>
+    @foreach(ShopOrder shopOrder in ShopOrders)
+    {
+        string accordionTitle = shopOrder.Created + " - " + shopOrder.CustomerInfo.FirstName + " " + shopOrder.CustomerInfo.LastName + " " + shopOrder.CustomerInfo.City;
+        <AccordionItem Title="@accordionTitle">
+            <Content>
+                <ManageShopOrder Id="@shopOrder.Id" ShopOrder="@shopOrder" />
+            </Content>
+        </AccordionItem>
+    }
+    </Accordion>
 }
 
 

@@ -1,0 +1,66 @@
+@using System.Collections.Immutable
+@using System.Reflection.Metadata
+@using ufshop.Components.Account.Pages
+@using ufshop.Data.Models
+@using ufshop.Services
+@using ufshop.Shared
+@namespace ufshop.Components.UI
+@rendermode InteractiveServer
+
+@code {
+
+    private readonly ManageShopOrderService Service;
+
+    [Parameter]
+    public Guid Id { get; set; }
+
+    [Parameter]
+    public ShopOrder ShopOrder { get; set; }
+
+    public ManageShopOrder(BeService srv)
+    {
+        Service = new ManageShopOrderService(srv);
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        @* await Reload(); *@
+        
+        @* ShopOrder = Service.GetShopOrder(Id); *@
+    }
+
+    private async Task Reload()
+    {   
+        @* ShopOrder = Service.GetShopOrder(Id); *@
+        StateHasChanged();
+    }
+
+
+}
+@if (ShopOrder is null)
+{
+    <Spinner />
+}
+else
+{
+    <Dropdown Color="DropdownColor.Secondary">
+        <DropdownToggleButton>Adress</DropdownToggleButton>
+        <DropdownMenu>
+            <ManageShopOrderCustomerInfo Id="@ShopOrder.CustomerInfo.Id" CustomerInfo="@ShopOrder.CustomerInfo" />
+        </DropdownMenu>
+    </Dropdown>
+
+    <Dropdown Color="DropdownColor.Secondary">
+        <DropdownToggleButton>Kundkorg</DropdownToggleButton>
+        <DropdownMenu>
+            <ManageShopOrderCart Id="@ShopOrder.Cart.Id" Cart="@ShopOrder.Cart" />
+        </DropdownMenu>
+    </Dropdown>
+
+    <Dropdown Color="DropdownColor.Secondary">
+        <DropdownToggleButton>Status</DropdownToggleButton>
+        <DropdownMenu>
+            <ManageShopOrderStatus Id="@ShopOrder.Id" Status="@ShopOrder.Status" />
+        </DropdownMenu>
+    </Dropdown>
+}

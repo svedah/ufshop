@@ -10,11 +10,11 @@ using ufshop.Shared;
 
 namespace ufshop.Services;
 
-public class ManageOrdersService
+public class ManageShopOrdersService
 {
     public readonly BeService beService;
 
-    public ManageOrdersService(BeService srv)
+    public ManageShopOrdersService(BeService srv)
     {
         beService = srv;
     }
