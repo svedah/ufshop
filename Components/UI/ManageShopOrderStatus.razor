@@ -1,5 +1,6 @@
 @using System.Collections.Immutable
 @using System.Reflection.Metadata
+@using Microsoft.EntityFrameworkCore.Query
 @using ufshop.Components.Account.Pages
 @using ufshop.Data.Models
 @using ufshop.Services
@@ -9,14 +10,24 @@
 
 @code {
 
+    private readonly ShopOrderStatusService Service;
+
     [Parameter]
     public Guid Id { get; set; }
 
     [Parameter]
     public ShopOrderStatus? Status { get; set; }
 
+    private readonly Dictionary<int, string> Translation = new Dictionary<int, string>{
+        {0, "Ej betald"},
+        {1, "Betald"},
+        {2, "Levererad"},
+        {3, "Avvisad"},
+    };
+
     public ManageShopOrderStatus(BeService srv)
     {
+        Service = new ShopOrderStatusService(srv);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -30,6 +41,15 @@
 }
 else
 {
-    <p>@Id</p>
-    <p>@Status</p>
+    string translated = Translation[(int)(Status.Value)];
+
+    @* <p>@Id</p> *@
+    <p>Status: @translated</p>
+    <select class="form-select">
+        <option selected disabled>Ändra status till</option>
+        <option value="0">Ej betald</option>
+        <option value="1">Betald</option>
+        <option value="2">Levererad</option>
+        <option value="3">Avvisad</option>
+    </select>
 }

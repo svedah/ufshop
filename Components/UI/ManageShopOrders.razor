@@ -17,7 +17,7 @@
     public ManageShopOrders(BeService srv)
     {
         Service = new ManageShopOrdersService(srv);
-        SelectedFilter = 5;
+        SelectedFilter = 4;
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -28,11 +28,23 @@
 
     private async Task Reload()
     {   
-        ShopOrders = Service.GetAllShopOrders();
+        @* ShopOrders = Service.GetAllShopOrders(); *@
+        ShopOrders = Service.GetFilteredShopOrders(SelectedFilter);
         StateHasChanged();
     }
 
     private bool CountZeroReload = false;
+
+    private void SelectFilterChange(ChangeEventArgs e)
+    {
+        int selectedFilter = -1;
+        if (int.TryParse(e.Value.ToString(), out selectedFilter))
+        {
+            SelectedFilter = selectedFilter;
+            //TODO: refresh ShopOrders
+            ShopOrders = Service.GetFilteredShopOrders(selectedFilter);
+        }
+    }
 
 }
 <div class="row">
@@ -46,27 +58,19 @@
 {
     <Spinner />
 }
-else if (ShopOrders.Count() == 0)
-{
-    if (!CountZeroReload)
-    {//ugly hack
-        CountZeroReload = true;
-        Reload().Wait();
-    }
-    <p>Inga ordrar registrerade</p>
-}
 else
 {
     <h2>Ordrar</h2>
     
-    <select class="form-select">
+    <select class="form-select" @onchange="SelectFilterChange">
         <option selected disabled>Visa</option>
-        <option value="1">Obetalda</option>
-        <option value="2">Betalda</option>
-        <option value="3">Skickade</option>
-        <option value="4">Avvisade</option>
-        <option value="5">Alla</option>
+        <option value="1">Betalda</option>
+        <option value="2">Skickade</option>
+        <option value="3">Avvisade</option>
+        <option value="4">Alla</option>
+        <option value="0">Obetalda</option>
     </select>
+    <hr />
 
     <Accordion>
     @foreach(ShopOrder shopOrder in ShopOrders)
@@ -80,22 +84,3 @@ else
     }
     </Accordion>
 }
-
-
-
-@* 
-
-    <Dropdown Color="DropdownColor.Secondary" Size="DropdownSize.Large">
-        <DropdownToggleButton>Large button</DropdownToggleButton>
-        <DropdownMenu>
-            <DropdownItem To="#" Type="DropdownItemType.Link">Action</DropdownItem>
-            <DropdownItem To="#" Type="DropdownItemType.Link">Another action</DropdownItem>
-            <DropdownItem To="#" Type="DropdownItemType.Link">Something else here</DropdownItem>
-            <p>Hej</p>
-            <p>Då</p>
-            <code>
-                rad1
-                rad2
-            </code>
-        </DropdownMenu>
-    </Dropdown> *@

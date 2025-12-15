@@ -43,12 +43,38 @@
 }
 else
 {
-    <Dropdown Color="DropdownColor.Secondary">
+    <Accordion>
+        <AccordionItem Title="Kontaktinformation">
+            <Content>
+                <ManageShopOrderCustomerInfo Id="@ShopOrder.CustomerInfo.Id" CustomerInfo="@ShopOrder.CustomerInfo" />
+            </Content>
+        </AccordionItem>
+    </Accordion>
+
+    <Accordion>
+        <AccordionItem Title="Beställning">
+            <Content>
+                <ManageShopOrderCart Id="@ShopOrder.Cart.Id" Cart="@ShopOrder.Cart" />
+            </Content>
+        </AccordionItem>
+    </Accordion>
+
+    <Accordion>
+        <AccordionItem Title="Orderstatus">
+            <Content>
+                <ManageShopOrderStatus Id="@ShopOrder.Id" Status="@ShopOrder.Status" />
+            </Content>
+        </AccordionItem>
+    </Accordion>
+
+
+    @* <Dropdown Color="DropdownColor.Secondary">
         <DropdownToggleButton>Adress</DropdownToggleButton>
         <DropdownMenu>
             <ManageShopOrderCustomerInfo Id="@ShopOrder.CustomerInfo.Id" CustomerInfo="@ShopOrder.CustomerInfo" />
         </DropdownMenu>
     </Dropdown>
+
 
     <Dropdown Color="DropdownColor.Secondary">
         <DropdownToggleButton>Kundkorg</DropdownToggleButton>
@@ -62,5 +88,5 @@ else
         <DropdownMenu>
             <ManageShopOrderStatus Id="@ShopOrder.Id" Status="@ShopOrder.Status" />
         </DropdownMenu>
-    </Dropdown>
+    </Dropdown> *@
 }

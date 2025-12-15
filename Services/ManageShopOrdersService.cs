@@ -32,4 +32,35 @@ public class ManageShopOrdersService
         List<ShopOrder> orders = tmp.Orders.OrderBy(e=>e.Created).ToList();
         return orders;
     }
+
+    public IEnumerable<ShopOrder> GetFilteredShopOrders(int filter)
+    {
+        Contract.Assert(filter >= 0 && filter <= 4);
+
+        List<ShopOrder> output = new List<ShopOrder>();
+        var list = GetAllShopOrders();
+        switch(filter)
+        {
+            case 0:
+                output = list.Where(e => e.Status.Equals(ufshop.Data.Models.ShopOrderStatus.Unpaid)).ToList();
+                break;
+            case 1:
+                output = list.Where(e => e.Status.Equals(ufshop.Data.Models.ShopOrderStatus.Paid)).ToList();
+                break;
+            case 2:
+                output = list.Where(e => e.Status.Equals(ufshop.Data.Models.ShopOrderStatus.Shipped)).ToList();
+                break;
+            case 3:
+                output = list.Where(e => e.Status.Equals(ufshop.Data.Models.ShopOrderStatus.Rejected)).ToList();
+                break;
+            case 4:
+                output = list.ToList();
+                break;
+            default:
+                output = list.ToList();
+                break;
+            
+        }
+        return output;
+    }
 }
