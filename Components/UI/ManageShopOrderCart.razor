@@ -9,6 +9,8 @@
 
 @code {
 
+    private readonly ManageShopOrderCartService Service;
+
     [Parameter]
     public Guid Id { get; set; }
 
@@ -17,6 +19,7 @@
 
     public ManageShopOrderCart(BeService srv)
     {
+        Service = new ManageShopOrderCartService(srv);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -30,6 +33,38 @@
 }
 else
 {
-    <p>@Cart.Id</p>
-    <p>@Cart.CartItems.Count</p>
+    <div class="row">
+        <div class="col">Titel</div>
+        <div class="col">Antal</div>
+        <div class="col">Styckpris</div>
+        <div class="col">Pris</div>
+    </div>
+    @foreach(CartItem cartItem in Cart.CartItems)
+    {
+        <div class="row">
+            <div class="col">
+                <p>@cartItem.Title</p>
+            </div>
+            <div class="col">
+                <p>@cartItem.Amount</p>
+            </div>
+            <div class="col">
+                <p>@cartItem.Price</p>
+            </div>
+            <div class="col">
+                @{int pta = cartItem.Amount * cartItem.Price;}
+                <p>@pta</p>
+            </div>
+        </div>
+    }
+    <div class="row">
+        <div class="col">
+            Basfraktpris: @Service.BaseShippingPrice().ToString()
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            Total summa: @Service.TotalSum(Cart)
+        </div>
+    </div>
 }
