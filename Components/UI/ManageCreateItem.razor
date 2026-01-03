@@ -97,8 +97,11 @@
     }
 }
 
+
+<section class="mx-5 my-4">
+
 <div class="row">
-    <div class="col">
+    <div class="col text-center">
         <h1>Skapa vara</h1>
     </div>
 </div>
@@ -128,37 +131,36 @@
     </div>
 </div>
 
-<div class="d-flex flex-row">
+<div class="d-flex justify-content-between">
     <div>
         <div class="row">
-            <div class="col">
+            <div class="col text-center">
                 <label class="col-form-label" for="@FormItemsAvailableId">Antal tillgängliga</label>
             </div>
         </div>    
-        
+
         <div class="row">
             <div class="col">
-                <InputNumber class="form-control" id="@FormItemsAvailableId" @bind-Value="@newShopItem.ItemsAvailable" Min="1" Max="1000" />
+                <InputNumber class="form-control text-center" id="@FormItemsAvailableId" @bind-Value="@newShopItem.ItemsAvailable" Min="1" Max="1000" />
             </div>
         </div>
     </div>
 
     <div>
-    
-    </div>
+        <div class="row">
+            <div class="col text-center">
+                <label class="col-form-label" for="@FormItemsPriceId">Pris</label>
+            </div>
+        </div>
 
-
-    <div class="row">
-        <div class="col">
-            <label class="col-form-label" for="@FormItemsPriceId">Pris</label>
+        <div class="row">
+            <div class="col">
+                <InputNumber class="form-control text-center" id="@FormItemsPriceId" @bind-Value="@newShopItem.Price" Min="0" Max="10000" />
+            </div>
         </div>
     </div>
 
-    <div class="row">
-        <div class="col">
-            <InputNumber class="form-control" id="@FormItemsPriceId" @bind-Value="@newShopItem.Price" Min="0" Max="10000" />
-        </div>
-    </div>
+
 </div>
 
 
@@ -243,3 +245,5 @@
 
 
 <Button Color="ButtonColor.Primary" @onclick="CreateNewItem" Disabled="!CanCreateNewItem">Spara</Button>
+
+</section>

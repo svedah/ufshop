@@ -85,20 +85,26 @@
 
 }
 
+<section class="mx-5 my-4">
+
+
 <div class="row">
-    <div class="col">
+    <div class="col text-center">
         <h1>Bildbibliotek</h1>
     </div>
 </div>
 
-<div class="row">
-    <div class="col">
-        <label for="@FormImagesId">Ladda upp bild</label>
+
+<div class="m-4 fw-semibold">
+    <div class="row">
+        <div class="col">
+            <label for="@FormImagesId">Ladda upp bild</label>
+        </div>
     </div>
-</div>
-<div class="row">
-    <div class="col">
-        <InputFile id="@FormImagesId" OnChange="LoadFile" />
+    <div class="row">
+        <div class="col">
+            <InputFile id="@FormImagesId" OnChange="LoadFile" />
+        </div>
     </div>
 </div>
 
@@ -107,25 +113,28 @@
     string imagename = "/img/" + image.Filename;
     string thumbname = "/img/t/" + image.Filename;
 
-    <div class="row">
+<div class="row m-3">
         <div class="col">
-            <Image Src="@imagename"  Alt="@image.AltText" style="width:100px;height:100px"/>
+            <Image Src="@imagename"  Alt="@image.AltText" style="width:150px;height:150px" class="border border-3 rounded-3 border-secondary"/>
             @* <Image Src="@thumbname"  Alt="@image.AltText" style="box-shadow: 0 0 0.5rem red;"/> *@
         </div>
     @* </div>
     <div class="row"> *@
-        <div class="col">
-            <InputText @bind-Value="@image.AltText"/>
-            <Button Color="ButtonColor.Primary" @onclick="((args) => UpdateImageAltText(args, image.Id))">
-                <Icon Name="IconName.Check" />
-            </Button>
-        </div>
-    @* </div>
-    <div class="row"> *@
-        <div class="col">
-            <Button Color="ButtonColor.Danger" @onclick="((args) => DeleteImage(args, image.Id))">
-                <Icon Name="IconName.Trash" />
-            </Button>
-        </div>
+
+    <div class="col d-flex flex-column justify-content-center">
+            <div class="row">
+                <InputTextArea @bind-Value="@image.AltText" rows="1" class="form-control px-3 py-2"/>
+            </div>  
+            <div class="row my-2">
+                <Button class="col me-1" Color="ButtonColor.Primary" @onclick="((args) => UpdateImageAltText(args, image.Id))">
+                    <Icon Name="IconName.Check" />
+                </Button>
+                <Button class="col ms-1" Color="ButtonColor.Danger" @onclick="((args) => DeleteImage(args, image.Id))">
+                    <Icon Name="IconName.Trash" />
+                </Button>
+            </div>
+        </div>    
     </div>
+
 }
+</section>
