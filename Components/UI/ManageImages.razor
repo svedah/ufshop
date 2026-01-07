@@ -85,56 +85,102 @@
 
 }
 
-<section class="mx-5 my-4">
+<section class="container my-5">
 
-
-<div class="row">
-    <div class="col text-center">
-        <h1>Bildbibliotek</h1>
+    @* Header *@
+    <div class="col text-center ">
+        <h1 class="display-5 fw-bold text-primary">
+            <i class="bi bi-images me-3"></i>Bildbibliotek
+        </h1>
     </div>
-</div>
 
-
-<div class="m-4 fw-semibold">
-    <div class="row">
-        <div class="col">
-            <label for="@FormImagesId">Ladda upp bild</label>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <InputFile id="@FormImagesId" OnChange="LoadFile" />
-        </div>
-    </div>
-</div>
-
-@foreach(ShopImage image in Images.OrderByDescending(e=>e.Created))
-{
-    string imagename = "/img/" + image.Filename;
-    string thumbname = "/img/t/" + image.Filename;
-
-<div class="row m-3">
-        <div class="col">
-            <Image Src="@imagename"  Alt="@image.AltText" style="width:150px;height:150px" class="border border-3 rounded-3 border-secondary"/>
-            @* <Image Src="@thumbname"  Alt="@image.AltText" style="box-shadow: 0 0 0.5rem red;"/> *@
-        </div>
-    @* </div>
-    <div class="row"> *@
-
-    <div class="col d-flex flex-column justify-content-center">
-            <div class="row">
-                <InputTextArea @bind-Value="@image.AltText" rows="1" class="form-control px-3 py-2"/>
-            </div>  
-            <div class="row my-2">
-                <Button class="col me-1" Color="ButtonColor.Primary" @onclick="((args) => UpdateImageAltText(args, image.Id))">
-                    <Icon Name="IconName.Check" />
-                </Button>
-                <Button class="col ms-1" Color="ButtonColor.Danger" @onclick="((args) => DeleteImage(args, image.Id))">
-                    <Icon Name="IconName.Trash" />
-                </Button>
+    @* Ladda upp bild *@
+    <div class="card shadow-sm border-0 mb-5">
+        <div class="card-body p-4 px-5">
+            <div class=" mb-3 mb-md-0">
+                <label for="@FormImagesId" class="form-label fw-semibold">
+                    <i class="bi bi-cloud-upload me-2"></i>Ladda upp ny bild
+                </label>
+                <InputFile id="@FormImagesId" OnChange="LoadFile" class="form-control form-control-lg"/>
             </div>
-        </div>    
+        </div>
     </div>
 
-}
+    @* Image Grid *@
+    <div class="row g-4">
+        @foreach(ShopImage image in Images.OrderByDescending(e=>e.Created))
+        {
+            string imagename = "/img/" + image.Filename;
+            string thumbname = "/img/t/" + image.Filename;
+
+        <div class="col-12 col-md-6 col-lg-4 ">
+            <div class="card h-100 shadow-sm border-0 image-card">
+                
+                @* Image Container *@
+                <div class="position-relative overflow-hidden" style="height: 250px;">
+
+                    <Image Src="@imagename" Alt="@image.AltText" 
+                               class="w-100 h-100 object-fit-cover" />
+
+
+                </div>
+
+                
+
+                @* <div class="col"> *@
+                    @* <Image Src="@imagename"  Alt="@image.AltText" style="width:150px;height:150px" class="border border-3 rounded-3 border-secondary"/> *@
+                    @* <Image Src="@thumbname"  Alt="@image.AltText" style="box-shadow: 0 0 0.5rem red;"/> *@
+                @* </div> *@
+            @* </div>
+            <div class="row"> *@
+
+            @* Card Body *@
+            <div class="card-body text-center">
+                <label class="form-label small mb-2">
+                    <i class="bi bi-textarea-t me-1"></i>Alternativ text
+                </label>
+
+                <InputTextArea @bind-Value="@image.AltText" rows="2" class="form-control px-3 py-2 mb-3"/>
+
+                <div class="d-flex gap-2">
+                    <Button class="flex-fill btn-primary fw-semibold" @onclick="((args) => UpdateImageAltText(args, image.Id))">
+                        <Icon Name="IconName.Check2" class="me-1"/>
+                        Spara
+                    </Button>
+                    <Button class="flex-fill btn-outline-danger fw-semibold" " @onclick="((args) => DeleteImage(args, image.Id))">
+                        <Icon Name="IconName.Trash" class="me-1" />
+                        Ta Bort
+                    </Button>
+
+
+
+                </div>
+            </div>
+
+
+
+            <div class="col d-flex flex-column justify-content-center">
+                    <div class="row">
+                        <InputTextArea @bind-Value="@image.AltText" rows="1" class="form-control px-3 py-2"/>
+                    </div>  
+                    <div class="row my-2">
+                        <Button class="col me-1" Color="ButtonColor.Primary" @onclick="((args) => UpdateImageAltText(args, image.Id))">
+                            <Icon Name="IconName.Check" />
+                        </Button>
+                        <Button class="col ms-1" Color="ButtonColor.Danger" @onclick="((args) => DeleteImage(args, image.Id))">
+                            <Icon Name="IconName.Trash" />
+                        </Button>
+                    </div>
+                </div>    
+            </div>
+
+            </div>
+
+
+
+
+
+        }
+
+    </div>
 </section>
