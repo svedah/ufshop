@@ -110,79 +110,41 @@
 
     @* Image Grid *@
     <div class="row g-4">
-        @foreach(ShopImage image in Images.OrderByDescending(e=>e.Created))
-        {
-            string imagename = "/img/" + image.Filename;
-            string thumbname = "/img/t/" + image.Filename;
+    @foreach(ShopImage image in Images.OrderByDescending(e=>e.Created))
+    {
+        string imagename = "/img/" + image.Filename;
+        string thumbname = "/img/t/" + image.Filename;
 
         <div class="col-12 col-md-6 col-lg-4 ">
             <div class="card h-100 shadow-sm border-0 image-card">
                 
                 @* Image Container *@
                 <div class="position-relative overflow-hidden" style="height: 250px;">
-
                     <Image Src="@imagename" Alt="@image.AltText" 
                                class="w-100 h-100 object-fit-cover" />
-
-
                 </div>
-
-                
-
-                @* <div class="col"> *@
-                    @* <Image Src="@imagename"  Alt="@image.AltText" style="width:150px;height:150px" class="border border-3 rounded-3 border-secondary"/> *@
-                    @* <Image Src="@thumbname"  Alt="@image.AltText" style="box-shadow: 0 0 0.5rem red;"/> *@
-                @* </div> *@
-            @* </div>
-            <div class="row"> *@
 
             @* Card Body *@
-            <div class="card-body text-center">
-                <label class="form-label small mb-2">
-                    <i class="bi bi-textarea-t me-1"></i>Alternativ text
-                </label>
+                <div class="card-body text-center">
+                    <label class="form-label small mb-2">
+                        <i class="bi bi-textarea-t me-1"></i>Alternativ text
+                    </label>
 
-                <InputTextArea @bind-Value="@image.AltText" rows="2" class="form-control px-3 py-2 mb-3"/>
+                    <InputTextArea @bind-Value="@image.AltText" rows="2" class="form-control px-3 py-2 mb-3"/>
 
-                <div class="d-flex gap-2">
-                    <Button class="flex-fill btn-primary fw-semibold" @onclick="((args) => UpdateImageAltText(args, image.Id))">
-                        <Icon Name="IconName.Check2" class="me-1"/>
-                        Spara
-                    </Button>
-                    <Button class="flex-fill btn-outline-danger fw-semibold" @onclick="((args) => DeleteImage(args, image.Id))">
-                        <Icon Name="IconName.Trash" class="me-1" />
-                        Ta Bort
-                    </Button>
-
-
-
-                </div>
-            </div>
-
-
-
-            <div class="col d-flex flex-column justify-content-center">
-                    <div class="row">
-                        <InputTextArea @bind-Value="@image.AltText" rows="1" class="form-control px-3 py-2"/>
-                    </div>  
-                    <div class="row my-2">
-                        <Button class="col me-1" Color="ButtonColor.Primary" @onclick="((args) => UpdateImageAltText(args, image.Id))">
-                            <Icon Name="IconName.Check" />
+                    <div class="d-flex gap-2">
+                        <Button class="flex-fill btn-primary fw-semibold" @onclick="((args) => UpdateImageAltText(args, image.Id))">
+                            <Icon Name="IconName.Check2" class="me-1"/>
+                            Spara
                         </Button>
-                        <Button class="col ms-1" Color="ButtonColor.Danger" @onclick="((args) => DeleteImage(args, image.Id))">
-                            <Icon Name="IconName.Trash" />
+                        <Button class="flex-fill btn-outline-danger fw-semibold" @onclick="((args) => DeleteImage(args, image.Id))">
+                            <Icon Name="IconName.Trash" class="me-1" />
+                            Ta Bort
                         </Button>
                     </div>
-                </div>    
+                </div>
             </div>
-
-            </div>
-
-
-
-
-
-        }
-
+        </div>
+    }
     </div>
 </section>
