@@ -18,22 +18,41 @@
 <PageTitle>Log in</PageTitle>
 
 
+<div class="container d-flex align-items-center justify-content-center" style="min-height: 75vh;">
+@* <div class="row w-100 justify-content-center"> *@
+    
+        <div class="col-12 col-sm-10 col-md-6 col-lg-4">
+
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <h3 class="text-center m-4">Logga in</h3>
+
             <StatusMessage Message="@errorMessage" />
             <EditForm Model="Input" method="post" OnValidSubmit="LoginUser" FormName="login">
                 <DataAnnotationsValidator />
                 <ValidationSummary class="text-danger" role="alert" />
-                    <label for="Input.Email" class="form-label">Email</label>
-                    <InputText @bind-Value="Input.Email" id="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-                    <ValidationMessage For="() => Input.Email" class="text-danger" />
 
-                    <label for="Input.Password" class="form-label">Password</label>
-                    <InputText type="password" @bind-Value="Input.Password" id="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" />
-                    <ValidationMessage For="() => Input.Password" class="text-danger" />
+                    <!-- Email -->
+                    <div class="mb-3">
+                        <label for="Input.Email" class="form-label">Email</label>
+                        <InputText @bind-Value="Input.Email" id="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="namn@exampel.com" />
+                        <ValidationMessage For="() => Input.Email" class="text-danger" />
+                    </div>
+
+                    <!-- Password -->
+                    <div class="mb-4">
+                        <label for="Input.Password" class="form-label">Lösenord</label>
+                        <InputText type="password" @bind-Value="Input.Password" id="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="Lösenord" />
+                        <ValidationMessage For="() => Input.Password" class="text-danger" />
+                    </div>
 
                     @* <InputCheckbox @bind-Value="Input.RememberMe" class="darker-border-checkbox form-check-input" /> *@
-                    <button type="submit" class="w-100 btn btn-lg btn-primary">Log in</button>
+                    <button type="submit" class="w-100 btn btn-lg btn-primary fw-semibold">Logga in</button>
             </EditForm>
-
+            </div>
+                </div>
+            </div>
+</div>
 @code {
     public readonly BeService beService;
     private string? errorMessage;
