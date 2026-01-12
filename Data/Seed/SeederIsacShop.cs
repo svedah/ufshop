@@ -25,6 +25,7 @@ public class SeederIsacShop
         var shop = new Shop
         {
             Id = Guid.NewGuid(),
+            Active = true,
             Prefix = "isac",
             Owner = user,
             Settings = settings,

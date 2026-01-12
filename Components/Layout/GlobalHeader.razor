@@ -63,9 +63,12 @@
             <AuthorizeView>
                 <Authorized>
                 <div class="d-flex">
-                    <NavLink class="btn btn-primary" href="/manage">
-                        <Icon Name="IconName.Shop"/>
-                    </NavLink>
+                    @if (shop.Active)
+                    {
+                        <NavLink class="btn btn-primary" href="/manage">
+                            <Icon Name="IconName.Shop"/>
+                        </NavLink>
+                    }
                     <Logout />@context.User.Identity?.Name
                 </div>
                 </Authorized>

@@ -34,4 +34,14 @@
         </Tab>
     }
 
+    <AuthorizeView Roles="Administrator">
+        <Tab Title="Administrering" KeepAlive="false">
+            <Content>
+                    <NavLink class="btn btn-primary" href="/adm">
+                        Gå till administrationssidan
+                    </NavLink>
+            </Content>
+        </Tab>
+    </AuthorizeView>
+
 </Tabs>

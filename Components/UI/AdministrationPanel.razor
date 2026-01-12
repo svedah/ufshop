@@ -1,0 +1,24 @@
+@* @using ufshop.Data.Models
+@using ufshop.Services
+@rendermode InteractiveServer
+@code {
+    public readonly BeService beService;
+
+    public AdministrationPanel(BeService srv)
+    {
+        beService = srv;
+    }
+
+}
+
+@if (beService is null)
+{
+    <Spinner />
+}
+else
+{
+    <h1>Administrationspanel</h1>
+    <p>Beställningar av UFshops (betalda)</p>
+    <AdministrationShopToggler />
+
+} *@

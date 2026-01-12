@@ -25,6 +25,11 @@ public class OrderShopService
         return validPrefix && validCompany && validEmail && validPhone;
     }
 
+    public bool IsValidPrefix(string input)
+    {
+        return ValidatePrefix(input);
+    }
+
     private bool ValidatePrefix(string input)
     {
         bool alreadyExists = beService.DbContext.Shops.Where(e => e.Prefix.Equals(input)).Any();

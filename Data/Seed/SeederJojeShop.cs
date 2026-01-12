@@ -25,6 +25,7 @@ public class SeederJojeShop
         var shop = new Shop
         {
             Id = Guid.NewGuid(),
+            Active = true,
             Prefix = "joje",
             Owner = user,
             Settings = settings,

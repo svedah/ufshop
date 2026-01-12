@@ -1,3 +1,4 @@
+@using System.Drawing
 @using ufshop.Shared
 @using ufshop.Services
 @namespace ufshop.Components.UI
@@ -22,6 +23,29 @@
     bool Assisted { get; set; } = false;
     private bool IsFormDataValid { get { return Service.IsFormDataValid(Prefix, Company, Email, Phone); } }
     //END Form bindings
+
+    private bool IsPrefixValid { get { return Service.IsValidPrefix(Prefix); } }
+
+    private string PrefixCSS
+    {
+        get
+        {
+            string output = "margin:0;padding:0;text-align:right;";
+            if (Prefix.Length > 0)
+            {
+                if (!IsPrefixValid)
+                {
+                    output += "border-color: red;";
+                }
+                else
+                {
+                    output += "border-color: green;";
+                }
+            }
+
+            return output;
+        }
+    }
 
     public OrderShop(BeService srv)
     {
@@ -64,7 +88,7 @@
                     type="text"
                     pattern="[a-z]{16}"
                     class="form-control"
-                    style="margin:0;padding:0;text-align:right;"
+                    style="@PrefixCSS"
             />
         </div>
         <div class="col" style="margin-left:0;padding-left:0;width:auto;">

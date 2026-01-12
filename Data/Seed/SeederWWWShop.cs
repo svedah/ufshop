@@ -173,6 +173,7 @@ public class SeederWWWShop
         var shop = new Shop
         {
             Id = Guid.NewGuid(),
+            Active = true,
             Prefix = "www",
             Owner = user,
             Settings = settings,

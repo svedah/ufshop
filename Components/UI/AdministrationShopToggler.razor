@@ -1,0 +1,66 @@
+@using ufshop.Data.Models
+@using ufshop.Services
+@rendermode InteractiveServer
+@code {
+    private readonly BeService beService;
+    private readonly AdministrationShopTogglerService Service;
+    private IQueryable<Shop> AllShops
+    {
+        get
+        {
+            return Service.AllShops().Where(e => e.Prefix != "www").OrderBy(e => e.Prefix);
+        }
+    } 
+
+    public AdministrationShopToggler(BeService srv)
+    {
+        beService = srv;
+        Service = new AdministrationShopTogglerService(srv);
+    }
+
+    private void Disable(Guid Id)
+    {
+        Service.SetActive(Id, false);
+    }
+
+    private void Enable(Guid Id)
+    {
+        Service.SetActive(Id, true);
+    }
+
+    private void Bing()
+    {
+        bing = !bing;
+    }
+    private bool bing = false;
+    private bool isChecked = false;
+}
+
+@if (beService is null)
+{
+    <Spinner />
+}
+else
+{
+    <h1>Shoptoggling</h1>
+
+    @foreach(Shop shop in AllShops)
+    {
+        <div>
+            <p>
+                @shop.Prefix
+                @if (shop.Active)
+                {
+                    //avaktivera
+                    <Button Color="ButtonColor.Primary" Size="ButtonSize.ExtraSmall" @onclick="() => Disable(shop.Id)"> Disable </Button>
+                }
+                else
+                {
+                    //aktivera
+                    <Button Color="ButtonColor.Primary" Size="ButtonSize.ExtraSmall" @onclick="() => Enable(shop.Id)"> Enable </Button>
+                }
+            </p>
+        </div>
+    }
+    
+}
