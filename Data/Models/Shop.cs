@@ -6,6 +6,7 @@ public class Shop
 
     // public required virtual ShopOwner Owner { get; set; }
     public required bool Active { get; set; }
+    public required bool Paid { get; set; }
     public required string Prefix { get; set; }//hostname
     public required ApplicationUser Owner{ get; set; }
     public required virtual ShopSetting Settings { get; set; }

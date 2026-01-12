@@ -73,10 +73,13 @@
                 </div>
                 </Authorized>
                 <NotAuthorized>
-                    <NavLink class="btn btn-primary" href="/login">
-                        @* <Icon Name="IconName.Person" /> *@
-                        <p class="m-0 fw-semibold">Logga In</p>
-                    </NavLink>
+                    @if (shop.Active)
+                    {
+                        <NavLink class="btn btn-primary" href="/login">
+                            @* <Icon Name="IconName.Person" /> *@
+                            <p class="m-0 fw-semibold">Logga In</p>
+                        </NavLink>
+                    }
                 </NotAuthorized>
             </AuthorizeView>
 

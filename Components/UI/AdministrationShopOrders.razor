@@ -1,0 +1,80 @@
+@using SQLitePCL
+@using ufshop.Data.Models
+@using ufshop.Services
+@rendermode InteractiveServer
+@code {
+    private readonly BeService beService;
+    private readonly ufshop.Services.AdministrationShopOrdersService Service;
+
+    private IQueryable<Shop> AllShops
+    {
+        get
+        {
+            return Service.AllShops()
+                          @* .Where(e => e.Prefix != "www")
+                          .Where(e => !e.Active)
+                          .Where(e => !e.Paid) *@
+                          .OrderBy(e => e.Prefix);
+        }
+    } 
+
+    private IQueryable<Shop> UnpaidShops
+    {
+        get
+        {
+            return AllShops.Where(e => !e.Paid);   
+        }
+    }
+
+    private IQueryable<Shop> PaidShops
+    {
+        get
+        {
+            return AllShops.Where(e => !e.Paid);   
+        }
+    }
+
+    public AdministrationShopOrders(BeService srv)
+    {
+        beService = srv;
+        Service = new AdministrationShopOrdersService(srv);
+    }
+
+}
+
+@if (beService is null)
+{
+    <Spinner />
+}
+else
+{
+    <h1>ShopOrdrar</h1>
+
+    <div class="row">
+        <div class="col">
+            Domänprefix
+        </div>
+        <div class="col">
+            Aktiv
+        </div>
+        <div class="col">
+            Betald
+        </div>
+    </div>
+    @foreach(Shop shop in AllShops)
+    {
+        <div class="row">
+            <div class="col">
+                @shop.Prefix
+            </div>
+            <div class="col">
+                123
+            </div>
+            <div class="col">
+                456
+            </div>
+        </div>
+    }
+
+    
+}
