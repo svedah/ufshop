@@ -46,7 +46,7 @@
     string imagestyle = string.Empty;
     if (Images.Where(e=>e.Id.Equals(shopImage.Id)).Any())
     {
-        imagestyle = "border: 2px solid green; box-shadow: 0 0 8px green; padding: 0;";
+        imagestyle = "border: 2px solid var(--bs-primary); box-shadow: 0 0 8px green; padding: 0;";
     }
     <Image Src="@thumbImageUrl" IsThumbNail="true" @onclick="((args) => SelectImage(args, shopImage))" style="@imagestyle" loading="lazy" />
 }

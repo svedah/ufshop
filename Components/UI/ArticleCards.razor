@@ -16,32 +16,44 @@
 
 @if (!beService.DomainPrefix.Equals("www"))
 {
-<div class="row">
-    <div class="col">
-        <h4>Artiklar</h4>
-    </div> 
-</div>
-    <div class="row">
-        <CardGroup>
-        @foreach(ShopItem si in ShopItems)
-        {
-            if (si.Active)
+    @* Vanliga artiklar *@
+    <section class="container my-5">
+        <h2 class="display-6 fw-bold text-primary text-center mb-5">
+            <i class="bi bi-shop me-2"></i>Artiklar
+        </h2>
+
+        <CardGroup class="row gy-4">
+            @foreach(ShopItem si in ShopItems)
             {
-                <ArticleCard Item="@si" />
+                if (si.Active)
+                {
+                    <div class="col-lg-4 col-md-6 col-sm-6 d-flex justify-content-center">
+                        <ArticleCard Item="@si" />
+                    </div>
+                }
             }
-        }
         </CardGroup>
-    </div>
+
+        @if (!ShopItems.Any(si => si.Active))
+        {
+            <div class="text-center py-5">
+                <i class="bi bi-inbox display-1 text-muted"></i>
+                <h4 class="text-muted mt-3">Inga artiklar tillgängliga</h4>
+                <p class="text-muted">Kom tillbaka senare för nya produkter</p>
+            </div>
+        }
+
+    </section>
 }
 else
 {
-    @* 
-        Det här segmentet är specifikt för "www"-uf-shop:en 
-        Anledningen till det är att en UF-shop inte är en 
+    @*
+        Det här segmentet är specifikt för "www"-uf-shop:en
+        Anledningen till det är att en UF-shop inte är en
         väldigt speciell "vara" som inte passar in i
         "ShopItem.cs"-klassen
 
-        Därför "fuskar vi till" en CardGroup med de "varor/tjänster"    
+        Därför "fuskar vi till" en CardGroup med de "varor/tjänster"
         som www.ufshop.nu erbjuder.
 
         Jag tänker mig utseendemässigt ett utseende likt ArticleCard
@@ -50,23 +62,102 @@ else
 
         Det formuläret finns i OrderShop.razor
     *@
-    <div class="row">
-        <CardGroup>
 
-            <Card Class="mb-4" Style="min-width: 16rem; max-width: 20rem;">
-                @* <Image Src="/img/WebbHelp_Logo.jpeg" Alt="WebbHelp Logo" /> *@
-                <CardBody>
-                    <CardTitle>Beställ UF-Shop</CardTitle>
-                    <CardText>
-                        <OrderShop />
-                    </CardText>
-                </CardBody>     
-                <CardFooter>
-                    <p>Fot</p>
-                </CardFooter>
-            </Card>
 
+    @* UF-Shop *@
+    <section class="container my-5">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold text-primary mb-3">
+                Skapa din UF-Shop
+            </h2>
+        </div>
+
+
+
+        <CardGroup class="row justify-content-center">
+            <div class=" col-10 col-sm-12 col-md-12 col-lg-10 col-xl-9">
+                <Card class="card shadow border-0 uf-shop-card mb-4">
+                    
+                    <!-- Card Header-->
+                    <CardHeader class="card-header bg-gradient-primary text-white py-4">
+                        <div class="d-flex align-items-center justify-content-center">
+                            <div class="icon-circle bg-white bg-opacity-25 me-3">
+                                <i class="bi bi-cart-check fs-3"></i>
+                            </div>
+                            <h3 class="mb-0 fw-bold">Beställ din UF-Shop</h3>
+                        </div>
+                    </CardHeader>
+
+
+                    <!-- Card Body-->
+                    <CardBody class="card-body p-4 p-md-5">
+                        <CardText>
+                            <OrderShop />
+                        </CardText>
+                    </CardBody>
+                    
+                    <CardFooter class="card-footer bg-light border-0 py-4">
+                        <div class="row g-3 text-center">
+                            <div class="col-md-4">
+                                <div class="benefit-item">
+                                    <i class="bi bi-lightning-charge-fill text-warning fs-3 mb-2"></i>
+                                    <h6 class="fw-semibold mb-1">Snabb setup</h6>
+                                    <small class="text-muted">Igång på minuter</small>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="benefit-item">
+                                    <i class="bi bi-window text-success fs-3 mb-2"></i>
+
+                                    <h6 class="fw-semibold mb-1">Modern Design</h6>
+                                    <small class="text-muted">Snyggt och professionellt intryck</small>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="benefit-item">
+                                    <i class="bi bi-mouse text-primary fs-3 mb-2"></i>
+                                    <h6 class="fw-semibold mb-1">Enkel att använda</h6>
+                                    <small class="text-muted">Ingen teknisk kunskap krävs</small>
+                                </div>
+                            </div>
+                        </div>
+                    </CardFooter>
+                </Card>
+            </div>
         </CardGroup>
-    </div>
+    </section>
 
 }
+
+<style>
+    .bg-gradient-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    
+    .icon-circle {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .uf-shop-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        overflow: hidden;
+    }
+    
+    .uf-shop-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175) !important;
+    }
+    
+    .benefit-item {
+        transition: transform 0.2s ease;
+    }
+    
+    .benefit-item:hover {
+        transform: scale(1.05);
+    }
+</style>

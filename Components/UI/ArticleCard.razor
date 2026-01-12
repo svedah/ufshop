@@ -41,22 +41,68 @@ else
 {
     string articleUrl = "/article/" + Item.Id.ToString();
     
-    <Card Class="mb-4" Style="max-width:12rem;">
-        <a href=@articleUrl style="text-decoration: inherit;color:inherit;">
-            <Image Src="@ImageUrl" Alt="@Item.PrimaryImage.AltText" />
-            <CardBody>
-                <CardTitle>
+    <Card class="card article-card shadow-sm rounded rounded-4 border " Style="width:17rem;">
+        <a href=@articleUrl class="text-decoration-none text-dark card-link">
+            
+            @* Image Container *@
+            <div class="position-relative overflow-hidden">
+                
+                <Image class="rounded-top-4" Src="@ImageUrl" Alt="@Item.PrimaryImage.AltText" />
+                 
+                <!-- Få kvar -->
+                @if (Item.ItemsAvailable <= 5)
+                {
+                    <span class="position-absolute top-0 end-0 m-3 badge bg-danger">
+                        Få kvar!
+                    </span>
+                }
+            </div>
+
+            @* Card Body *@
+            <CardBody class="card-body d-flex flex-column" style="height: 140px;">
+                <CardTitle class="card-title fw-bold mb-3 text-truncate">
                     @Item.Title
                 </CardTitle>
-                <CardText>
+                <CardText class="card-text text-muted small clamp-description mb-2 ">
                     @Item.Description
                 </CardText>
             </CardBody>
         </a>
-            <CardFooter>
-                Pris: @Item.Price
-                @* <Button Color="ButtonColor.Primary" @onclick="AddToBasket">Lägg i varukorg</Button> *@
-                Antal kvar: @Item.ItemsAvailable
-            </CardFooter>
+
+        @* Card Footer *@
+        <CardFooter class="card-footer rounded-bottom-4 bg-white border-top-2">
+
+            <div class="d-flex justify-content-between align-items-center mb-3 mt-2">
+                <small class="text-muted">
+                    <i class="bi bi-box-seam me-1"></i>Antal kvar: @Item.ItemsAvailable st
+                </small>
+                <span class="h5 mb-0 fw-bold text-primary">@Item.Price kr</span>
+            </div>
+
+
+            @* Todo gör att knappen funkar *@
+
+
+            <button class="btn btn-primary w-100 mb-3" @onclick="AddToBasket">
+                <i class="bi bi-cart-plus me-2"></i>Lägg i varukorg
+            </button>
+        </CardFooter>
     </Card>
 }
+
+<style>
+    .clamp-title {
+    display: -webkit-box;
+    -webkit-line-clamp: 1; /* number of lines */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    }
+
+    .clamp-description {
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* number of lines */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    }
+
+</style>

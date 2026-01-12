@@ -119,103 +119,115 @@
     public List<ShopItem> AllShopItems = new List<ShopItem>();
     public void UpdateAllShopItems()
     {
-        AllShopItems = Service.AllShopItems().Where(e => e.Active).ToList();
+        AllShopItems = Service.AllShopItems().ToList();
     }
 
 
 }
-<div class="row">
-    <div class="col">
-        <h1>Redigera vara</h1>
-    </div>
-</div>
+<section class="mx-4 my-4">
 
-<div class="row">
-    <div class="col">
-        <select class="form-select" @onchange="SelectItemChange" @onclick="UpdateAllShopItems">
-            <option selected disabled>Välj vara</option>
-            @foreach(ShopItem item in AllShopItems)
-            {
-                string active = item.Active ? string.Empty : "ej";
-                <option value="@item.Id">
-                    @item.Title (@item.ItemsAvailable kvar, @active publicerad)
+    <div class="row m-4">
+        <div class="col text-center text-primary">
+            <h1 class="display-5 fw-bold">Redigera Vara</h1>
+        </div>
+    </div>
+
+
+    @* Välj vara *@
+    <div class="select-item-container mb-4">
+        <label class="form-label fw-semibold mb-2">
+            <i class="bi bi-box-seam me-2 text-primary"></i>Välj vara att redigera
+        </label>
+        
+        <div class="select-wrapper">
+            <select class="form-select form-select-lg shadow-sm" 
+                    @onchange="SelectItemChange" 
+                    @onclick="UpdateAllShopItems">
+                <option selected disabled>
+                    Välj vara från listan
                 </option>
-            }
-        </select>
+                @foreach(ShopItem item in AllShopItems)
+                {
+                    string active = item.Active ? string.Empty : "ej";
+                    <option value="@item.Id">
+                        @item.Title • @item.ItemsAvailable st • @active publicerad
+                    </option>
+                }
+            </select>
+        </div> 
     </div>
-</div>
+        
 
-@if (editShopItem.Id != Guid.Empty)
-{
+    @if (editShopItem.Id != Guid.Empty)
+    {
+
+    <!-- Main Form Card -->
+    <div class="card shadow border-0 mb-4">
+        <div class="card-body p-4">
+
+            @* Titel *@
+            <div class="mb-4">
+                <label class="form-label fw-semibold" for="@FormTitleId">
+                    <i class="bi bi-tag me-2"></i>Titel
+                </label>
+                <InputText class="form-control" id="@FormTitleId" @bind-Value="@editShopItem.Title" />
+            </div>
 
 
-    <div class="row">
-        <div class="col">
-            <label class="col-form-label" for="@FormTitleId">Titel</label>
+            @* Beskrivning *@
+            <div class="mb-4">
+                <label class="form-label fw-semibold" for="@FormDescriptionId">
+                    <i class="bi bi-text-paragraph me-2"></i>Beskrivning
+                </label>
+                <TextAreaInput class="form-control" id="@FormDescriptionId" Rows="5" @bind-Value="@editShopItem.Description" />
+            </div>
+
+
+
+            @* Pris och tillgång del *@
+            <div class="row g-3 mb-4">
+
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold" for="@FormItemsPriceId">
+                        <i class="bi bi-currency-dollar me-2"></i>Pris
+                    </label>
+
+                    <div class="input-group input-group-lg">
+                        <InputNumber class="form-control text-center" id="@FormItemsPriceId" @bind-Value="@editShopItem.Price" Min="0" Max="10000" />
+                        <span class="input-group-text">kr</span>
+                    </div>
+                </div>
+
+
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold" for="@FormItemsAvailableId">
+                        <i class="bi bi-box-seam me-2"></i>Antal tillgängliga
+                    </label>
+                    <InputNumber class="form-control form-control-lg text-center" id="@FormItemsAvailableId" @bind-Value="@editShopItem.ItemsAvailable" Min="1" Max="1000" />
+                </div>
+
+
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold" for="@FormItemsOrderId">
+                        <i class="bi bi-sort-numeric-down me-2"></i>Sorteringsordning
+                    </label>
+                    <InputNumber class="form-control form-control-lg text-center" id="@FormItemsOrderId" @bind-Value="@editShopItem.Order" Min="1" Max="10000" />
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="row">
-        <div class="col">
-            <InputText class="form-control" id="@FormTitleId" @bind-Value="@editShopItem.Title" />
+
+    @* Bild väljare *@
+
+
+    <div class="card shadow border-0 mb-4">
+        <div class="card-header bg-white border-bottom px-4 py-3">
+            <h5 class="mb-0 fw-semibold">
+                <i class="bi bi-images me-2 text-primary"></i>Bilder
+            </h5>
         </div>
-    </div>
-
-    <div class="row">
-        <div class="col">
-            <label class="col-form-label" for="@FormDescriptionId">Beskrivning</label>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col">
-            <TextAreaInput class="form-control" id="@FormDescriptionId" Rows="5" @bind-Value="@editShopItem.Description" />
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col">
-            <label class="col-form-label" for="@FormItemsAvailableId">Antal tillgängliga</label>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col">
-            <InputNumber class="form-control" id="@FormItemsAvailableId" @bind-Value="@editShopItem.ItemsAvailable" Min="1" Max="1000" />
-        </div>
-    </div>
-
-
-    <div class="row">
-        <div class="col">
-            <label class="col-form-label" for="@FormItemsPriceId">Pris</label>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col">
-            <InputNumber class="form-control" id="@FormItemsPriceId" @bind-Value="@editShopItem.Price" Min="0" Max="10000" />
-        </div>
-    </div>
-
-
-    <div class="row">
-        <div class="col">
-            <label class="col-form-label" for="@FormItemsOrderId">Sorteringsordning</label>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col">
-            <InputNumber class="form-control" id="@FormItemsOrderId" @bind-Value="@editShopItem.Order" Min="1" Max="10000" />
-        </div>
-    </div>
-
-
-
-
-    <div class="row">
-        <div class="col">
+        <div class="card-body p-4">
             <Accordion>
                 <AccordionItem Title="Primär bild">
                     <Content>
@@ -231,54 +243,75 @@
         </div>
     </div>
 
+    @* Bild förhandsgranskning *@
 
+    <div class="card shadow border-0 mb-4">
+        <div class="card-header bg-white border-bottom px-4 py-3">
+            <h5 class="mb-0 fw-semibold">
+                <i class="bi bi-eye me-2 text-primary"></i>Förhandsgranskning
+            </h5>
+        </div>
 
+        <div class="card-body container p-4">
+            <div class="row">
+                @* Primär bild *@
+                <div class="col-md mb-4 d-grid justify-content-center">
+                    <label class="form-label text-center fw-semibold text-muted  mb-3">PRIMÄR BILD</label>
+                    
+                    @{
+                        string imageFile = "/img/" + editShopItem.PrimaryImage.Filename;
+                    }
 
-    <div class="row">
-        <div class="col">
-            <label class="col-form-label">Vald primär bild</label>
+                    <Image Src="@imageFile" Alt="@editShopItem.PrimaryImage.AltText" 
+                    class="rounded-4 border border-3 shadow-sm" style="width: 200px; height: 200px; object-fit: cover;" />
+                        
+                </div>
+
+                <!-- Karusell bilder -->
+                @if(editShopItem.Images.Any())
+                {
+                    <div class="col-md-7 d-grid justify-content-center">
+                        <label class="form-label text-center fw-semibold mb-3 text-muted">KARUSELLBILDER</label>
+                    
+                        <div class="d-flex gap-3">
+                        @foreach(ShopImage image in @editShopItem.Images.OrderBy(e=>e.Created))
+                        {
+                            string imageFileName = "/img/t/" + image.Filename;
+                            @* <div class="border rounded p-2 bg-light"> *@
+                            <Image Src="@imageFileName" IsThumbNail="true" 
+                            Alt="@editShopItem.PrimaryImage.AltText" class="rounded-4 border border-2 shadow-sm"
+                            style="width: 120px; height: 120px; object-fit: cover;"/>
+                            @* </div> *@
+                        }
+                        </div>            
+                    </div>
+                }
+            </div>
         </div>
     </div>
 
-    <div class="row">
-        <div class="col">
-    @{
-        string imageFile = "/img/" + editShopItem.PrimaryImage.Filename;
+
+    <!-- Publicera och spara -->
+    <div class="card container shadow border-0 mb-4">
+        <div class="card-body row p-4">
+            <div class="col-lg col-md d-flex flex-column justify-content-center">
+                <div class="form-check form-switch form-check-reverse text-start d-flex justify-content-start align-items-center mb-3">
+                    <CheckboxInput id="FormActiveId" class="form-check-input" 
+                                Label="Publicera varan direkt" @bind-Value="@editShopItem.Active" />
+                </div>
+                <small class="text-muted d-block mt-1 mx-4 my-2 mb-sm-1 d-flex align-items-center">
+                    Varan blir synlig i butiken när den är publicerad
+                </small>
+            </div>
+
+            <div class="col-lg col-md d-grid gap-2 d-md-flex justify-content-md-end align-items-center my-sm-4">
+                <Button Color="ButtonColor.Primary" Size="ButtonSize.Large" class="fw-bold px-lg-5 px-md-4"
+                        @onclick="EditItem" Disabled="!CanEditItem">
+                    Spara vara
+                </Button>
+            </div>
+        </div>
+    </div>
     }
-            <Image Src="@imageFile" Alt="@editShopItem.PrimaryImage.AltText" style="width: 200px; height: 200px" />
-        </div>
-    </div>
 
-    <div class="row">
-        <div class="col">
-            <label class="col-form-label">Valda karusellbilder</label>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col">
-        @foreach(ShopImage image in @editShopItem.Images.OrderBy(e=>e.Created))
-        {
-            string imageFileName = "/img/t/" + image.Filename;
-            <Image Src="@imageFileName" IsThumbNail="true" Alt="@editShopItem.PrimaryImage.AltText" />
-        }
-
-        </div>
-    </div>
-
-    @* <div class="row">
-        <div class="col">
-            <label class="col-form-label" for="@FormActiveId">Publicera</label>
-        </div>
-    </div> *@
-    <div class="row">
-        <div class="col">
-            <CheckboxInput id="FormActiveId" Label="Publicera" @bind-Value="@editShopItem.Active" />
-            @* TODO: om ufshop väljer att avpublicera måste varan plockas bort från ALLA aktiva carts (jippi...) *@
-        </div>
-    </div>
-
-
-
-    <Button Color="ButtonColor.Primary" @onclick="EditItem" Disabled="!CanEditItem">Spara</Button>
-}
+</section>

@@ -45,7 +45,7 @@
     string imagestyle = string.Empty; //"border: 2px solid transparent;";
     if (Image is not null && Image.Id.Equals(shopImage.Id))
     {
-        imagestyle = "border: 2px solid green; box-shadow: 0 0 8px green; padding: 0; transform:scale(1.11)";
+        imagestyle = "border: 2px solid var(--bs-primary); box-shadow: 0 0 8px green; padding: 0; transform:scale(1.11)";
     }
     string thumbImageUrl = "/img/t/" + shopImage.Filename;
     <Image Src="@thumbImageUrl" IsThumbNail="true" @onclick="((args) => SelectImage(args, shopImage))" style="@imagestyle" loading="lazy" />
