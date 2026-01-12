@@ -40,13 +40,36 @@
 
 }
 
-@foreach(ShopImage shopImage in AllImages.OrderBy(e => e.Created))
-{
-    string imagestyle = string.Empty; //"border: 2px solid transparent;";
-    if (Image is not null && Image.Id.Equals(shopImage.Id))
+<div class="image-selector-grid">
+    <div class="row g-3">
+        @foreach(ShopImage shopImage in AllImages.OrderBy(e => e.Created))
+        {
+            string thumbImageUrl = "/img/t/" + shopImage.Filename;
+            string imagestyle = string.Empty; //"border: 2px solid transparent;";
+            
+            if (Image is not null && Image.Id.Equals(shopImage.Id))
+            {
+                imagestyle = "border: 2px solid var(--bs-primary); box-shadow: 0 0 5px var(--bs-primary); padding: 0; transform:scale(1.11)";
+            }
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2 d-flex justify-content-center">
+
+                <Image Src="@thumbImageUrl" 
+                    IsThumbNail="true" 
+                    Alt="@shopImage.AltText"
+                    class="img-fluid rounded-4 bg-light"
+                    @onclick="((args) => SelectImage(args, shopImage))" 
+                    style="@imagestyle" 
+                    loading="lazy" />
+            </div>
+        }        
+    </div>
+
+    @if (!AllImages.Any())
     {
-        imagestyle = "border: 2px solid var(--bs-primary); box-shadow: 0 0 8px green; padding: 0; transform:scale(1.11)";
+        <div class="text-center py-4">
+            <i class="bi bi-images text-muted" style="font-size: 4rem;"></i>
+            <p class="text-muted mt-3">Inga bilder tillgängliga</p>
+        </div>
     }
-    string thumbImageUrl = "/img/t/" + shopImage.Filename;
-    <Image Src="@thumbImageUrl" IsThumbNail="true" @onclick="((args) => SelectImage(args, shopImage))" style="@imagestyle" loading="lazy" />
-}
+
+</div>
