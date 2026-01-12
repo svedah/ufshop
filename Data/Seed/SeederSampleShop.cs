@@ -173,6 +173,8 @@ public class SeederSampleShop
         var shop = new Shop
         {
             Id = Guid.NewGuid(),
+            Active = true,
+            Paid = true,
             Prefix = "sampleshop",
             Owner = user,
             Settings = settings,

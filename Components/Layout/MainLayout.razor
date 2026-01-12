@@ -1,9 +1,38 @@
 ﻿@inherits LayoutComponentBase
+@using ufshop.Data.Models
+@using ufshop.Services
+@inject BeService beService
 
+@code {
+    private Shop shop;
+
+    private Shop GetShop()
+    {
+        Shop output;
+        ShopService ss = new ShopService(beService);
+        if (ss.GetShop(beService.DomainPrefix, out output))
+        {
+            return output;
+        }
+        return default!;
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        //kunde inte göra en konstruktor så det får bli ett fulhack här
+        shop = GetShop();
+    }
+}
 @* <div class="container"> *@
     <GlobalHeader />
     <main class="container overflow-visible">
-        @Body
+        @if(shop.Active)
+        {
+            @Body
+        }
+        else
+        {
+            <p>Den här shoppen är ej längre aktiv</p>
+        }
     </main>
     <GlobalFooter />
 @* </div> *@
