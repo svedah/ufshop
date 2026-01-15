@@ -67,6 +67,8 @@
 
     public async Task RegisterUser(EditContext editContext)
     {
+        RedirectManager.RedirectTo("/");//deny registration
+
         var user = CreateUser();
 
         await UserStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
