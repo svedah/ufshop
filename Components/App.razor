@@ -1,6 +1,7 @@
 ﻿@using Microsoft.EntityFrameworkCore.Storage.ValueConversion
 @using ufshop.Data
 @using ufshop.Data.Models
+@using ufshop.Helpers
 @using ufshop.Services
 @inject ufshop.Services.BeService BeService
 @code{
@@ -20,8 +21,12 @@
     @* <meta lol="@BeService.wwwroot" /> *@
     @if (!ShopExists)
     {
+        DomainExtract de = new DomainExtract(BeService.HttpContextAccessor.HttpContext.Request.Host.Host);
+        string fullDefaultDomain = de.FullDefaultDomain;
+        string metaContent = "0; url=//" + fullDefaultDomain;
         @* TODO: REDIRECTA TILL WWW.UFSHOP.NU/DEAUTH *@
-        <meta http-equiv="refresh" content="0; url=//www.ufshop.nu">
+        @* <meta http-equiv="refresh" content="0; url=//www.ufshop.nu"> *@
+        <meta http-equiv="refresh" content=@metaContent>
     }
     else
     {

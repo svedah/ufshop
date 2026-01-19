@@ -12,7 +12,7 @@ public class TemplatePageService
     public TemplatePageService(BeService srv)
     {
         beService = srv;
-        DomainPrefix = DomainHelper.ExtractSubDomain(beService.HttpContextAccessor);
+        DomainPrefix = beService.DomainPrefix;
 
         if (new ShopService(beService).GetShop(DomainPrefix, out Shop))
         {

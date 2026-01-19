@@ -18,12 +18,19 @@ public class BeService
     // public readonly IdentityRedirectManager IdentityRedirectManager;
     public readonly IJSRuntime JsRuntime;
     
-    
     // public readonly AuthenticationStateProvider AuthenticationStateProvider;
     // public readonly AuthenticationState AuthenticationState;
     public readonly string wwwroot;
 
-    public readonly string DomainPrefix;
+    public string DomainPrefix
+    {
+        get
+        {
+            var domainExtract = new DomainExtract(HttpContextAccessor.HttpContext.Request.Host.Host);
+            return domainExtract.Prefix;
+        }
+    }
+    
 
     public BeService
     (
@@ -56,7 +63,7 @@ public class BeService
 
 
         wwwroot = iWebHostEnvironment.WebRootPath + Path.DirectorySeparatorChar;
-        DomainPrefix = DomainHelper.ExtractSubDomain(httpContextAccessor);
+        // DomainPrefix = DomainHelper.ExtractSubDomain(httpContextAccessor);
     }
 
     //var context = ServiceProvider.GetService<ApplicationDbContext>();

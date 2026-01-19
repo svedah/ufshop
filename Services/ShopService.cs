@@ -17,7 +17,6 @@ public class ShopService
     public bool ShopExists(string domainPrefix)
     {
         Contract.Assert(domainPrefix is not null);
-        Contract.Assert(domainPrefix.Length > 2);
         return beService.DbContext.Shops.Where(e => e.Prefix.Equals(domainPrefix)).Any();
     }
 

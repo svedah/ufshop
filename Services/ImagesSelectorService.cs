@@ -13,7 +13,6 @@ public class ImagesSelectorService
     {
         beService = srv;
 
-        string DomainPrefix = DomainHelper.ExtractSubDomain(beService.HttpContextAccessor);
         shopService = new ShopService(srv);
         shopService.GetShop(beService.DomainPrefix, out shop);
     }

@@ -2,8 +2,8 @@ namespace ufshop.Shared;
 
 static public class Constants
 {
-    static public string DOMAINNAME = "ufshop.nu";
-    static public string DEFAULTDOMAIN = "www";
+    static public string DOMAINNAME = "ufshop.nu";//<-- används bara av databas-seedern
+    static public string DEFAULTDOMAINPREFIX = "www";
 
 
     
