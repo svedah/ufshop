@@ -115,18 +115,18 @@
         string imagename = "/img/" + image.Filename;
         string thumbname = "/img/t/" + image.Filename;
 
-        <div class="col-12 col-md-6 col-lg-4 ">
-            <div class="card h-100 shadow-sm border-0 image-card">
+        <div class="col-12 col-md-6 col-lg-4 d-flex justify-content-center">
+            <div class="card rounded-4 shadow-sm border image-card" Style="width:19rem;">
                 
                 @* Image Container *@
-                <div class="position-relative overflow-hidden" style="height: 250px;">
+                <div class="position-relative overflow-hidden" >
                     <Image Src="@imagename" Alt="@image.AltText" 
-                               class="w-100 h-100 object-fit-cover" />
+                               class="w-100  object-fit-cover rounded-top-4" />
                 </div>
 
             @* Card Body *@
-                <div class="card-body text-center">
-                    <label class="form-label small mb-2">
+                <div class="card-body text-center p-4 pt-3">
+                    <label class="form-label small mb-3">
                         <i class="bi bi-textarea-t me-1"></i>Alternativ text
                     </label>
 
@@ -147,4 +147,17 @@
         </div>
     }
     </div>
+
+
+    <!-- Empty State -->
+    @if(!Images.Any())
+    {
+        <div class="text-center py-4 mx-5">
+            <div class="mb-4">
+                <i class="bi bi-images display-1 text-muted"></i>
+            </div>
+            <h3 class="text-muted">Inga bilder än</h3>
+            <p class="text-muted">Börja med att ladda upp din första bild ovan</p>
+        </div>
+    }
 </section>
