@@ -52,7 +52,7 @@ public class ManageImagesService
             DeleteImageFromShop(shopImage);
 
             //sedan kan vi sudda från shopimage från databasen
-            DeleteImageFromShopImages(shopImage);
+            // DeleteImageFromShopImages(shopImage);
 
             //och till sist filen självt...
             // string file = beService.wwwroot + shopImage.Filename;
