@@ -86,7 +86,7 @@
             <input @bind="Prefix"
                    type="text"
                    pattern="[a-z]{16}"
-                   class="form-control border-start-0 border-end-0"
+                   class="form-control border-start-0 border-end-0 text-center"
                    placeholder="uf-namn"
                    style="@PrefixCSS"
             />            
@@ -259,7 +259,7 @@
     }
     
     .form-check-card .form-check-input:checked + .form-check-label {
-        border-color: #var(--bs-primary);
+        @* border-color: #var(--bs-primary); *@
         background: rgba(13, 110, 253, 0.05);
         box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
     }
