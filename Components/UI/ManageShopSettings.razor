@@ -11,12 +11,17 @@
     public readonly BeService beService;
     public readonly ManageShopSettingsService Service;
 
+    private List<string> Themes;
+    private string SelectedTheme;
+
     //shop . shopsetting . shopcontactinfo . shopsocialmedia
     //shop .    settings . contactinfo . socialmedia
     public ManageShopSettings(BeService srv)
     {
         beService = srv;
         Service = new ManageShopSettingsService(srv);
+        Themes = Service.GetThemes();
+        SelectedTheme = Service.GetShopTheme();
     }
 
     @* protected override async Task OnInitializedAsync()
@@ -28,9 +33,18 @@
     {
         Service.SaveShop();
     }
+
+    private void SelectThemeChange(ChangeEventArgs e)
+    {
+        if (e is not null && e.Value is not null)
+        {
+            SelectedTheme = e.Value.ToString();
+            Service.Shop.Settings.Theme = SelectedTheme;
+        }
+    }
 }
 <h1>Inställningar UF-shop</h1>
-
+<p>SelectedTheme: @SelectedTheme</p>
 <label class="form-control">Namn UF-företag</label>
 <InputText @bind-value="Service.Shop.Settings.Title" class="form-control" />
 
@@ -44,11 +58,25 @@
 <label class="form-control">Basfraktpris</label>
 <InputNumber @bind-value="Service.Shop.Settings.BaseShippingPrice" class="form-control" />
 
-<label class="form-control">Layout (används ej ännu)</label>
-<InputText @bind-value="Service.Shop.Settings.Layout" class="form-control" disabled="true" />
+@* <label class="form-control">Layout (används ej ännu)</label> *@
+@* <InputText @bind-value="Service.Shop.Settings.Layout" class="form-control" disabled="true" /> *@
 
-<label class="form-control">Färgtema (används ej ännu)</label>
-<InputText @bind-value="Service.Shop.Settings.Theme" class="form-control" disabled="true" />
+<label class="form-control">Färgtema</label>
+@* <InputText @bind-value="Service.Shop.Settings.Theme" class="form-control" disabled="true" /> *@
+<select class="form-select" @onchange="SelectThemeChange">
+    @foreach(string themeName in Themes)
+    {
+        if (themeName.Equals(SelectedTheme))
+        {
+            <option value="@themeName" selected>@themeName</option>
+        }
+        else
+        {
+            <option value="@themeName">@themeName</option>
+        }
+    }
+</select>
+
 
 <h2>Kontaktinformation</h2>
 
