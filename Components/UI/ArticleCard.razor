@@ -60,6 +60,18 @@ else
                 }
             </div>
 
+            @* Rabatt container *@
+            <div class="position-relative overflow-hidden">
+
+                <Image class="rounded-top-4" Src="="@ImageUrl" Alt="@Item.PrimaryImage.AltText" />
+
+                @if (Item.Rabatt == false) {
+                    <span class="position-absolute top-0 end-0 m-3 badge bg-danger">
+                        Rabatt!
+                    </span>
+                }
+            </div>
+
             @* Card Body *@
             <CardBody class="card-body d-flex flex-column" style="height: 140px;">
                 <CardTitle class="card-title fw-bold mb-3 text-truncate">

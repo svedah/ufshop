@@ -12,6 +12,7 @@ public class ShopItem
     // public required bool Deleted { get; set; }//shopitems can never be deleted once a cart contains it
     // public required virtual Shop Shop { get; set; }
     public required bool Uploadable { get; set; }
+    public required bool Rabatt { get; set; }//rabattnotis på varan
     public required virtual ShopImage PrimaryImage { get; set; }
     public required virtual HashSet<ShopImage> Images { get; set; }
 
