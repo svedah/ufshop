@@ -10,6 +10,7 @@ public class ShopSetting
     public required string Description { get; set; }
     public required string Layout { get; set; }
     public required string Theme { get; set; }
+    // public string SwishCert { get; set; }
 
     public required virtual ShopContactInfo ContactInfo { get; set; }
 

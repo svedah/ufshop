@@ -1,0 +1,150 @@
+﻿@page "/payment/{id:guid}"
+@using Microsoft.EntityFrameworkCore
+@using ufshop.Data.Models
+@using ufshop.Services
+@using ufshop.Shared
+@rendermode InteractiveServer
+@using Microsoft.AspNetCore.Authorization
+
+
+@code {
+    [Parameter]
+    public Guid id { get; set; } //order id
+    private readonly BeService BeService;
+    private readonly PaymentService Service;
+    private System.Threading.Timer? timer;
+
+
+    private ShopOrder Order { get; set; }
+    private string OrderPaymentStatus
+    {
+        get
+        {
+            string output = string.Empty;
+            if (Order is not null)
+            {
+                switch (Order.Status)
+                {
+                    case ShopOrderStatus.Paid:
+                        output = "PAID";
+                        break;
+                    case ShopOrderStatus.Unpaid:
+                        output = "NOT PAID";
+                        break;
+                    case ShopOrderStatus.Shipped:
+                        output = "SHIPPED";
+                        break;
+                    case ShopOrderStatus.Rejected:
+                        output = "REJECTED";
+                        break;
+                    default:
+                        output = "DEFAULT";
+                        break;
+                }
+
+            }
+            return output;
+        }
+    }
+
+    private string QrCodeUrl { get; set; }
+    private string SwishURL { get; set; }
+
+
+
+    private Random _rnd;
+    public int RandomNumber { get; set; } = 1;
+
+
+
+
+    public Payment(BeService beService)
+    {
+        BeService = beService;
+        Service = new PaymentService(beService);
+        _rnd = new Random();
+
+        //https://developer.swish.nu/documentation/guides/trigger-the-swish-app
+        string text = "https://app.swish.nu/1/p/sw/?sw=0725501404&amt=100&cur=SEK&msg=ett%20litet%20test&src=qr";
+        QrCodeUrl = System.Web.HttpUtility.UrlEncode(text);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        UpdateRandomNumber();
+        UpdateOrder();
+
+        //Starta timer som körs var 3:e sekund
+        timer = new System.Threading.Timer(async _ => {
+            UpdateRandomNumber();
+            UpdateOrder();
+            InvokeAsync(StateHasChanged);
+        }, null, TimeSpan.FromSeconds(3), TimeSpan.FromSeconds(3));
+
+
+    }
+
+    private void UpdateRandomNumber()
+    {
+        RandomNumber = _rnd.Next(0, 10000);
+    }
+
+    private void UpdateOrder()
+    {
+        Cart cart = new Cart
+        {
+            Id = Guid.NewGuid(),
+            CartItems = new HashSet<CartItem>()
+        };
+
+        CustomerInfo customerInfo = new CustomerInfo
+        {
+            Id = Guid.NewGuid(),
+            FirstName = "First",
+            LastName = "Last",
+            StreetName = "Gatan",
+            StreetNo = "12345",
+            City = "Väääääääääärnamo",
+            ZipCode = "123456",
+            Email = "em@il.com",
+            Phone = "0123456789",
+            Info = "Bra info hörrö"
+        };
+
+
+        Order = new ShopOrder
+        {
+            Id = id,
+            Created = DateTime.Now,
+            Cart = cart,
+            CustomerInfo = customerInfo,
+            Status = ShopOrderStatus.Unpaid
+        };
+    }
+
+
+    @* private async Task NavigateBack()
+    {
+        await BeService.JsRuntime.InvokeVoidAsync("history.back");
+    } *@
+    public void Dispose()
+    {
+        timer?.Dispose();
+    }
+}
+
+@if (!id.Equals(Guid.Empty))
+{
+    string imageString = "/qr/png/" + QrCodeUrl;
+
+    <PageTitle>Visar Order @id</PageTitle>
+    <p>Order @id</p>
+    <p>RandomNumber: @RandomNumber</p>
+    <p>OrderPaymentStatus: @OrderPaymentStatus</p>
+
+    <img src=@imageString alt="swish-qr" />
+}
+else
+{
+    <Spinner />
+}
