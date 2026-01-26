@@ -18,6 +18,7 @@
     public readonly string FormItemsOrderId = Guid.NewGuid().ToString();
     public readonly string FormPrimaryImageId = Guid.NewGuid().ToString();
     public readonly string FormImagesId = Guid.NewGuid().ToString();
+    public readonly string FormRabattId = Guid.NewGuid().ToString();
     public readonly string FormActiveId = Guid.NewGuid().ToString();
 
     ShopItem editShopItem = new ShopItem
@@ -37,7 +38,8 @@
             AltText = "BildBeskrivning"
         },
         Images = new HashSet<ShopImage>(),
-        Uploadable = false
+        Uploadable = false,
+        Rabatt = false
         @* Properties = new HashSet<ShopItemProperty>() *@
     };
 
@@ -128,7 +130,7 @@
 
     <div class="row m-4">
         <div class="col text-center text-primary">
-            <h1 class="display-5 fw-bold">Redigera Vara</h1>
+            <h1 class="display-5 fw-bold">RedJKYG   igera Vara hejhejhe</h1>
         </div>
     </div>
 
@@ -291,7 +293,7 @@
     </div>
 
 
-    <!-- Publicera och spara -->
+    <!-- Publicera, Rabattera och spara -->
     <div class="card container shadow border-0 mb-4">
         <div class="card-body row p-4">
             <div class="col-lg col-md d-flex flex-column justify-content-center">
@@ -301,6 +303,14 @@
                 </div>
                 <small class="text-muted d-block mt-1 mx-4 my-2 mb-sm-1 d-flex align-items-center">
                     Varan blir synlig i butiken när den är publicerad
+                </small>
+
+                <div class="form-check form-switch form-check-reverse text-start d-flex justify-content-start align-items-center mb-3">
+                    <CheckboxInput id="FormRabattId" class="form-check-input" 
+                                Label="Rabattera varan direkt" @bind-Value="@editShopItem.Rabatt" />
+                </div>
+                <small class="text-muted d-block mt-1 mx-4 my-2 mb-sm-1 d-flex align-items-center">
+                    Varan visar rabatt notis
                 </small>
             </div>
 
