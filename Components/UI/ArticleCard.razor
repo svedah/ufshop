@@ -20,12 +20,14 @@
         beService = srv;
     }
 
-    public void AddToBasket()
+    public async Task AddToBasket()
     {
-        //TODO
-        //check if availability > 0
-
-        //CartService.Add(Item)
+        if (Item is not null && !Item.Id.Equals(Guid.Empty) && Item.ItemsAvailable > 0)
+        {
+            CartItem newCartItem = CartService.BuildCartItem(Item, 1);
+            CartService cartService = new CartService(beService);
+            await cartService.AddOrUpdateAsync(newCartItem);
+        }
     }
 }
 @* 
@@ -83,7 +85,7 @@ else
             @* Todo gör att knappen funkar *@
 
 
-            <button class="btn btn-primary w-100 mb-3" @onclick="AddToBasket">
+            <button class="btn btn-primary w-100 mb-3" @onclick="() => AddToBasket()">
                 <i class="bi bi-cart-plus me-2"></i>Lägg i varukorg
             </button>
         </CardFooter>
