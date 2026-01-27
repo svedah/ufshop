@@ -40,9 +40,11 @@ else
 
     [SupplyParameterFromQuery]
     private string? ReturnUrl { get; set; }
-
     protected override async Task OnInitializedAsync()
     {
+        //block page visit - redirect to index immediately
+        RedirectManager.RedirectTo("/");
+
         if (Email is null)
         {
             RedirectManager.RedirectTo("");

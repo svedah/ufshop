@@ -13,6 +13,44 @@ public class ManageShopSettingsService
         new ShopService(srv).GetShop(beService.DomainPrefix, out Shop);
     }
 
+    public List<string> GetThemes()
+    {
+        List<string> output = new List<string>();
+
+        string themeRoot = beService.wwwroot + "css" + Path.DirectorySeparatorChar;
+        DirectoryInfo di = new DirectoryInfo(themeRoot);
+        FileInfo[] files = di.GetFiles("*.min.css");
+
+        foreach(FileInfo file in files)
+        {
+            string filename = file.Name.Replace(".min.css", string.Empty);
+            output.Add(filename);
+        }
+
+        output.Sort();
+
+        return output;
+    }
+
+    public string GetShopTheme()
+    {
+        string output = string.Empty;
+
+        var availableThemes = GetThemes();
+        var currentShopTheme = Shop.Settings.Theme;
+
+        if (!availableThemes.Contains(currentShopTheme))
+        {
+            output = "bootstrap";    
+        }
+        else
+        {
+            output = currentShopTheme;
+        }
+
+        return output;
+    }
+
     public void SaveShop()
     {
         //1. update & save shopsocialmedia shop.settings.contactinfo.socialmedia

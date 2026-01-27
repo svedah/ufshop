@@ -132,6 +132,7 @@
         </div>
     </div>
 
+    <h1>CanEditItem: @CanEditItem</h1>
 
     @* Välj vara *@
     <div class="select-item-container mb-4">
@@ -193,9 +194,9 @@
                     </label>
 
                     <div class="input-group input-group-lg">
-                        <InputNumber class="form-control text-center" id="@FormItemsPriceId" @bind-Value="@editShopItem.Price" Min="0" Max="10000" />
+                        <NumberInput class="form-control text-center" id="@FormItemsPriceId" @bind-Value="@editShopItem.Price" EnableMinMax="true" Min="0" Max="10000" />
                         <span class="input-group-text">kr</span>
-                    </div>
+                    </div>  
                 </div>
 
 
@@ -203,7 +204,7 @@
                     <label class="form-label fw-semibold" for="@FormItemsAvailableId">
                         <i class="bi bi-box-seam me-2"></i>Antal tillgängliga
                     </label>
-                    <InputNumber class="form-control form-control-lg text-center" id="@FormItemsAvailableId" @bind-Value="@editShopItem.ItemsAvailable" Min="1" Max="1000" />
+                    <NumberInput class="form-control form-control-lg text-center" id="@FormItemsAvailableId" @bind-Value="@editShopItem.ItemsAvailable" Min="1" Max="1000" />
                 </div>
 
 
@@ -211,7 +212,7 @@
                     <label class="form-label fw-semibold" for="@FormItemsOrderId">
                         <i class="bi bi-sort-numeric-down me-2"></i>Sorteringsordning
                     </label>
-                    <InputNumber class="form-control form-control-lg text-center" id="@FormItemsOrderId" @bind-Value="@editShopItem.Order" Min="1" Max="10000" />
+                    <NumberInput class="form-control form-control-lg text-center" id="@FormItemsOrderId" @bind-Value="@editShopItem.Order" Min="1" Max="10000" />
                 </div>
             </div>
         </div>

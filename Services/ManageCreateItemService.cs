@@ -31,6 +31,8 @@ public class ManageCreateItemService
         ShopService ss = new ShopService(beService);
         if (ss.GetShop(beService.DomainPrefix, out shop))
         {
+            bool titleOk = newShopItem.Title.Trim().Length > 0;
+            bool descriptionOK = newShopItem.Description.Trim().Length > 0;
             bool sameTitleExists = shop.Items.Where(e => e.Title.Equals(newShopItem.Title)).Any();
             bool sameDescriptionExists = shop.Items.Where(e => e.Description.Equals(newShopItem.Description)).Any();;
             bool hasItems = newShopItem.ItemsAvailable > 0;
@@ -38,7 +40,7 @@ public class ManageCreateItemService
             bool hasSortOrder = newShopItem.Order > 0;
             bool hasPrimaryImage = !newShopItem.PrimaryImage.Id.Equals(Guid.Empty);
 
-            output = !sameTitleExists && !sameDescriptionExists && hasItems && hasPrice && hasSortOrder && hasPrimaryImage;
+            output = titleOk && descriptionOK && !sameTitleExists && !sameDescriptionExists && hasItems && hasPrice && hasSortOrder && hasPrimaryImage;
         }
         return output;
     }
