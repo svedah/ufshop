@@ -123,6 +123,24 @@ public class CartService
         await SaveCartAsync(cart);
     }
 
+    private List<CartItem> FilterInvalidCartItems(List<CartItem> input)
+    {
+        var output = new List<CartItem>();
+
+        foreach(CartItem ci in input)
+        {
+            bool shopItemExists = beService.DbContext.ShopItems.Where(e => e.Id.Equals(ci.ShopItem.Id)).Any();
+            bool shopItemIsActive = shopItemExists && beService.DbContext.ShopItems.Where(e => e.Id.Equals(ci.ShopItem.Id)).First().Active;
+            bool shopItemAvailable = shopItemExists && beService.DbContext.ShopItems.Where(e => e.Id.Equals(ci.ShopItem.Id)).First().ItemsAvailable >= ci.Amount;
+            if (shopItemExists && shopItemIsActive && shopItemAvailable)
+            {
+                output.Add(ci);
+            }
+        }
+
+        return output;
+    }
+
 
     //TODO: sign cart to protect from tampering
     private async Task<List<CartItem>> LoadCartAsync()
@@ -137,11 +155,15 @@ public class CartService
             output = JsonSerializer.Deserialize<List<CartItem>>(json) ?? output;
         }
 
+        output = FilterInvalidCartItems(output);
+
         return output;        
     }
 
     private async Task SaveCartAsync(List<CartItem> input)
     {
+        input = FilterInvalidCartItems(input);
+
         var json = JsonSerializer.Serialize(input);
         //TODO:encrypt
         await _jsRuntime.InvokeVoidAsync("localStorage.setItem", _shopKey, json);
