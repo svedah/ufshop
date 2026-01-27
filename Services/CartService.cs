@@ -75,19 +75,12 @@ public class CartService
         //TODO: load properties
         ShopItem shopItem = beService.DbContext.ShopItems.Where(e => e.Id.Equals(input.ShopItem.Id)).First();
 
-        bool cartItemExists = cart.Where(e=>e.Id.Equals(input.Id)).Any();
+        bool cartItemExists = cart.Where(e=>e.ShopItem.Id.Equals(input.ShopItem.Id)).Any();
 
         if (cartItemExists)
         {
-            input.ShopItem = shopItem;
-            for (int i = 0; i < cart.Count; i++)
-            {
-                if (cart[i].Id.Equals(input.Id))
-                {
-                    cart[i] = input;
-                    break;
-                }
-            }
+            CartItem existing = cart.Where(e=>e.ShopItem.Id.Equals(input.ShopItem.Id)).First();
+            existing.Amount += input.Amount;
         }
         else
         {
