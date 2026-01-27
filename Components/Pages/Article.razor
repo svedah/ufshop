@@ -183,8 +183,13 @@ else
                         <!-- Price -->
                         <div class="mb-4 pb-4 border-bottom">
                             <div class="d-flex align-items-baseline">
-                                <h2 class="display-5 fw-bold text-primary mb-0">@shopItem.Price</h2>
-                                <span class="fs-4 text-muted ms-2">kr</span>
+                                @if (shopItem.Rabatt) {
+                                    <h2 class="display-5 fw-bold text-danger mb-0">@shopItem.Price</h2>
+                                    <span class="fs-4 text-muted ms-2">kr</span>
+                                } else {    
+                                    <h2 class="display-5 fw-bold text-primary mb-0">@shopItem.Price</h2>
+                                    <span class="fs-4 text-muted ms-2">kr</span>
+                                }
                             </div>
                         </div>
 
