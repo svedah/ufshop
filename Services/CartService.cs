@@ -63,6 +63,13 @@ public class CartService
         return cart;
     }
 
+    public async Task<List<CartItem>> EmptyCartContent()
+    {
+        var output = new List<CartItem>();
+        await SaveCartAsync(output);
+        return output;
+    }
+
     public async Task AddOrUpdateAsync(CartItem input)
     {
         Contract.Assert(input is not null);
