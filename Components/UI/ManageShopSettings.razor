@@ -101,7 +101,7 @@
 
                 <AccordionItem>
                     <TitleTemplate>
-                        <h3><Icon Name="IconName.ChatLeft" Class="me-1" /> Kontaktinformation</h3>
+                        <h3><Icon Name="IconName.ChatLeftText" Class="me-1" /> Kontaktinformation</h3>
                     </TitleTemplate>
                     <Content>
 
@@ -115,24 +115,49 @@
 
                 <AccordionItem>
                     <TitleTemplate>
-                        <h3><Icon Name="IconName.Tiktok" Class="me-1" /> Sociala medier</h3>
+                        <h3><Icon Name="IconName.ChatLeftHeart" Class="me-1" /> Sociala medier</h3>
                     </TitleTemplate>
                     <Content>
 
-                        <label class="form-control">Facebook-sida</label>
-                        <InputText @bind-value="Service.Shop.Settings.ContactInfo.SocialMedia.Facebook" class="form-control" />
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">
+                                <Icon Name="IconName.Facebook"/> Facebook-sida
+                            </label>
+                            <InputText @bind-value="Service.Shop.Settings.ContactInfo.SocialMedia.Facebook"
+                                class="form-control" />
+                        </div>
 
-                        <label class="form-control">Instagram-sida</label>
-                        <InputText @bind-value="Service.Shop.Settings.ContactInfo.SocialMedia.Instagram" class="form-control" />
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">
+                                <Icon Name="IconName.Instagram" /> Instagram-sida
+                            </label>
+                            <InputText @bind-value="Service.Shop.Settings.ContactInfo.SocialMedia.Instagram"
+                                class="form-control" />
+                        </div>
 
-                        <label class="form-control">LinkedIn-sida</label>
-                        <InputText @bind-value="Service.Shop.Settings.ContactInfo.SocialMedia.LinkedIn" class="form-control" />
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">
+                                <Icon Name="IconName.Linkedin" /> LinkedIn-sida
+                            </label>
+                            <InputText @bind-value="Service.Shop.Settings.ContactInfo.SocialMedia.LinkedIn"
+                                class="form-control" />
+                        </div>
 
-                        <label class="form-control">TikTok-sida</label>
-                        <InputText @bind-value="Service.Shop.Settings.ContactInfo.SocialMedia.TikTok" class="form-control" />
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">
+                                <Icon Name="IconName.Tiktok" /> TikTok-sida
+                            </label>
+                            <InputText @bind-value="Service.Shop.Settings.ContactInfo.SocialMedia.TikTok"
+                                class="form-control" />
+                        </div>
 
-                        <label class="form-control">YouTube-sida</label>
-                        <InputText @bind-value="Service.Shop.Settings.ContactInfo.SocialMedia.YouTube" class="form-control" />
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">
+                                <Icon Name="IconName.Youtube" /> YouTube-sida
+                            </label>
+                            <InputText @bind-value="Service.Shop.Settings.ContactInfo.SocialMedia.YouTube"
+                                class="form-control" />
+                        </div>
 
                     </Content>
                 </AccordionItem>
