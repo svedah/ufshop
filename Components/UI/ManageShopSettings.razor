@@ -43,66 +43,108 @@
         }
     }
 }
-<h1>Inställningar UF-shop</h1>
-<p>SelectedTheme: @SelectedTheme</p>
-<label class="form-control">Namn UF-företag</label>
-<InputText @bind-value="Service.Shop.Settings.Title" class="form-control" />
-
-<label class="form-control">Beskrivning UF-företag</label>
-@* <InputText @bind-value="Service.Shop.Settings.Description" class="form-control" /> *@
-<TextAreaInput @bind-value="Service.Shop.Settings.Description" class="form-control" rows="5" />
-
-<label class="form-control">Swish nummer</label>
-<InputText @bind-value="Service.Shop.Settings.SwishNumber" class="form-control" />
-
-<label class="form-control">Basfraktpris</label>
-<NumberInput @bind-value="Service.Shop.Settings.BaseShippingPrice" class="form-control" EnableMinMax="true" Min="0" Max="10000" />
-
-@* <label class="form-control">Layout (används ej ännu)</label> *@
-@* <InputText @bind-value="Service.Shop.Settings.Layout" class="form-control" disabled="true" /> *@
-
-<label class="form-control">Färgtema</label>
-@* <InputText @bind-value="Service.Shop.Settings.Theme" class="form-control" disabled="true" /> *@
-<select class="form-select" @onchange="SelectThemeChange">
-    @foreach(string themeName in Themes)
-    {
-        if (themeName.Equals(SelectedTheme))
-        {
-            <option value="@themeName" selected>@themeName</option>
-        }
-        else
-        {
-            <option value="@themeName">@themeName</option>
-        }
-    }
-</select>
 
 
-<h2>Kontaktinformation</h2>
+<section class="mx-4 my-4">
 
-<label class="form-control">E-postadress UF-företag</label>
-<InputText @bind-value="Service.Shop.Settings.ContactInfo.Email" class="form-control" />
+    <div class="row m-4">
+        <div class="col text-center text-primary">
+            <h1 class="display-5 fw-bold">Inställningar</h1>
+        </div>
+    </div>
 
-<label class="form-control">Mobilnummer UF-företag</label>
-<InputText @bind-value="Service.Shop.Settings.ContactInfo.MobileNumber" class="form-control" />
 
-<h2>Sociala medier</h2>
+    <div class="card shadow border-0 mb-4">
+        <div class="card-body p-4">
 
-<label class="form-control">Facebook-sida</label>
-<InputText @bind-value="Service.Shop.Settings.ContactInfo.SocialMedia.Facebook" class="form-control" />
+            <Accordion class="mb-5">
+                <AccordionItem>
+                    <TitleTemplate>
+                        <h3><Icon Name="IconName.Gear" Class="me-1" /> Inställningar UF-shop</h3>
+                    </TitleTemplate>
+                    <Content>
+                        <p>SelectedTheme: @SelectedTheme</p>
+                        <label class="form-control">Namn UF-företag</label>
+                        <InputText @bind-value="Service.Shop.Settings.Title" class="form-control" />
 
-<label class="form-control">Instagram-sida</label>
-<InputText @bind-value="Service.Shop.Settings.ContactInfo.SocialMedia.Instagram" class="form-control" />
+                        <label class="form-control">Beskrivning UF-företag</label>
+                        @* <InputText @bind-value="Service.Shop.Settings.Description" class="form-control" /> *@
+                        <TextAreaInput @bind-value="Service.Shop.Settings.Description" class="form-control" rows="5" />
 
-<label class="form-control">LinkedIn-sida</label>
-<InputText @bind-value="Service.Shop.Settings.ContactInfo.SocialMedia.LinkedIn" class="form-control" />
+                        <label class="form-control">Swish nummer</label>
+                        <InputText @bind-value="Service.Shop.Settings.SwishNumber" class="form-control" />
 
-<label class="form-control">TikTok-sida</label>
-<InputText @bind-value="Service.Shop.Settings.ContactInfo.SocialMedia.TikTok" class="form-control" />
+                        <label class="form-control">Basfraktpris</label>
+                        <NumberInput @bind-value="Service.Shop.Settings.BaseShippingPrice" class="form-control" EnableMinMax="true" Min="0" Max="10000" />
 
-<label class="form-control">YouTube-sida</label>
-<InputText @bind-value="Service.Shop.Settings.ContactInfo.SocialMedia.YouTube" class="form-control" />
+                        @* <label class="form-control">Layout (används ej ännu)</label> *@
+                        @* <InputText @bind-value="Service.Shop.Settings.Layout" class="form-control" disabled="true" /> *@
 
-<Button Color="ButtonColor.Success" @onclick="((args) => SaveShopSettings(args))">
-    <Icon Name="IconName.Save" />
-</Button>
+                        <label class="form-control">Färgtema</label>
+                        @* <InputText @bind-value="Service.Shop.Settings.Theme" class="form-control" disabled="true" /> *@
+                        <select class="form-select" @onchange="SelectThemeChange">
+                            @foreach(string themeName in Themes)
+                            {
+                                if (themeName.Equals(SelectedTheme))
+                                {
+                                    <option value="@themeName" selected>@themeName</option>
+                                }
+                                else
+                                {
+                                <option value="@themeName">@themeName</option>
+                                }
+                            }
+                        </select>
+
+                    </Content>
+                </AccordionItem>
+
+                <AccordionItem>
+                    <TitleTemplate>
+                        <h3><Icon Name="IconName.ChatLeft" Class="me-1" /> Kontaktinformation</h3>
+                    </TitleTemplate>
+                    <Content>
+
+                        <label class="form-control">E-postadress UF-företag</label><span><InputText @bind-value="Service.Shop.Settings.ContactInfo.Email" class="form-control" /></span>
+
+                        <label class="form-control">Mobilnummer UF-företag</label>
+                        <InputText @bind-value="Service.Shop.Settings.ContactInfo.MobileNumber" class="form-control" />
+
+                    </Content>
+                </AccordionItem>
+
+                <AccordionItem>
+                    <TitleTemplate>
+                        <h3><Icon Name="IconName.Tiktok" Class="me-1" /> Sociala medier</h3>
+                    </TitleTemplate>
+                    <Content>
+
+                        <label class="form-control">Facebook-sida</label>
+                        <InputText @bind-value="Service.Shop.Settings.ContactInfo.SocialMedia.Facebook" class="form-control" />
+
+                        <label class="form-control">Instagram-sida</label>
+                        <InputText @bind-value="Service.Shop.Settings.ContactInfo.SocialMedia.Instagram" class="form-control" />
+
+                        <label class="form-control">LinkedIn-sida</label>
+                        <InputText @bind-value="Service.Shop.Settings.ContactInfo.SocialMedia.LinkedIn" class="form-control" />
+
+                        <label class="form-control">TikTok-sida</label>
+                        <InputText @bind-value="Service.Shop.Settings.ContactInfo.SocialMedia.TikTok" class="form-control" />
+
+                        <label class="form-control">YouTube-sida</label>
+                        <InputText @bind-value="Service.Shop.Settings.ContactInfo.SocialMedia.YouTube" class="form-control" />
+
+                    </Content>
+                </AccordionItem>
+            </Accordion>
+
+            <Button Color="ButtonColor.Success" @onclick="((args) => SaveShopSettings(args))">
+                <Icon Name="IconName.Save" />
+            </Button>
+
+        </div>
+    </div>
+
+
+
+</section>
