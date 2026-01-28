@@ -68,6 +68,13 @@
         await InvokeAsync(StateHasChanged);
     }
 
+    private async Task DeleteCart()
+    {
+        CartContent = await cartService.EmptyCartContent();
+        await ValidityChanged();
+        await InvokeAsync(StateHasChanged);
+    }
+
 }
 <h2 class="d-flex justify-content-between align-items-center mb-3">
     <span>Varukorgen</span>
@@ -85,6 +92,11 @@
 
 @if (CartContent.Count > 0)
 {
+    <p>Ta bort allt i varukorgen</p>
+    <Button Color="ButtonColor.Danger" Size="ButtonSize.ExtraSmall" @onclick="() => DeleteCart()">
+        <Icon Name="IconName.Trash" />
+    </Button>
+
     <p>
     Varupris: @CartContentSum
     </p>
