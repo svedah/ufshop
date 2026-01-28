@@ -105,10 +105,21 @@
                     </TitleTemplate>
                     <Content>
 
-                        <label class="form-control">E-postadress UF-företag</label><span><InputText @bind-value="Service.Shop.Settings.ContactInfo.Email" class="form-control" /></span>
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">
+                                <Icon Name="IconName.Envelope" /> E-postadress
+                            </label>
+                            <InputText @bind-value="Service.Shop.Settings.ContactInfo.Email"
+                                class="form-control" />
+                        </div>
 
-                        <label class="form-control">Mobilnummer UF-företag</label>
-                        <InputText @bind-value="Service.Shop.Settings.ContactInfo.MobileNumber" class="form-control" />
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">
+                                <Icon Name="IconName.Phone" /> Mobilnummer
+                            </label>
+                            <InputText @bind-value="Service.Shop.Settings.ContactInfo.MobileNumber"
+                                class="form-control" />
+                        </div>
 
                     </Content>
                 </AccordionItem>
