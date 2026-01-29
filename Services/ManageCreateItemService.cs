@@ -61,6 +61,7 @@ public class ManageCreateItemService
             Active = input.Active,
             PrimaryImage = input.PrimaryImage,
             Images = input.Images,
+            Rabatt = input.Rabatt,
             Uploadable = input.Uploadable
             // Properties = input.Properties
         };
@@ -96,6 +97,7 @@ public class ManageCreateItemService
                 AltText = "Bildbeskrivning"
             },
             Images = new HashSet<ShopImage>(),
+            Rabatt = false,
             Uploadable = false
         };
     }
