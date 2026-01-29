@@ -30,10 +30,6 @@
         }
     }
 }
-@* 
- TODO: ersätt Image Med Carousel 
- https://demos.blazorbootstrap.com/carousel
-*@
 
 @if (Item is null)
 {
@@ -90,10 +86,6 @@ else
                 </small>
                 <span class="h5 mb-0 fw-bold text-primary">@Item.Price kr</span>
             </div>
-
-
-            @* Todo gör att knappen funkar *@
-
 
             <button class="btn btn-primary w-100 mb-3" @onclick="() => AddToBasket()">
                 <i class="bi bi-cart-plus me-2"></i>Lägg i varukorg

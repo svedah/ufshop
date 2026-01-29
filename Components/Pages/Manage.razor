@@ -20,57 +20,58 @@
 </HeadContent>
 <div class="row">
     <div class="col text-center my-4">
-        <h1>Hantera shop</h1>
+        <h1 class="display-5 fw-bold">Hantera shop</h1>
     </div>
 </div>
-<div class="row">
-    <div class="col">
-    <Tabs class="fw-semibold justify-content-center">
-        <Tab Title="Beställningar">
-            <Content>
-                <ManageShopOrders />
-            </Content>
-        </Tab>
-        <Tab Title="Bildbibliotek">
-            <Content>
-                <ManageImages />
-            </Content>
-        </Tab>
-        <Tab Title="Skapa vara">
-            <Content>
-                <ManageCreateItem />
-            </Content>
-        </Tab>
-        <Tab Title="Redigera vara">
-            <Content>
-                <ManageEditItem />
-            </Content>
-        </Tab>
-        <Tab Title="Skapa sida">
-            <Content>
-                <ManageCreatePage />
-            </Content>
-        </Tab>
-        <Tab Title="Redigera sida">
-            <Content>
-                <ManageEditPage />
-            </Content>
-        </Tab>
-        <Tab Title="Inställningar">
-            <Content>
-                <ManageShopSettings />
-            </Content>
-        </Tab>
 
-        @* <AuthorizeView Roles="Administrator">
-            <Tab Title="Administration" KeepAlive="false">
+<div class="card shadow-sm border-0">
+    <div class="card-body p-0">
+        <Tabs  EnableFadeEffect="true" class="nav-pills nav-fill flex-column flex-md-row p-3 border-bottom pb-0">
+            <Tab Title="Beställningar">
                 <Content>
-                    <OrderShop />
+                    <ManageShopOrders />
                 </Content>
             </Tab>
-        </AuthorizeView> *@
+            <Tab Title="Bildbibliotek">
+                <Content>
+                    <ManageImages />
+                </Content>
+            </Tab>
+            <Tab Title="Skapa vara">
+                <Content>
+                    <ManageCreateItem />
+                </Content>
+            </Tab>
+            <Tab Title="Redigera vara">
+                <Content>
+                    <ManageEditItem />
+                </Content>
+            </Tab>
+            <Tab Title="Skapa sida">
+                <Content>
+                    <ManageCreatePage />
+                </Content>
+            </Tab>
+            <Tab Title="Redigera sida">
+                <Content>
+                    <ManageEditPage />
+                </Content>
+            </Tab>
+            <Tab Title="Inställningar">
+                <Content>
+                    <ManageShopSettings />
+                </Content>
+            </Tab>
+
+            @* <AuthorizeView Roles="Administrator">
+                <Tab Title="Administration" KeepAlive="false">
+                    <Content>
+                        <OrderShop />
+                    </Content>
+                </Tab>
+            </AuthorizeView> *@
 
 
-    </Tabs>
+        </Tabs>
     </div>
 </div>
