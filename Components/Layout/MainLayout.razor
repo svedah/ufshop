@@ -22,21 +22,21 @@
         shop = GetShop();
     }
 }
-@* <div class="container"> *@
-    <GlobalHeader />
-    <main class="container overflow-visible">
-        @if(shop.Active)
-        {
-            @Body
-        }
-        else
-        {
-            <p>Den här shoppen är ej längre aktiv</p>
-        }
-    </main>
-    <GlobalFooter />
-@* </div> *@
 
+@if(shop.Active)
+{
+    @* <div class="container"> *@
+    <GlobalHeader />
+        <main class="container overflow-visible">
+                @Body
+        </main>
+    <GlobalFooter />
+    @* </div> *@
+}
+else
+{
+    <p>Den här shoppen är ej längre aktiv</p>
+}
 
 <div id="blazor-error-ui" data-nosnippet>
     An unhandled error has occurred.

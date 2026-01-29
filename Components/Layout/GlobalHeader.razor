@@ -29,13 +29,9 @@
     }
 
 }
-<header class="sticky-top">
-    <nav class="navbar navbar-expand-sm navbar-light bg-white shadow-sm mb-3 p-2 px-4">
+<header class="sticky-top ">
+    <nav class="navbar navbar-expand-sm bg-primary-subtle shadow-sm mb-3 p-2 px-4">
         <div class="container-fluid">
-
-            @* Byt ut huset mot företagets logga *@
-            @* Skriv företagets namn brevid loggan *@
-
             <NavLink class="navbar-brand" href="/">
                 @if (ShopLogo is not null)
                 {
@@ -60,29 +56,9 @@
                 <Image Src="@imageUrl" Alt="" width="60px" />
             </p> *@
 
-            <AuthorizeView>
-                <Authorized>
-                <div class="d-flex">
-                    @if (shop.Active)
-                    {
-                        <NavLink class="btn btn-primary" href="/manage">
-                            <Icon Name="IconName.Shop"/>
-                        </NavLink>
-                    }
-                    <Logout />@context.User.Identity?.Name
-                </div>
-                </Authorized>
-                <NotAuthorized>
-                    @if (shop.Active)
-                    {
-                        <NavLink class="btn btn-primary" href="/login">
-                            @* <Icon Name="IconName.Person" /> *@
-                            <p class="m-0 fw-semibold">Logga In</p>
-                        </NavLink>
-                    }
-                </NotAuthorized>
-            </AuthorizeView>
+            
 
+            <ThemeSwitcher class="btn btn-primary p-1"/>
 
             <div class="navbar justify-content-between"> @*collapse*@
 

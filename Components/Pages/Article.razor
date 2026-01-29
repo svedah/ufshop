@@ -115,69 +115,67 @@ else
 {
     <PageTitle>Visar artikel "@shopItem.Title"</PageTitle>
 
-    <div class="container my-4">
-            
-        <!-- Back Button -->
-        <div class="mb-4">
-            <Button Color="ButtonColor.Light" Size="ButtonSize.Large" @onclick="NavigateBack" class="shadow-sm">
-                <Icon Name="IconName.ArrowLeft" class="me-2" />
-                Tillbaka
-            </Button>
-        </div>
-
+    <div class="container my-3">
         <div class="row g-4">
             <!-- Vänster Kolumn - Bilder -->
             <div class="col-lg-6">
                 <!-- Primär Bild -->
                 <div class="card border-0 shadow-sm mb-3">
                     <div class="card-body p-3">
-                        <div class="primary-image-container">
-                            <img src="@ImageURL" alt="@ImageText" class="img-fluid rounded-4 w-100" />
-                        </div>
-                    </div>
-                </div>
+                        <!-- Karusell Bilder -->
+                        @if (shopItem.Images.Any())
+                        { 
+                            <Carousel ShowIndicators="true" Autoplay="CarouselAutoPlay.StartOnPageLoad" class="custom-carousel">
+                                <CarouselItem Active="true" Interval="3000">
+                                    <img src="@ImageURL" alt="@ImageText" class="img-fluid rounded-4 w-100" />
+                                </CarouselItem>
 
-
-                @* Todo karusellbilder ska visas på primär bild inte som en separat del *@
-
-
-                <!-- Karusell Bilder -->
-                @if (shopItem.Images.Any())
-                {
-                    <div class="card border-0 shadow-sm">
-                        <div class="card-header bg-white border-bottom px-4">
-                            <h6 class="fw-semibold">
-                                <i class="bi bi-images me-2"></i>Fler bilder
-                            </h6>
-                        </div>
-                        <div class="card-body p-4">
-                            <div class="row g-2">
                                 @foreach(ShopImage shopImage in shopItem.Images)
                                 {
                                     string imageUrl = "/img/t/" + shopImage.Filename;
                                     string imageText = shopImage.AltText;
-                                    <div class="col-4 col-md-3">
-                                        <div class="carousel-thumb">
-                                            <img src="@imageUrl" alt="@imageText" class="img-fluid rounded-3" />
-                                        </div>
-                                    </div>
+                                    
+                                    <CarouselItem>
+                                        <img src="@imageUrl" alt="@imageText" class="img-fluid rounded-4 w-100" />
+                                    </CarouselItem>
                                 }
+                            </Carousel>
+
+                            <style>
+                                .custom-carousel .carousel-indicators button {
+                                    background-color: rgba(255, 255, 255, 0.8);
+                                    border: 2px solid rgba(0, 0, 0, 0.5);
+                                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+                                    width: 12px;
+                                    height: 12px;
+                                    border-radius: 50%;
+                                }
+                                
+                                .custom-carousel .carousel-indicators button.active {
+                                    background-color: var(--bs-primary);
+                                    border-color: white;
+                                    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+                                }
+                            </style>
+                        }
+                        else 
+                        {
+                            <div class="primary-image-container">
+                                <img src="@ImageURL" alt="@ImageText" class="img-fluid rounded-4 w-100" />
                             </div>
-                        </div>
+                        }
                     </div>
-                }
+                </div>
             </div>
 
             <!-- Höger Kolumn - Produkt Info -->
             <div class="col-lg-6">
                 <div class="card border-0 shadow-sm h-100">
                     <div class="card-body p-4">
-
-                        @* Todo Fixa titel *@
                         
                         <!-- Titel -->
-                        <div class="mb-4">
-                            <h1 class="display-6 fw-bold mb-3">@shopItem.Title</h1>
+                        <div class="col mb-3">
+                            <h1 class="display-6 fw-bold mb-0 d-flex align-items-center text-break">@shopItem.Title</h1>
                         </div>
 
                         <!-- Price -->
@@ -194,63 +192,61 @@ else
                                 <i class="bi bi-text-paragraph me-2 text-primary"></i>Beskrivning
                             </h5>
                             <p class="text-muted lead">@shopItem.Description</p>
+                        
                         </div>
 
                         <!-- Availability -->
                         <div class="mb-4">
-                            <div class="d-flex align-items-center justify-content-between p-4 bg-light rounded">
-                                    <h6 class="fw-semibold mb-1">
-                                        <i class="bi bi-box-seam me-2 text-primary"></i>Lagerstatus
-                                    </h6>
-                                    <p class="mb-0 text-muted">
-                                        @if (shopItem.ItemsAvailable <= 5)
-                                        {
-                                            <span class="text-warning fw-semibold">
-                                                <i class="bi bi-exclamation-triangle-fill me-1"></i>
-                                                Endast @shopItem.ItemsAvailable kvar!
-                                            </span>
-                                        }
-                                        else if (shopItem.ItemsAvailable == 0)
-                                        {
-                                            <span class="text-danger fw-semibold">
-                                                <i class="bi bi-x-circle-fill me-1"></i>
-                                                Slutsåld
-                                            </span>
-                                        }
-                                        else
-                                        {
-                                            <span class="text-success fw-semibold">
-                                                <i class="bi bi-check-circle-fill me-1"></i>
-                                                @shopItem.ItemsAvailable st i lager
-                                            </span>
-                                        }
-                                    </p>
+                            <div class="d-flex flex-column flex-sm-row align-items-start align-items-sm-center justify-content-sm-between p-4 bg-light rounded gap-2">
+                                <h6 class="fw-semibold mb-0">
+                                    <i class="bi bi-box-seam me-2 text-primary"></i>Lagerstatus
+                                </h6>
+                                <p class="mb-0 text-muted">
+                                    @if (shopItem.ItemsAvailable <= 5)
+                                    {
+                                        <span class="text-warning fw-semibold">
+                                            <i class="bi bi-exclamation-triangle-fill me-1"></i>
+                                            Endast @shopItem.ItemsAvailable kvar!
+                                        </span>
+                                    }
+                                    else if (shopItem.ItemsAvailable == 0)
+                                    {
+                                        <span class="text-danger fw-semibold">
+                                            <i class="bi bi-x-circle-fill me-1"></i>
+                                            Slutsåld
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-success fw-semibold">
+                                            <i class="bi bi-check-circle-fill me-1"></i>
+                                            @shopItem.ItemsAvailable st i lager
+                                        </span>
+                                    }
+                                </p>
                             </div>
                         </div>
 
                         <!-- Quantity Selector and Add to Cart -->
                         @if (shopItem.Active && shopItem.ItemsAvailable > 0)
                         {
-                            @* Todo Snygga till design på välj antal *@
-
                             <div class="card bg-primary bg-opacity-10 border-primary border-2">
-                                <div class="col card-body p-4 text-center">
-                                    <div class=" d-flex justify-content-between">
-                                        <label class="col form-label fw-semibold mb-3 d-flex align-items-center justify-content-start ps-4">
+                                <div class="card-body p-4 text-center">
+                                    <label class="form-label fw-semibold mb-3 d-flex align-items-center justify-content-center">
                                         Välj antal
-                                        </label>
+                                    </label>
                                         
-                                        <div class="col input-group input-group-lg mb-3">
-                                            
-                                            <InputNumber @bind-value="BuyNumItems" 
-                                                        min="1" 
-                                                        max="@shopItem.ItemsAvailable" 
-                                                        @onchange="NumItemsChange"
-                                                        class="form-control text-center fw-bold" />
-                                            <span class="input-group-text bg-white text-muted">st</span>
-                                        </div>
-                                    </div>
-                                
+                                    <div class="input-group input-group-lg mb-3">
+                                        <span class="input-group-text bg-white d-none d-sm-flex">
+                                            <i class="bi bi-bag"></i>
+                                        </span>
+                                        <InputNumber @bind-value="BuyNumItems" 
+                                                    min="1" 
+                                                    max="@shopItem.ItemsAvailable" 
+                                                    @onchange="NumItemsChange"
+                                                    class="form-control text-center fw-bold" />
+                                        <span class="input-group-text bg-white text-muted">st</span>
+                                    </div>                           
                                 
 
                                     <div class="d-grid">
@@ -259,7 +255,7 @@ else
                                                 @onclick="AddToCart"
                                                 class="py-3">
                                             <i class="bi bi-cart-plus-fill me-2"></i>
-                                            Lägg till i varukorg
+                                            Lägg i varukorg
                                         </Button>
                                     </div>
                                 </div>

@@ -1,4 +1,136 @@
+@using ufshop.Data.Models
+@using ufshop.Services
+
 @rendermode InteractiveServer
-<footer>
+@code {
+    public readonly BeService beService;
+    public readonly Shop shop;
+
+    public readonly string ShopTitle;
+    public readonly ShopImage ShopLogo;
+
+    public GlobalFooter(BeService srv)
+    {
+        beService = srv;
+        shop = GetShop();
+        ShopTitle = shop.Settings.Title;
+        ShopLogo = shop.Settings.LogoImage;
+    } 
+
+    private Shop GetShop()
+    {
+        Shop output;
+        ShopService ss = new ShopService(beService);
+        if (ss.GetShop(beService.DomainPrefix, out output))
+        {
+            return output;
+        }
+        return default!;
+    }
+
+}
+
+
+<footer class="mt-4">
     @* <LoginLogout /> *@
+    <AuthorizeView>
+        <Authorized>
+        <div class="d-flex">
+            @if (shop.Active)
+            {
+                <NavLink class="btn btn-secondary" href="/manage">
+                    <Icon Name="IconName.Shop"/>
+                </NavLink>
+            }
+            <Logout />@context.User.Identity?.Name
+        </div>
+        </Authorized>
+        <NotAuthorized>
+            @if (shop.Active)
+            {
+                <NavLink class="btn btn-primary" href="/login">
+                    @* <Icon Name="IconName.Person" /> *@
+                    <p class="m-0 fw-semibold">Logga In</p>
+                </NavLink>
+            }
+        </NotAuthorized>
+    </AuthorizeView>
+
+
+
+    <div class="row g-4">
+        <!-- Contact Info -->
+            <div class="col-md-4">
+                <h6 class="fw-bold text-primary mb-3">Kontakt</h6>
+                @if (!string.IsNullOrEmpty(shop.Settings.ContactInfo.Email))
+                {
+                    <p class="text-muted small mb-2">
+                        <i class="bi bi-envelope me-2"></i>
+                        <a href="mailto:@shop.Settings.ContactInfo.Email" class="text-decoration-none text-muted">
+                            @shop.Settings.ContactInfo.Email
+                        </a>
+                    </p>
+                }
+                @if (!string.IsNullOrEmpty(shop.Settings.ContactInfo.MobileNumber))
+                {
+                    <p class="text-muted small mb-2">
+                        <i class="bi bi-telephone me-2"></i>
+                        @shop.Settings.ContactInfo.MobileNumber
+                    </p>
+                }
+            </div>
+
+            <!-- Social Media -->
+            <div class="col-md-4">
+                <h6 class="fw-bold text-primary mb-3">Följ oss</h6>
+                <div class="d-flex gap-2">
+                    @if (!string.IsNullOrEmpty(shop.Settings.ContactInfo.SocialMedia.Facebook))
+                    {
+                        <a href="@shop.Settings.ContactInfo.SocialMedia.Facebook" 
+                           target="_blank" 
+                           class="btn btn-sm btn-outline-primary rounded-circle"
+                           title="Facebook">
+                            <i class="bi bi-facebook"></i>
+                        </a>
+                    }
+                    @if (!string.IsNullOrEmpty(shop.Settings.ContactInfo.SocialMedia.Instagram))
+                    {
+                        <a href="@shop.Settings.ContactInfo.SocialMedia.Instagram" 
+                           target="_blank" 
+                           class="btn btn-sm btn-outline-danger rounded-circle"
+                           title="Instagram">
+                            <i class="bi bi-instagram"></i>
+                        </a>
+                    }
+                    @if (!string.IsNullOrEmpty(shop.Settings.ContactInfo.SocialMedia.LinkedIn))
+                    {
+                        <a href="@shop.Settings.ContactInfo.SocialMedia.LinkedIn" 
+                           target="_blank" 
+                           class="btn btn-sm btn-outline-info rounded-circle"
+                           title="LinkedIn">
+                            <i class="bi bi-linkedin"></i>
+                        </a>
+                    }
+                    @if (!string.IsNullOrEmpty(shop.Settings.ContactInfo.SocialMedia.TikTok))
+                    {
+                        <a href="@shop.Settings.ContactInfo.SocialMedia.TikTok" 
+                           target="_blank" 
+                           class="btn btn-sm btn-outline-dark rounded-circle"
+                           title="TikTok">
+                            <i class="bi bi-tiktok"></i>
+                        </a>
+                    }
+                    @if (!string.IsNullOrEmpty(shop.Settings.ContactInfo.SocialMedia.YouTube))
+                    {
+                        <a href="@shop.Settings.ContactInfo.SocialMedia.YouTube" 
+                           target="_blank" 
+                           class="btn btn-sm btn-outline-danger rounded-circle"
+                           title="YouTube">
+                            <i class="bi bi-youtube"></i>
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+
 </footer>
