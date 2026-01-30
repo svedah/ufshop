@@ -2,6 +2,7 @@
 @using ufshop.Services
 
 @rendermode InteractiveServer
+
 @code {
     public readonly BeService beService;
     public readonly Shop shop;
@@ -15,7 +16,7 @@
         shop = GetShop();
         ShopTitle = shop.Settings.Title;
         ShopLogo = shop.Settings.LogoImage;
-    } 
+    }
 
     private Shop GetShop()
     {
@@ -27,100 +28,100 @@
         }
         return default!;
     }
-
 }
 
-
-<footer class="mt-4 bg-info-subtle">
+<footer class="mt-4 bg-body-tertiary text-body border-top border-body-secondary">
     <div class="container">
 
-        <div class="row g-4 p-3 d-flex justify-content-around">
-            
+        <div class="row g-4 p-3 justify-content-around">
 
-            @if(!string.IsNullOrEmpty(shop.Settings.ContactInfo.Email) || !string.IsNullOrEmpty(shop.Settings.ContactInfo.MobileNumber))
+            @if (!string.IsNullOrEmpty(shop.Settings.ContactInfo.Email) ||
+                 !string.IsNullOrEmpty(shop.Settings.ContactInfo.MobileNumber))
             {
                 <!-- Contact Info -->
                 <div class="col-lg-3 col-md-6 text-center">
-                    <h6 class="fw-bold text-dark mb-3">
-                        <i class="bi bi-person-lines-fill me-2 text-primary"></i>Kontakt
+                    <h6 class="fw-bold mb-3 text-body-emphasis">
+                        <i class="bi bi-person-lines-fill me-2 text-primary-emphasis"></i>
+                        Kontakt
                     </h6>
+
                     @if (!string.IsNullOrEmpty(shop.Settings.ContactInfo.Email))
                     {
                         <p class="mb-2">
-                            <a href="mailto:@shop.Settings.ContactInfo.Email" 
-                                class="text-decoration-none text-muted small d-flex align-items-center justify-content-center">
+                            <a href="mailto:@shop.Settings.ContactInfo.Email"
+                               class="text-decoration-none text-body-secondary small d-flex align-items-center justify-content-center">
                                 <i class="bi bi-envelope-fill me-2"></i>
                                 <span>@shop.Settings.ContactInfo.Email</span>
                             </a>
                         </p>
                     }
+
                     @if (!string.IsNullOrEmpty(shop.Settings.ContactInfo.MobileNumber))
                     {
-                        <p class="mb-2">
-                            <span class="text-muted small d-flex align-items-center justify-content-center">
-                                <i class="bi bi-telephone-fill me-2"></i>
-                                <span>@shop.Settings.ContactInfo.MobileNumber</span>
-                            </span>
+                        <p class="mb-2 text-body-secondary small d-flex align-items-center justify-content-center">
+                            <i class="bi bi-telephone-fill me-2"></i>
+                            <span>@shop.Settings.ContactInfo.MobileNumber</span>
                         </p>
                     }
                 </div>
             }
 
-            @if(!string.IsNullOrEmpty(shop.Settings.ContactInfo.SocialMedia.Facebook) ||
-                !string.IsNullOrEmpty(shop.Settings.ContactInfo.SocialMedia.Instagram) ||
-                !string.IsNullOrEmpty(shop.Settings.ContactInfo.SocialMedia.LinkedIn) ||
-                !string.IsNullOrEmpty(shop.Settings.ContactInfo.SocialMedia.TikTok) ||
-                !string.IsNullOrEmpty(shop.Settings.ContactInfo.SocialMedia.YouTube))
+            @if (!string.IsNullOrEmpty(shop.Settings.ContactInfo.SocialMedia.Facebook) ||
+                 !string.IsNullOrEmpty(shop.Settings.ContactInfo.SocialMedia.Instagram) ||
+                 !string.IsNullOrEmpty(shop.Settings.ContactInfo.SocialMedia.LinkedIn) ||
+                 !string.IsNullOrEmpty(shop.Settings.ContactInfo.SocialMedia.TikTok) ||
+                 !string.IsNullOrEmpty(shop.Settings.ContactInfo.SocialMedia.YouTube))
             {
-
                 <!-- Social Media -->
                 <div class="col-lg-3 col-md-6 text-center">
-                    <h6 class="fw-bold text-dark mb-3">
-                        <i class="bi bi-share-fill me-2 text-primary"></i>Följ oss
+                    <h6 class="fw-bold mb-3 text-body-emphasis">
+                        <i class="bi bi-share-fill me-2 text-primary-emphasis"></i>
+                        Följ oss
                     </h6>
+
                     <div class="d-flex flex-wrap justify-content-center gap-2">
                         @if (!string.IsNullOrEmpty(shop.Settings.ContactInfo.SocialMedia.Facebook))
                         {
-                            <a href="@shop.Settings.ContactInfo.SocialMedia.Facebook" 
-                                target="_blank" 
-                                class="btn btn-sm btn-primary rounded-circle"
-                                title="Facebook">
+                            <a href="@shop.Settings.ContactInfo.SocialMedia.Facebook"
+                               target="_blank"
+                               class="btn btn-sm btn-primary"
+                               title="Facebook">
                                 <i class="bi bi-facebook"></i>
                             </a>
                         }
                         @if (!string.IsNullOrEmpty(shop.Settings.ContactInfo.SocialMedia.Instagram))
                         {
-                            <a href="@shop.Settings.ContactInfo.SocialMedia.Instagram" 
-                                target="_blank" 
-                                class="btn btn-sm btn-danger rounded-circle"
-                                title="Instagram">
+                            <a href="@shop.Settings.ContactInfo.SocialMedia.Instagram"
+                               target="_blank"
+                               class="btn btn-sm btn-danger"
+                               title="Instagram">
                                 <i class="bi bi-instagram"></i>
                             </a>
                         }
                         @if (!string.IsNullOrEmpty(shop.Settings.ContactInfo.SocialMedia.LinkedIn))
                         {
-                            <a href="@shop.Settings.ContactInfo.SocialMedia.LinkedIn" 
-                                target="_blank" 
-                                class="btn btn-sm btn-info rounded-circle"
-                                title="LinkedIn">
+                            <a href="@shop.Settings.ContactInfo.SocialMedia.LinkedIn"
+                               target="_blank"
+                               class="btn btn-sm btn-info"
+                               title="LinkedIn">
                                 <i class="bi bi-linkedin"></i>
                             </a>
                         }
                         @if (!string.IsNullOrEmpty(shop.Settings.ContactInfo.SocialMedia.TikTok))
                         {
-                            <a href="@shop.Settings.ContactInfo.SocialMedia.TikTok" 
-                                target="_blank" 
-                                class="btn btn-sm btn-dark rounded-circle"
-                                title="TikTok">
+                            <a href="@shop.Settings.ContactInfo.SocialMedia.TikTok"
+                               target="_blank"
+                               class="btn btn-sm btn-dark"
+                               title="TikTok">
                                 <i class="bi bi-tiktok"></i>
                             </a>
                         }
                         @if (!string.IsNullOrEmpty(shop.Settings.ContactInfo.SocialMedia.YouTube))
                         {
-                            <a href="@shop.Settings.ContactInfo.SocialMedia.YouTube" 
-                                target="_blank" 
-                                class="btn btn-sm btn-danger rounded-circle"
-                                title="YouTube">
+                            <a href="@shop.Settings.ContactInfo.SocialMedia.YouTube"
+                               target="_blank"
+                               class="btn btn-sm btn-danger"
+                               title="YouTube">
                                 <i class="bi bi-youtube"></i>
                             </a>
                         }
@@ -128,18 +129,19 @@
                 </div>
             }
 
-            @* <LoginLogout /> *@
             <div class="col-lg-2 col-md-6">
                 <AuthorizeView>
                     <Authorized>
                         @if (shop.Active)
                         {
-                            <h6 class="fw-bold text-dark mb-3 text-center">
-                                <i class="bi bi-gear-fill me-2 text-primary"></i>Hantera
+                            <h6 class="fw-bold mb-3 text-center text-body-emphasis">
+                                <i class="bi bi-gear-fill me-2 text-primary-emphasis"></i>
+                                Hantera
                             </h6>
+
                             <div class="d-flex justify-content-between">
                                 <NavLink class="btn btn-outline-primary col me-2" href="/manage">
-                                    <i class="bi bi-shop me-2"></i>
+                                    <i class="bi bi-shop"></i>
                                 </NavLink>
                                 <div class="col">
                                     <Logout />
@@ -147,20 +149,25 @@
                             </div>
                         }
                     </Authorized>
+
                     <NotAuthorized>
                         @if (shop.Active)
                         {
-                            <h6 class="fw-bold text-dark mb-3">
-                                <i class="bi bi-person-circle me-2 text-primary"></i>Konto
+                            <h6 class="fw-bold mb-3 text-body-emphasis">
+                                <i class="bi bi-person-circle me-2 text-primary-emphasis"></i>
+                                Konto
                             </h6>
-                            <NavLink class="btn btn-primary w-100 d-flex justify-content-center" href="/login">
+
+                            <NavLink class="btn btn-primary w-100 d-flex justify-content-center align-items-center"
+                                     href="/login">
                                 <i class="bi bi-box-arrow-in-right me-2"></i>
-                                <p class="m-0 fw-semibold">Logga In</p>
+                                <span class="fw-semibold">Logga In</span>
                             </NavLink>
                         }
                     </NotAuthorized>
                 </AuthorizeView>
             </div>
+
         </div>
     </div>
 </footer>
