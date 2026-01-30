@@ -4,9 +4,10 @@
 <form action="Account/Logout" method="post">
     <AntiforgeryToken />
     <input type="hidden" name="ReturnUrl" value="@currentUrl" />
-    <button class="btn btn-primary" type="submit">
+    <button class="btn btn-primary text-nowrap w-100 d-flex justify-content-center" type="submit">
         @* <span class="bi bi-arrow-bar-left-nav-menu" aria-hidden="true"></span> Logout *@
          @* <Icon Name="IconName.DoorClosed" /> *@
+        <i class="bi bi-box-arrow-in-left me-2"></i>
         <p class="m-0 fw-semibold">Logga Ut</p>
     </button>
 </form>

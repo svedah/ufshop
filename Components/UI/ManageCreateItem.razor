@@ -227,7 +227,7 @@
                     <div class="col-md-7 d-grid justify-content-center">
                         <label class="form-label text-center fw-semibold mb-3 text-muted">KARUSELLBILDER</label>
                     
-                        <div class="d-flex gap-3">
+                        <div class="d-flex flex-column gap-3">
                         @foreach(ShopImage image in @newShopItem.Images.OrderBy(e=>e.Created))
                         {
                             string imageFileName = "/img/t/" + image.Filename;
@@ -246,13 +246,13 @@
 
     <!-- Publicera och spara -->
     <div class="card container shadow border-0 mb-4">
-        <div class="card-body row p-4">
-            <div class="col-lg col-md d-flex flex-column justify-content-center">
-                <div class="form-check form-switch form-check-reverse text-start d-flex justify-content-start align-items-center mb-3">
-                    <CheckboxInput id="FormActiveId" class="form-check-input" 
+        <div class="card-body row p-3 px-2 p-sm-4">
+            <div class="fw-semibold col-lg col-md d-flex flex-column justify-content-center">
+                <label class="form-check form-switch form-check-reverse text-start d-flex justify-content-center justify-content-md-start align-items-center mb-3">
+                    <CheckboxInput id="FormActiveId" class="form-check-input d-flex align-self-center" 
                                 Label="Publicera varan direkt" @bind-Value="@newShopItem.Active" />
-                </div>
-                <small class="text-muted d-block mt-1 mx-4 my-2 mb-sm-1 d-flex align-items-center">
+                </label>
+                <small class="text-muted d-block mt-1 mx-4 my-2 mb-3 mb-sm-1 d-flex justify-content-center justify-content-md-start align-items-center text-center text-md-start">
                     Varan blir synlig i butiken när den är publicerad
                 </small>
             </div>
