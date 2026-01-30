@@ -143,18 +143,20 @@ else
 
                             <style>
                                 .custom-carousel .carousel-indicators button {
-                                    background-color: rgba(255, 255, 255, 0.8);
-                                    border: 2px solid rgba(0, 0, 0, 0.5);
+                                    background-color: var(--bs-body-bg);
+                                    border: 2px solid var(--bs-border-color);
                                     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
                                     width: 12px;
                                     height: 12px;
                                     border-radius: 50%;
+                                    opacity: 0.5;
                                 }
                                 
                                 .custom-carousel .carousel-indicators button.active {
                                     background-color: var(--bs-primary);
-                                    border-color: white;
+                                    border-color: var(--bs-primary);
                                     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+                                    opacity: 1;
                                 }
                             </style>
                         }
@@ -202,47 +204,51 @@ else
 
                         <!-- Availability -->
                         <div class="mb-4">
-                            <div class="d-flex flex-column flex-sm-row align-items-start align-items-sm-center justify-content-sm-between p-4 bg-light rounded gap-2">
-                                <h6 class="fw-semibold mb-0">
-                                    <i class="bi bi-box-seam me-2 text-primary"></i>Lagerstatus
-                                </h6>
-                                <p class="mb-0 text-muted">
-                                    @if (shopItem.ItemsAvailable <= 5)
-                                    {
-                                        <span class="text-warning fw-semibold">
-                                            <i class="bi bi-exclamation-triangle-fill me-1"></i>
-                                            Endast @shopItem.ItemsAvailable kvar!
-                                        </span>
-                                    }
-                                    else if (shopItem.ItemsAvailable == 0)
-                                    {
-                                        <span class="text-danger fw-semibold">
-                                            <i class="bi bi-x-circle-fill me-1"></i>
-                                            Slutsåld
-                                        </span>
-                                    }
-                                    else
-                                    {
-                                        <span class="text-success fw-semibold">
-                                            <i class="bi bi-check-circle-fill me-1"></i>
-                                            @shopItem.ItemsAvailable st i lager
-                                        </span>
-                                    }
-                                </p>
+                            <div class="card border">
+                                <div class="card-body p-4">
+                                    <div class="d-flex flex-column flex-sm-row align-items-start align-items-sm-center justify-content-sm-between gap-2">
+                                        <h6 class="fw-semibold mb-0">
+                                            <i class="bi bi-box-seam me-2 text-primary"></i>Lagerstatus
+                                        </h6>
+                                        <p class="mb-0">
+                                            @if (shopItem.ItemsAvailable <= 5)
+                                            {
+                                                <span class="text-warning fw-semibold">
+                                                    <i class="bi bi-exclamation-triangle-fill me-1"></i>
+                                                    Endast @shopItem.ItemsAvailable kvar!
+                                                </span>
+                                            }
+                                            else if (shopItem.ItemsAvailable == 0)
+                                            {
+                                                <span class="text-danger fw-semibold">
+                                                    <i class="bi bi-x-circle-fill me-1"></i>
+                                                    Slutsåld
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-success fw-semibold">
+                                                    <i class="bi bi-check-circle-fill me-1"></i>
+                                                    @shopItem.ItemsAvailable st i lager
+                                                </span>
+                                            }
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
                         <!-- Quantity Selector and Add to Cart -->
                         @if (shopItem.Active && shopItem.ItemsAvailable > 0)
                         {
-                            <div class="card bg-primary bg-opacity-10 border-primary border-2">
+                            <div class="card border-primary border-2">
                                 <div class="card-body p-4 text-center">
                                     <label class="form-label fw-semibold mb-3 d-flex align-items-center justify-content-center">
                                         Välj antal
                                     </label>
                                         
                                     <div class="input-group input-group-lg mb-3">
-                                        <span class="input-group-text bg-white d-none d-sm-flex">
+                                        <span class="input-group-text d-none d-sm-flex">
                                             <i class="bi bi-bag"></i>
                                         </span>
                                         <InputNumber @bind-value="BuyNumItems" 
@@ -250,7 +256,7 @@ else
                                                     max="@shopItem.ItemsAvailable" 
                                                     @onchange="NumItemsChange"
                                                     class="form-control text-center fw-bold" />
-                                        <span class="input-group-text bg-white text-muted">st</span>
+                                        <span class="input-group-text">st</span>
                                     </div>                           
                                 
 

@@ -35,11 +35,11 @@
             {
                 if (!IsPrefixValid)
                 {
-                    output += "border-color: red;";
+                    output += "border-color: var(--bs-danger);";
                 }
                 else
                 {
-                    output += "border-color: green;";
+                    output += "border-color: var(--bs-success);";
                 }
             }
 
@@ -81,7 +81,7 @@
         </label>
 
         <div class="input-group input-group-lg">
-            <span class="input-group-text bg-light border-end-0 d-none d-sm-flex">https://</span>
+            <span class="input-group-text border-end-0 d-none d-sm-flex">https://</span>
             
             <input @bind="Prefix"
                    type="text"
@@ -90,7 +90,7 @@
                    placeholder="uf-namn"
                    style="@PrefixCSS"
             />            
-            <span class="input-group-text bg-light border-start-0">.ufshop.nu</span>
+            <span class="input-group-text border-start-0">.ufshop.nu</span>
         </div>
 
         <small class="text-muted d-block mt-2">
@@ -110,7 +110,7 @@
     </section>
     
     @* Kontakt information *@
-    <section class="card border-0 bg-light mb-4">
+    <section class="card border mb-4">
         <div class="card-body p-4">
             <h6 class="fw-semibold mb-3 text-muted">
                 <i class="bi bi-person-lines-fill me-2"></i>KONTAKTINFORMATION
@@ -120,7 +120,7 @@
             <div class="mb-3">
                 <label class="form-label fw-semibold">E-post adress</label>
                 <div class="input-group">
-                    <span class="input-group-text bg-white d-none d-sm-flex">
+                    <span class="input-group-text d-none d-sm-flex">
                         <i class="bi bi-envelope"></i>
                     </span>
                     <InputText @bind-Value="Email" 
@@ -134,7 +134,7 @@
             <div class="mb-0">
                 <label class="form-label fw-semibold">Mobilnummer</label>
                 <div class="input-group">
-                    <span class="input-group-text bg-white d-none d-sm-flex">
+                    <span class="input-group-text d-none d-sm-flex">
                         <i class="bi bi-telephone"></i>
                     </span>
                     <InputText @bind-Value="Phone" 
@@ -184,7 +184,7 @@
 
     @* Assisterad *@
     <section class="mb-4">
-        <div class="card border-0 bg-light">
+        <div class="card border">
             <div class="card-body p-3">
                 <div class="d-flex flex-column flex-sm-row align-items-center justify-content-sm-between text-center text-sm-start mx-2 mx-sm-4">
                     <div>
@@ -245,11 +245,11 @@
     }
     
     .form-check-card .form-check-label {
-        border: 2px solid #dee2e6;
+        border: 2px solid var(--bs-border-color);
         border-radius: 0.5rem;
         cursor: pointer;
         transition: all 0.3s ease;
-        background: var(--bs-subtle); /* todo byt färgen*/
+        background-color: var(--bs-body-bg);
     }
     
     .form-check-card .form-check-label:hover {
@@ -259,13 +259,13 @@
     }
     
     .form-check-card .form-check-input:checked + .form-check-label {
-        @* border-color: #var(--bs-primary); *@
-        background: rgba(13, 110, 253, 0.05);
-        box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+        border-color: var(--bs-primary);
+        background-color: var(--bs-primary-bg-subtle);
+        box-shadow: 0 0 0 0.2rem var(--bs-primary-border-subtle);
     }
     
     .form-check-card .form-check-input:checked + .form-check-label i {
-        color: #var(--bs-primary) !important;
+        color: var(--bs-primary) !important;
     }
     
     /* Switch Styling */
@@ -274,11 +274,6 @@
         height: 1.5rem;
         cursor: pointer;
     }
-    
-    @* .form-check-switch .form-check-input:checked {
-        background-color: #198754;
-        border-color: #198754;
-    } *@
     
     /* Button Styling */
     .btn-submit {
@@ -289,7 +284,7 @@
     
     .btn-submit:hover:not(:disabled) {
         transform: translateY(-2px);
-        box-shadow: 0 6px 12px rgba(25, 135, 84, 0.3);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
     }
     
     .btn-submit:disabled {
