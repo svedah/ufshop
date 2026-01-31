@@ -30,52 +30,86 @@
 
 }
 <header class="sticky-top ">
-    <nav class="navbar navbar-expand-sm bg-primary-subtle shadow-sm mb-3 p-2 px-4">
+    <nav class="navbar navbar-expand-lg bg-primary-subtle shadow-sm mb-3 p-2 px-sm-4">
         <div class="container-fluid">
-            <NavLink class="navbar-brand" href="/">
+            <NavLink class="navbar-brand d-flex align-items-center" href="/">
                 @if (ShopLogo is not null)
                 {
-                    <p class="d-flex flex-row-reverse justify-content-around align-items-center m-0 fw-bold">
+                    string imageUrl = "/img/" + ShopLogo.Filename;
+                    
+                    <Image Src="@imageUrl" 
+                            Alt="@ShopTitle" 
+                            width="60px" 
+                            class="shop-logo me-3 rounded shadow-sm" />
+                    <span class="fw-bold m-0 fs-5 d-none d-sm-inline text-nowrap">
                         @ShopTitle
-                        @{string imageUrl = "/img/" + ShopLogo.Filename;}
-                        <Image Src="@imageUrl" Alt="" width="60px" class="me-3 rounded" />
-                    </p>
+                    </span>
                 }
                 else
                 {
-                    <Icon Name="IconName.House"/>
-                    <p class="d-flex align-items-center m-0">
+                    <Icon Name="IconName.House" class="text-primary me-2"/>
+                    <span class="fw-bold  m-0 fs-5 d-none d-sm-inline text-nowrap">
                         @ShopTitle
-                    </p>
+                    </span>
                 }
             </NavLink>
-
-            @* <p class="d-flex align-items-center m-0">
-                @ShopTitle
-                @{string imageUrl = "/img/" + ShopLogo.Filename;}
-                <Image Src="@imageUrl" Alt="" width="60px" />
-            </p> *@
-
             
+            <!-- Höger Sida -->
+            <div class="d-flex align-items-center gap-2">
 
-            <ThemeSwitcher class="btn btn-primary p-1"/>
+                <ThemeSwitcher class="btn btn-primary btn-sm"/>
 
-            <div class="navbar justify-content-between"> @*collapse*@
-
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                    </li>
-                    <li class="nav-item">
-                        <NavLink class="btn btn-primary" href="/checkout">
-                            <Icon Name="IconName.Cart"/>
-                        </NavLink>
-                    </li>
-                </ul>
-
+                <NavLink class="btn btn-primary position-relative px-3 py-2" href="/checkout">
+                    <Icon Name="IconName.Cart" />
+                    <span class="d-none d-md">Varukorg</span>
+                    
+                    @* todo gör att den faktiskt visar rätt tal *@
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        3
+                    </span>
+                </NavLink>
             </div>
-
         </div>
     </nav>
 </header>
 
 
+<style>
+
+
+#bb-theme-text {
+    display: none !important;
+}
+
+    /* Logo sizing - responsive */
+    .shop-logo {
+        width: 45px;
+        height: 45px;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+    
+    .shop-logo:hover {
+        transform: scale(1.05);
+    }
+    
+
+    .navbar-brand:hover .shop-logo {
+        transform: rotate(5deg) scale(1.05);
+    }
+    
+    /* Button hover effects */
+    .btn {
+        transition: all 0.3s ease;
+    }
+    
+    .btn:hover {
+        transform: translateY(-2px);
+    }
+    
+    .btn-primary:hover {
+        box-shadow: 0 4px 8px rgba(13, 110, 253, 0.3);
+    }
+    
+
+</style>
