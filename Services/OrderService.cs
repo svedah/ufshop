@@ -36,9 +36,6 @@ public class OrderService
 
         ShopOrderService shopOrderService = new ShopOrderService(beService);
 
-        //generera unik geus för shoporder
-        string shopOrderGeus = shopOrderService.GetGeus();
-
         //generera unikt guid för shopOrder
         Guid shopOrderId = Guid.NewGuid();
 
@@ -48,7 +45,6 @@ public class OrderService
             Id = shopOrderId,
             Created = DateTime.Now,
             Cart = cart,
-            Geus = shopOrderGeus,
             CustomerInfo = customerInfo,
             Status = ShopOrderStatus.Unpaid,
         };

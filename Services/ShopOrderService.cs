@@ -17,34 +17,34 @@ public class ShopOrderService
         beService = srv;
     }
 
-    public string GetGeus()
-    {
-        Shop shop;
-        ShopService shopService = new ShopService(beService);
-        if (shopService.GetShop(beService.DomainPrefix, out shop))
-        {
-            //build hashset of all geuses in shop.
-            HashSet<string> Geuses = new HashSet<string>();
-            foreach(ShopOrder order in shop.Orders)
-            {
-                if(order.Geus.Length == Shared.Constants.GEUSLENGTH)
-                {
-                    Geuses.Add(order.Geus);
-                }
-            }
+    // public string GetGeus()
+    // {
+    //     Shop shop;
+    //     ShopService shopService = new ShopService(beService);
+    //     if (shopService.GetShop(beService.DomainPrefix, out shop))
+    //     {
+    //         //build hashset of all geuses in shop.
+    //         HashSet<string> Geuses = new HashSet<string>();
+    //         foreach(ShopOrder order in shop.Orders)
+    //         {
+    //             if(order.Geus.Length == Shared.Constants.GEUSLENGTH)
+    //             {
+    //                 Geuses.Add(order.Geus);
+    //             }
+    //         }
 
-            //Generate random Geus until unique found
-            string newGeus = string.Empty;
-            do
-            {
-                newGeus = Helpers.Geus.Generate(Shared.Constants.GEUSLENGTH);
-            } 
-            while (Geuses.Contains(newGeus));
+    //         //Generate random Geus until unique found
+    //         string newGeus = string.Empty;
+    //         do
+    //         {
+    //             newGeus = Helpers.Geus.Generate(Shared.Constants.GEUSLENGTH);
+    //         } 
+    //         while (Geuses.Contains(newGeus));
 
-            return newGeus;
-        }
-        return string.Empty;
-    }
+    //         return newGeus;
+    //     }
+    //     return string.Empty;
+    // }
 
     public void Save(ShopOrder input)
     {

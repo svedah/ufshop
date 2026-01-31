@@ -1,9 +1,12 @@
 @page "/checkout"
 @using Microsoft.AspNetCore.SignalR
+@using ufshop.Components.Account
 @using ufshop.Services
 @using ufshop.Data.Models
 @rendermode InteractiveServer
 @* @inject ufshop.Services.BeService BeService *@
+@inject IdentityRedirectManager RedirectManager
+
 @code {
     private readonly BeService beService;
     @* private readonly CartService cartService; *@
@@ -64,7 +67,8 @@
                 //do NOT clean customerinfo in localStorage
 
                 //TODO: navigate to payment page with shoporder id
-                
+            RedirectManager.RedirectTo("Payment/" + shopOrderId.ToString());
+
 
             }
             else

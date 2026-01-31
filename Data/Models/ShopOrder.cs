@@ -4,7 +4,7 @@ public class ShopOrder
 {
     public required Guid Id { get; set; }
     public required DateTime Created { get; set; }
-    public required string Geus { get; set; }
+    // public required string Geus { get; set; }
     public required virtual Cart Cart { get; set; }
     public required virtual CustomerInfo CustomerInfo { get; set; }
     public required virtual ShopOrderStatus Status { get; set; }
