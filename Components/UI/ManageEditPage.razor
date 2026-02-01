@@ -86,124 +86,111 @@
     }
 
 }
-<div class="row">
-    <div class="col">
-        <h1>Redigera sida</h1>
+<div class="container my-4">
+
+    <!-- Header -->
+    <div class="text-center mb-5">
+        <h1 class="fw-bold text-primary">
+            <i class="bi bi-pencil-square me-2"></i>Redigera sida
+        </h1>
     </div>
-</div>
 
-<div class="row">
-    <div class="col">
-        <select class="form-select" @onchange="SelectPageChange" @onfocus="UpdateAllShopPages">
-            <option selected disabled>Välj sida</option>
-            @* @foreach(ShopPage shopPage in Service.AllShopPages().OrderBy(e => e.Order)) *@
-            @foreach(ShopPage shopPage in ShopPages)
-            {
-                <option value="@shopPage.Id">
-                    @shopPage.Header
-                </option>
-            }
-        </select>
-    </div>
-</div>
-
-
-@if (editShopPage.Id != Guid.Empty)
-{
-    <div class="row">
-        <div class="col">
-            <label class="form-label">Sidtitel</label>
+    <!-- Välj Sida -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0 fw-semibold">
+                <i class="bi bi-file-text me-2"></i>Välj sida
+            </h5>
+        </div>
+        <div class="card-body">
+            <select class="form-select form-select-lg" @onchange="SelectPageChange" @onfocus="UpdateAllShopPages">
+                <option selected disabled>Välj sida...</option>
+                @foreach(ShopPage shopPage in ShopPages)
+                {
+                    <option value="@shopPage.Id">
+                        @shopPage.Header
+                    </option>
+                }
+            </select>
         </div>
     </div>
-
-    <div class="row">
-        <div class="col">
-            <InputText @bind-value="editShopPage.Header" class="form-control" />
-        </div>
-        @* <div class="col">
-            <Button Color="ButtonColor.Primary" @onclick="((args) => EmptyFunction(args, Guid.Empty))">
-                <Icon Name="IconName.Check" />
-            </Button>
-        </div> *@
-    </div>
-
-    <div class="row">
-        <div class="col">
-            <label class="form-label">Sidordning</label>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <InputNumber @bind-value="editShopPage.Order" class="form-control" />
-        </div>
-        @* <div class="col">
-            <Button Color="ButtonColor.Primary" @onclick="((args) => EmptyFunction(args, Guid.Empty))">
-                <Icon Name="IconName.Check" />
-            </Button>
-        </div> *@
-    </div>
-
-    <Accordion>
-    @foreach(ShopPageFragment shopPageFragment in editShopPage.ShopPageFragments.OrderBy(e => e.Order))
+    
+    @if (editShopPage.Id != Guid.Empty)
     {
-        string accordionTitle = "Sidstycke: " + shopPageFragment.Header;
-        <AccordionItem Title="@accordionTitle">
-            <Content>
-                @* wtf micro$oft... varför inte hela objektet, varför bara id?!?*@
-                <ManageEditPageFragment ShopPageFragmentId="@shopPageFragment.Id" />
-                <div class="row">
-                    <div class="col">
-                        <label class="form-label">Ta bort sidstycke</label>
+        <!-- Titel & Ordning -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h6 class="mb-0 fw-semibold">
+                    <i class="bi bi-pencil me-2"></i>Sidinformation
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <!-- Titel -->
+                    <div class="col-12 col-md-9">
+                        <label class="form-label fw-semibold">Sidtitel</label>
+                        <InputText @bind-value="editShopPage.Header" class="form-control" placeholder="Ange sidtitel..." />
+                    </div>
+
+                    <!-- Ordning -->
+                    <div class="col-12 col-md-3">
+                        <label class="form-label fw-semibold">Sidordning</label>
+                        <InputNumber @bind-value="editShopPage.Order" class="form-control" />
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col">
-                        <Button Color="ButtonColor.Danger" @onclick="((args) => DeleteShopPageFragment(args, shopPageFragment.Id))">
-                            <Icon Name="IconName.Trash" />
-                        </Button>
+            </div>
+        </div>
+  
+        <!-- Page Fragments Card -->
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h6 class="mb-0 fw-semibold">
+                    <i class="bi bi-layout-text-window me-2"></i>Sidstycken
+                </h6>
+                <Button Color="ButtonColor.Primary" Size="ButtonSize.Small" @onclick="((args) => AddNewShopPageFragment(args))">
+                    <Icon Name="IconName.Plus" class="me-1" /> Lägg till
+                </Button>
+            </div>
+            <div class="card-body">
+                @if (editShopPage.ShopPageFragments.Any())
+                {
+                    <Accordion>
+                        @foreach(ShopPageFragment shopPageFragment in editShopPage.ShopPageFragments.OrderBy(e => e.Order))
+                        {
+                            string accordionTitle = "Sidstycke: " + shopPageFragment.Header;
+                            <AccordionItem Title="@accordionTitle">
+                                <Content>
+                                    <ManageEditPageFragment ShopPageFragmentId="@shopPageFragment.Id" />
+                                    
+                                    <div class="border-top mt-3 pt-3 d-flex justify-content-center">
+                                        <Button Color="ButtonColor.Danger" 
+                                                @onclick="((args) => DeleteShopPageFragment(args, shopPageFragment.Id))">
+                                            <Icon Name="IconName.Trash" class="me-1" /> Ta bort sidstycke
+                                        </Button>
+                                    </div>
+                                </Content>
+                            </AccordionItem>
+                        }
+                    </Accordion>
+                }
+                else
+                {
+                    <div class="text-center py-4 text-muted">
+                        <i class="bi bi-file-text fs-1"></i>
+                        <p class="mt-2 mb-0">Inga sidstycken ännu. Lägg till ett ovan!</p>
                     </div>
-                </div>
-            </Content>
-        </AccordionItem>
+                }
+            </div>
+        </div>
+
+        <!-- Delete and Save Button -->
+        <div class="d-flex justify-content-center">
+            <Button Color="ButtonColor.Danger" @onclick="((args) => DeleteShopPage(args, editShopPage.Id))" class="mx-3">
+                <Icon Name="IconName.Trash" class="me-2"/> Ta Bort Sida
+            </Button>
+            <Button Color="ButtonColor.Success" Size="ButtonSize.Large" @onclick="((args) => SaveShopPage(args))" class="mx-3">
+                <Icon Name="IconName.Save" class="me-2" /> Spara sida
+            </Button>
+        </div>
     }
-    </Accordion>
-
-    <div class="row">
-        <div class="col">
-            <label class="form-label">Lägg till nytt sidstycke</label>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <Button Color="ButtonColor.Primary" @onclick="((args) => AddNewShopPageFragment(args))">
-                <Icon Name="IconName.Plus" />
-            </Button>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col">
-            <label class="form-label">Spara sida</label>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <Button Color="ButtonColor.Success" @onclick="((args) => SaveShopPage(args))">
-                <Icon Name="IconName.Save" />
-            </Button>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col">
-            <label class="form-label">Ta bort sida</label>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <Button Color="ButtonColor.Danger" @onclick="((args) => DeleteShopPage(args, editShopPage.Id))">
-                <Icon Name="IconName.Trash" />
-            </Button>
-        </div>
-    </div>
-}
+</div>
