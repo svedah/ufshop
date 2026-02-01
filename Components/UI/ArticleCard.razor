@@ -36,11 +36,18 @@
     <Spinner />
 }
 else
-{
-    string articleUrl = "/article/" + Item.Id.ToString();
-    
+{    
+    @inject NavigationManager NavigationManager
+
+    @code {
+        private void GoToArticle()
+        {    
+            NavigationManager.NavigateTo("/article/" + Item.Id.ToString(), forceLoad: true);
+        }
+    }
+
     <Card class="card article-card shadow-sm rounded rounded-4 border" Style="width:17rem;">
-        <a href=@articleUrl class="text-decoration-none card-link">
+        <a @onclick="GoToArticle" class="text-decoration-none card-link">
             
             @* Image Container *@
             <div class="position-relative overflow-hidden">

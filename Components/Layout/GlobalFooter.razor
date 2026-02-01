@@ -129,6 +129,24 @@
                 </div>
             }
 
+
+            
+            @inject NavigationManager NavigationManager
+
+            @code {
+                private void GoToLogin()
+                {
+                    
+                    NavigationManager.NavigateTo("/login", forceLoad: true);
+                }
+
+                private void GoToManage()
+                {
+                    
+                    NavigationManager.NavigateTo("/manage", forceLoad: true);
+                }
+            }
+
             <div class="col-lg-2 col-md-6">
                 <AuthorizeView>
                     <Authorized>
@@ -140,7 +158,8 @@
                             </h6>
 
                             <div class="d-flex justify-content-between">
-                                <NavLink class="btn btn-primary col me-2" href="/manage">
+                                <NavLink class="btn btn-primary col me-2" 
+                                    @onclick="GoToManage">
                                     <i class="bi bi-shop"></i>
                                 </NavLink>
                                 <div class="col">
@@ -159,10 +178,11 @@
                             </h6>
 
                             <NavLink class="btn btn-primary w-100 d-flex justify-content-center align-items-center"
-                                     href="/login">
+                                     @onclick="GoToLogin">
                                 <i class="bi bi-box-arrow-in-right me-2"></i>
                                 <span class="fw-semibold">Logga In</span>
-                            </NavLink>
+                            </NavLink> 
+                            
                         }
                     </NotAuthorized>
                 </AuthorizeView>
