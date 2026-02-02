@@ -45,13 +45,13 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        @* if (firstRender)
+        if (firstRender)
         {
             CartContent = await cartService.GetCartContent();
-        } *@
-        CartContent = await cartService.GetCartContent();
-        ValidityChanged();
-        StateHasChanged();
+            ValidityChanged();
+            StateHasChanged();
+        }
+        @* AJABAJA INTE UTAN firstRender CartContent = await cartService.GetCartContent(); *@
     }
     
     public async Task ValidityChanged()

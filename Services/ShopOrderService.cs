@@ -17,6 +17,44 @@ public class ShopOrderService
         beService = srv;
     }
 
+    public ShopOrder Empty()
+    {
+        //Om det här någonsin körs avsäger jag mig allt ansvar...
+        return new ShopOrder
+        {
+            Id = Guid.Empty,
+            Cart = new CartService(beService).Empty(),
+            Created = DateTime.UnixEpoch,
+            CustomerInfo = new CustomerInfoService(beService).Empty(),
+            Status = ShopOrderStatus.Rejected  
+        };
+    }
+
+
+    public bool Exists(Guid shopOrderId)
+    {
+        bool output = beService.DbContext.ShopOrders.Where(e => e.Id.Equals(shopOrderId)).AsNoTracking().Any();
+        return output;
+        // return true;
+    }
+
+    //TODO: untested
+    public ShopOrder Get(Guid id)
+    {
+        ShopOrder shopOrder = beService.DbContext.ShopOrders
+                        .Where(e => e.Id.Equals(id))
+
+                        .Include(e => e.Cart)
+                        .ThenInclude(e => e.CartItems)
+                        .ThenInclude(e => e.ShopItem)
+                        .ThenInclude(e => e.PrimaryImage)
+
+                        .Include(e => e.CustomerInfo)
+                        
+                        .First();
+        return shopOrder;
+    }
+
     // public string GetGeus()
     // {
     //     Shop shop;

@@ -1,0 +1,49 @@
+﻿@page "/orderconfirmation/{id:guid}"
+@using Microsoft.EntityFrameworkCore
+@using ufshop.Components.Account
+@using ufshop.Data
+@using ufshop.Data.Models
+@using ufshop.Services
+@using ufshop.Shared
+@rendermode InteractiveServer
+@using Microsoft.AspNetCore.Authorization
+
+@inject IServiceProvider Services
+@inject IdentityRedirectManager RedirectManager
+
+@code {
+    [Parameter]
+    public Guid id { get; set; } //order id
+    private ShopOrder Order { get; set; }
+    private readonly BeService BeService;
+    private readonly OrderConfirmationService Service;
+
+
+    public OrderConfirmation(BeService beService)
+    {
+        BeService = beService;
+        Service = new OrderConfirmationService(BeService);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        UpdateOrder();
+    }
+
+    private void UpdateOrder()
+    {
+        if (!id.Equals(Guid.Empty) && Service.ShopOrderExists(id))
+        {
+            Order = Service.GetShopOrder(id);
+        }
+    }
+}
+
+@if (Order is not null)
+{
+    <PageTitle>Orderbekräftelse @id</PageTitle>
+
+    <p>Order: @Order.Id</p>
+    <p>Order Status: @Order.Status</p>
+
+}

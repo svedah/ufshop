@@ -1,150 +1,155 @@
 ﻿@page "/payment/{id:guid}"
 @using Microsoft.EntityFrameworkCore
+@using ufshop.Components.Account
+@using ufshop.Data
 @using ufshop.Data.Models
 @using ufshop.Services
 @using ufshop.Shared
 @rendermode InteractiveServer
 @using Microsoft.AspNetCore.Authorization
 
+@inject IServiceProvider Services
+@inject IdentityRedirectManager RedirectManager
 
 @code {
     [Parameter]
     public Guid id { get; set; } //order id
+    private ShopOrder Order { get; set; }
+    private ShopOrderStatus Status { get; set; }
+    private bool ShowIframe { get; set; }
+    private Random Random = new Random();//delete
+    private int RandomNumber { get; set; }//delete
+    private CancellationTokenSource cts;
     private readonly BeService BeService;
     private readonly PaymentService Service;
-    private System.Threading.Timer? timer;
 
-
-    private ShopOrder Order { get; set; }
-    private string OrderPaymentStatus
+    private string swishRedirectUrl
     {
         get
         {
+            //BUG: BeService.DomainPrefix (HttpContextAccessor) has thrown NullReferenceException here
             string output = string.Empty;
-            if (Order is not null)
+            ShopService ss = new ShopService(BeService);
+            Shop shop;
+            if (ss.GetShop(BeService.DomainPrefix, out shop))
             {
-                switch (Order.Status)
-                {
-                    case ShopOrderStatus.Paid:
-                        output = "PAID";
-                        break;
-                    case ShopOrderStatus.Unpaid:
-                        output = "NOT PAID";
-                        break;
-                    case ShopOrderStatus.Shipped:
-                        output = "SHIPPED";
-                        break;
-                    case ShopOrderStatus.Rejected:
-                        output = "REJECTED";
-                        break;
-                    default:
-                        output = "DEFAULT";
-                        break;
-                }
-
+                output =    "https://" + 
+                            BeService.DomainPrefix.ToLower() +
+                            "." + 
+                            Constants.DOMAINNAME +
+                            "/swishredirect/payment/" +
+                            id.ToString();
             }
             return output;
         }
     }
+    private string QrCodeUrl
+    {
+        get
+        {
+            string output = System.Web.HttpUtility.UrlEncode(swishRedirectUrl);
+            return output;
+        }
+    }
 
-    private string QrCodeUrl { get; set; }
-    private string SwishURL { get; set; }
-
-
-
-    private Random _rnd;
-    public int RandomNumber { get; set; } = 1;
-
-
-
+    private string QrImage
+    {
+        get
+        {
+            return "/qr/png/" + QrCodeUrl;
+        }
+    }
 
     public Payment(BeService beService)
     {
         BeService = beService;
         Service = new PaymentService(beService);
-        _rnd = new Random();
-
-        //https://developer.swish.nu/documentation/guides/trigger-the-swish-app
-        string text = "https://app.swish.nu/1/p/sw/?sw=0725501404&amt=100&cur=SEK&msg=ett%20litet%20test&src=qr";
-        QrCodeUrl = System.Web.HttpUtility.UrlEncode(text);
+        cts = new CancellationTokenSource();
+        ShowIframe = false;
     }
 
     protected override async Task OnInitializedAsync()
     {
-        UpdateRandomNumber();
-        UpdateOrder();
-
-        //Starta timer som körs var 3:e sekund
-        timer = new System.Threading.Timer(async _ => {
-            UpdateRandomNumber();
-            UpdateOrder();
-            InvokeAsync(StateHasChanged);
-        }, null, TimeSpan.FromSeconds(3), TimeSpan.FromSeconds(3));
-
-
+        UpdateOrderAndStatus();
+        if (Order is not null)
+        {
+            _ = RunLoopAsync(cts.Token);
+        }
     }
 
-    private void UpdateRandomNumber()
+    private async Task RunLoopAsync(CancellationToken token)
     {
-        RandomNumber = _rnd.Next(0, 10000);
+        PeriodicTimer timer = new PeriodicTimer(TimeSpan.FromSeconds(3));
+
+        while (await timer.WaitForNextTickAsync(token))
+        {
+            using IServiceScope scope = Services.CreateScope();
+            ApplicationDbContext db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+            ShopOrder so = await db.ShopOrders.Where(e => e.Id.Equals(id)).FirstOrDefaultAsync();
+            Status = so.Status;
+            RandomNumber = Random.Next();
+
+            await InvokeAsync(StateHasChanged);
+        }
     }
 
-    private void UpdateOrder()
+    private void UpdateOrderAndStatus()
     {
-        Cart cart = new Cart
+        if (!id.Equals(Guid.Empty) && Service.ShopOrderExists(id))
         {
-            Id = Guid.NewGuid(),
-            CartItems = new HashSet<CartItem>()
-        };
-
-        CustomerInfo customerInfo = new CustomerInfo
-        {
-            Id = Guid.NewGuid(),
-            FirstName = "First",
-            LastName = "Last",
-            StreetName = "Gatan",
-            StreetNo = "12345",
-            City = "Väääääääääärnamo",
-            ZipCode = "123456",
-            Email = "em@il.com",
-            Phone = "0123456789",
-            Info = "Bra info hörrö"
-        };
-
-
-        Order = new ShopOrder
-        {
-            Id = id,
-            Created = DateTime.Now,
-            Cart = cart,
-            CustomerInfo = customerInfo,
-            Status = ShopOrderStatus.Unpaid
-        };
+            Order = Service.GetShopOrder(id);
+            Status = Order.Status;
+        }
     }
 
-
-    @* private async Task NavigateBack()
-    {
-        await BeService.JsRuntime.InvokeVoidAsync("history.back");
-    } *@
     public void Dispose()
     {
-        timer?.Dispose();
+        cts.Cancel();
+        cts.Dispose();
+    }
+
+    public void SwishTrigger()
+    {
+        ShowIframe = !ShowIframe;
     }
 }
 
-@if (!id.Equals(Guid.Empty))
+@if (Order is not null)
 {
-    string imageString = "/qr/png/" + QrCodeUrl;
+    <PageTitle>Betalning order @id</PageTitle>
+    @* qr-kod *@
+    <Image Src=@QrImage Alt="Scanna med din mobilkamera för att betala din order" />
+    @* knapp *@
+    <Button Color="ButtonColor.Primary" @onclick="() => SwishTrigger()">Swisha från denna enheten</Button>
 
-    <PageTitle>Visar Order @id</PageTitle>
-    <p>Order @id</p>
-    <p>RandomNumber: @RandomNumber</p>
-    <p>OrderPaymentStatus: @OrderPaymentStatus</p>
+    @* order status *@
+    <p>Status: @Status</p>@*ta bort, behöver inte synas*@
+    @* slumptal bara för att se att den periodvisa uppdateringen är igång *@
+    <p>Random: @RandomNumber</p>@*ta bort, behöver inte synas*@
 
-    <img src=@imageString alt="swish-qr" />
+    <PaymentCartViewer CartItems=@Order.Cart.CartItems />@*mycket att snygga till här*@
+    <CustomerInfoViewer CustomerInfo=@Order.CustomerInfo />@*mycket att snygga till här*@
+
+    @* swish trigger redirect *@
+    @if (Status == ShopOrderStatus.SwishTriggered)
+    {
+        RedirectManager.RedirectTo("OrderConfirmation/" + id.ToString());
+    }    
+    @* swish trigger *@
+    @if (ShowIframe)
+    {
+        <IframeViewer Url="@swishRedirectUrl" Width="0" Height="0" />
+    }
 }
 else
 {
+    @*
+    Den här syns om order inte kunde hittas.
+    (order id finns inte i databasen)
+    Detta kommer bara synas om vi programmerat fel
+    eller om någon "hacker" modifierar url
+    Kanske är snyggare att ge en knapp till startsidan istället. 
+    *@
     <Spinner />
 }

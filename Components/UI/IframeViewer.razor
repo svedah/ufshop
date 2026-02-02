@@ -1,0 +1,29 @@
+@inherits LayoutComponentBase
+@* <IframeViewer Url="https://example.com" Width="800px" Height="800px" /> *@
+@code {
+    [Parameter]
+    public string? Url { get; set; }
+
+    [Parameter]
+    public string Width { get; set; } = "64";
+
+    [Parameter]
+    public string Height { get; set; } = "64";
+}
+
+@if (!string.IsNullOrWhiteSpace(Url))
+{
+    <iframe 
+        src="@Url"
+        width="@Width"
+        height="@Height"
+        style="border: none;"
+        allowfullscreen>
+    </iframe>
+}
+else
+{
+    <p>No URL provided.</p>
+    <Spinner />
+}
+
