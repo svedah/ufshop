@@ -55,7 +55,7 @@ else
 {
     string translated = Translation[(int)(Status.Value)];
 
-    @* <p>@Id</p> *@
+    <p>Id: @Id</p>
     <p>Status: @translated</p>
     <select class="form-select" @onchange="SelectChange">
         <option selected disabled>Ändra status till</option>

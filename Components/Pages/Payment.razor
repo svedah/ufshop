@@ -25,6 +25,7 @@
 
     private string swishRedirectUrl
     {
+        @* BUG: använd inte getter! Sätt allt readonly och skapa i konstruktorn *@
         get
         {
             //BUG: BeService.DomainPrefix (HttpContextAccessor) has thrown NullReferenceException here
@@ -119,7 +120,8 @@
 {
     <PageTitle>Betalning order @id</PageTitle>
     @* qr-kod *@
-    <Image Src=@QrImage Alt="Scanna med din mobilkamera för att betala din order" />
+    @* <Image Src=@QrImage Alt="Scanna med din mobilkamera för att betala din order" /> *@
+    <qrbild source=@QrImage Alt="qrkod" />
     @* knapp *@
     <Button Color="ButtonColor.Primary" @onclick="() => SwishTrigger()">Swisha från denna enheten</Button>
 
