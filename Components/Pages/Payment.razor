@@ -23,9 +23,10 @@
     private readonly BeService BeService;
     private readonly PaymentService Service;
 
-    private string swishRedirectUrl
+    private string SwishRedirectUrl;
+
+/*    private string swishRedirectUrl
     {
-        @* BUG: använd inte getter! Sätt allt readonly och skapa i konstruktorn *@
         get
         {
             //BUG: BeService.DomainPrefix (HttpContextAccessor) has thrown NullReferenceException here
@@ -44,7 +45,9 @@
             return output;
         }
     }
-    private string QrCodeUrl
+*/
+    private string QrCodeData;
+/*    private string QrCodeUrl
     {
         get
         {
@@ -52,25 +55,30 @@
             return output;
         }
     }
-
-    private string QrImage
+*/
+    private string QrImageUrl;
+/*    private string QrImage
     {
         get
         {
             return "/qr/png/" + QrCodeUrl;
         }
     }
-
+*/
     public Payment(BeService beService)
     {
         BeService = beService;
         Service = new PaymentService(beService);
         cts = new CancellationTokenSource();
         ShowIframe = false;
+
     }
 
     protected override async Task OnInitializedAsync()
     {
+        SwishRedirectUrl = Service.BuildSwishRedirectUrl(id);
+        QrCodeData = Service.BuildQrCodeData(id);
+        QrImageUrl = "/qr/png/" + QrCodeData;
         UpdateOrderAndStatus();
         if (Order is not null)
         {
@@ -119,9 +127,12 @@
 @if (Order is not null)
 {
     <PageTitle>Betalning order @id</PageTitle>
+    <p>SwishRedirectUrl: @SwishRedirectUrl</p>
+    <p>QrCodeData: @QrCodeData</p>
+    <p>QrImageurl: @QrImageUrl</p>
     @* qr-kod *@
     @* <Image Src=@QrImage Alt="Scanna med din mobilkamera för att betala din order" /> *@
-    <qrbild source=@QrImage Alt="qrkod" />
+    <qrbild source=@QrImageUrl Alt="qrkod" />
     @* knapp *@
     <Button Color="ButtonColor.Primary" @onclick="() => SwishTrigger()">Swisha från denna enheten</Button>
 
@@ -141,7 +152,7 @@
     @* swish trigger *@
     @if (ShowIframe)
     {
-        <IframeViewer Url="@swishRedirectUrl" Width="0" Height="0" />
+        <IframeViewer Url="@SwishRedirectUrl" Width="0" Height="0" />
     }
 }
 else

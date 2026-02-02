@@ -1,9 +1,10 @@
 using System.Diagnostics.Contracts;
 using Microsoft.EntityFrameworkCore;
-using SQLitePCL;
 using ufshop.Data;
 using ufshop.Data.Models;
 using ufshop.Helpers;
+using ufshop.Shared;
+
 namespace ufshop.Services;
 
 public class PaymentService
@@ -12,6 +13,28 @@ public class PaymentService
     public PaymentService(BeService srv)
     {
         beService = srv;
+    }
+
+    public string BuildSwishRedirectUrl(Guid id)
+    {
+        string output = string.Empty;
+        ShopService ss = new ShopService(beService);
+        Shop shop;
+        if (ss.GetShop(beService.DomainPrefix, out shop))
+        {
+            output =    "https://" + 
+                        beService.DomainPrefix.ToLower() +
+                        "." + 
+                        Constants.DOMAINNAME +
+                        "/swishredirect/payment/" +
+                        id.ToString();
+        }
+        return output;
+    }
+
+    public string BuildQrCodeData(Guid id)
+    {
+        return System.Web.HttpUtility.UrlEncode(BuildSwishRedirectUrl(id));       
     }
 
     public bool ShopOrderExists(Guid shopOrderId)
