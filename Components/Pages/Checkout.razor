@@ -1,9 +1,12 @@
 @page "/checkout"
 @using Microsoft.AspNetCore.SignalR
+@using ufshop.Components.Account
 @using ufshop.Services
 @using ufshop.Data.Models
 @rendermode InteractiveServer
 @* @inject ufshop.Services.BeService BeService *@
+@inject IdentityRedirectManager RedirectManager
+
 @code {
     private readonly BeService beService;
     @* private readonly CartService cartService; *@
@@ -52,19 +55,20 @@
 
 
             //should return orderResult GUID
-            bool orderResult = await orderService.MakeOrderAsync(cart, customerInfo);
+            Guid shopOrderId = await orderService.MakeOrderAsync(cart, customerInfo);
 
-            if (orderResult)
+            if (!shopOrderId.Equals(Guid.Empty))
             {
                 //stored OK, navigate to payment page
                 checkoutSuccess = true;
 
-                //TODO: clean cart from localStorage
                 await cartService.ClearAsync();
 
                 //do NOT clean customerinfo in localStorage
 
                 //TODO: navigate to payment page with shoporder id
+                RedirectManager.RedirectTo("Payment/" + shopOrderId.ToString());
+
 
             }
             else

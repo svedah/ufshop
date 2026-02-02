@@ -1,0 +1,34 @@
+@using System.Collections.Immutable
+@using System.Reflection.Metadata
+@using Microsoft.CodeAnalysis.CSharp.Syntax
+@using ufshop.Data.Models
+@using ufshop.Services
+@using ufshop.Shared
+@namespace ufshop.Components.UI
+@rendermode InteractiveServer
+
+@code {
+    public readonly BeService beService;
+
+    [Parameter]
+    public HashSet<CartItem> CartItems { get; set; }
+
+    public PaymentCartViewer(BeService srv)
+    {
+        beService = srv;
+    }
+
+}
+
+@if (CartItems is not null)
+{
+    int cartTotal = 0;
+    @foreach(CartItem ci in CartItems)
+    {
+        int totalForItem = ci.Amount * ci.Price;
+        cartTotal += totalForItem;
+        <p>@ci.Amount stycken @ci.Title, @@ @ci.Price, totalt: @totalForItem SEK</p>
+    }
+    <p>TOTALT: @cartTotal</p>
+
+}

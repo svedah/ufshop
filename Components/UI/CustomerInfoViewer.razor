@@ -1,0 +1,30 @@
+@using System.Collections.Immutable
+@using System.Reflection.Metadata
+@using Microsoft.CodeAnalysis.CSharp.Syntax
+@using ufshop.Data.Models
+@using ufshop.Services
+@using ufshop.Shared
+@namespace ufshop.Components.UI
+@rendermode InteractiveServer
+
+@code {
+    public readonly BeService beService;
+
+    [Parameter]
+    public CustomerInfo CustomerInfo { get; set; }
+
+    public CustomerInfoViewer(BeService srv)
+    {
+        beService = srv;
+    }
+
+}
+
+@if (CustomerInfo is not null)
+{
+    <p>@CustomerInfo.FirstName @CustomerInfo.LastName</p>
+    <p>@CustomerInfo.StreetName @CustomerInfo.StreetNo</p>
+    <p>@CustomerInfo.ZipCode @CustomerInfo.City</p>
+    <p>@CustomerInfo.Email @CustomerInfo.Phone</p>
+
+}

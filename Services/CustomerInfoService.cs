@@ -81,7 +81,7 @@ public class CustomerInfoService
     {
         return new CustomerInfo
         {
-            Id = Guid.NewGuid(),
+            Id = Guid.Empty,
             FirstName = string.Empty,
             LastName = string.Empty,
             StreetName = string.Empty,
