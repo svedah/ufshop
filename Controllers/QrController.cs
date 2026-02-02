@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-using Net.Codecrete.QrCodeGenerator;
+// using Net.Codecrete.QrCodeGenerator;
 
 namespace ufshop.Controllers;
 
@@ -19,10 +19,11 @@ public class QRController : ControllerBase
 
         int borderWidth = 2;
 
-
-        var qrCode = QrCode.EncodeText(dtext, QrCode.Ecc.High);
-        byte[] png = qrCode.ToPng(4, (int)borderWidth);
-        return new FileContentResult(png, "image/png");
+        // Net.Codecrete.QrCodeGenerator;
+        // var qrCode = QrCode.EncodeText(dtext, QrCode.Ecc.High);
+        // byte[] png = qrCode.ToPng(4, (int)borderWidth);
+        // return new FileContentResult(png, "image/png");
+        return new FileContentResult(new byte[0], "image/png");
     }
 
 }
