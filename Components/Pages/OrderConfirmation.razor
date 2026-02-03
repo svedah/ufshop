@@ -51,7 +51,8 @@
     <PageTitle>Orderbekräftelse @id</PageTitle>
 
     <p>Order: @Order.Id</p>
-    <p>Order Status: @Order.Status</p>
+    @* om orderstatus är swishtriggered, skriv ut "ej manuellt bekräftad" till användaren *@
+    <p>Order Status: @Order.Status</p> 
 
     @* komponent som skall visa alla items i varukorgen *@
     @* används både på betalningssidan och orderbekräftelsesidan (denna) *@
@@ -60,5 +61,10 @@
     @* komponent som skall visa all kundinformation *@
     @* används både på betalningssidan och orderbekräftelsesidan (denna) *@
     <CustomerInfoViewer CustomerInfo=@Order.CustomerInfo />@*mycket att snygga till här*@
-
+    
+    string pdfUrl = "/pdf/orderconfirmation/" + id.ToString();
+    string fileName = Shop.Settings.Title + " Orderbekräftelse " + id.ToString() + ".pdf";
+    <a href=@pdfUrl download=@fileName>
+        <Button Color="ButtonColor.Primary">Ladda ner som .pdf</Button>
+    </a>
 }
