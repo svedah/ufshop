@@ -11,6 +11,7 @@
 
 @inject IServiceProvider Services
 @inject NavigationManager NavigationManager
+@implements IDisposable
 
 @code {
     [Parameter]
@@ -18,6 +19,8 @@
     private ShopOrder Order { get; set; }
     private bool ShowIframe { get; set; }
     private CancellationTokenSource cts;
+    private bool _disposed = false;
+    private Random random = new Random();
     private readonly BeService BeService;
     private readonly PaymentService Service;
 
@@ -34,6 +37,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        NavigationManager.LocationChanged += OnLocationChanged;
         SwishRedirectUrl = Service.BuildSwishRedirectUrl(id);
         QrEmbeddedImage = QrImageHelper.MakeEmbeddedImage(SwishRedirectUrl);
         UpdateOrder();
@@ -43,30 +47,41 @@
         }
     }
 
+    private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        cts.Cancel();
+    }
+
     private async Task RunLoopAsync(CancellationToken token)
     {
         PeriodicTimer timer = new PeriodicTimer(TimeSpan.FromSeconds(3));
-
-        while (await timer.WaitForNextTickAsync(token))
+        try
         {
-            using IServiceScope scope = Services.CreateScope();
-            ApplicationDbContext db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-
-            ShopOrder so = await db.ShopOrders.Where(e => e.Id.Equals(id)).FirstOrDefaultAsync();
-
-            if (so is not null && so.Id.Equals(id))
+            while (await timer.WaitForNextTickAsync(token))
             {
-                ShopOrderStatus Status = so.Status;
-                if (so.Status != ShopOrderStatus.Unpaid)
+                using IServiceScope scope = Services.CreateScope();
+                ApplicationDbContext db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+                ShopOrder so = await db.ShopOrders.Where(e => e.Id.Equals(id)).FirstOrDefaultAsync();
+
+                if (so is not null && so.Id.Equals(id))
                 {
-                    NavigationManager.NavigateTo("/OrderConfirmation/" + id.ToString(), forceLoad: true);
-                    cts.Cancel();
-                }
-                else
-                {
-                    await InvokeAsync(StateHasChanged);
+                    ShopOrderStatus Status = so.Status;
+                    if (so.Status != ShopOrderStatus.Unpaid)
+                    {
+                        cts.Cancel();
+                        timer.Dispose();
+                        NavigationManager.NavigateTo("/OrderConfirmation/" + id.ToString(), forceLoad: true);
+                    }
+                    else
+                    {
+                        await InvokeAsync(StateHasChanged);
+                    }
                 }
             }
+        }
+        catch(OperationCanceledException)
+        {
 
         }
     }
@@ -81,8 +96,14 @@
 
     public void Dispose()
     {
+        if (_disposed)
+        {
+            return;
+        }
+        NavigationManager.LocationChanged -= OnLocationChanged;
         cts.Cancel();
         cts.Dispose();
+        _disposed = true;
     }
 
     public void SwishTrigger()

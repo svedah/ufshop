@@ -15,9 +15,11 @@
     [Parameter]
     public Guid id { get; set; } //order id
     private ShopOrder Order { get; set; }
+    private Shop Shop { get; set; }
+    private Cart Cart { get { return Order.Cart; } }
+    private CustomerInfo CustomerInfo { get { return Order.CustomerInfo; } }
     private readonly BeService BeService;
     private readonly OrderConfirmationService Service;
-
 
     public OrderConfirmation(BeService beService)
     {
@@ -27,10 +29,15 @@
 
     protected override async Task OnInitializedAsync()
     {
-        UpdateOrder();
+        GetOrder();
+        Shop shop;
+        if (Order is not null && Service.GetShop(out shop))
+        {
+            Shop = shop;
+        }
     }
 
-    private void UpdateOrder()
+    private void GetOrder()
     {
         if (!id.Equals(Guid.Empty) && Service.ShopOrderExists(id))
         {
@@ -39,11 +46,19 @@
     }
 }
 
-@if (Order is not null)
+@if (Order is not null && Shop is not null)
 {
     <PageTitle>Orderbekräftelse @id</PageTitle>
 
     <p>Order: @Order.Id</p>
     <p>Order Status: @Order.Status</p>
+
+    @* komponent som skall visa alla items i varukorgen *@
+    @* används både på betalningssidan och orderbekräftelsesidan (denna) *@
+    <PaymentCartViewer CartItems=@Order.Cart.CartItems />@*mycket att snygga till här*@
+
+    @* komponent som skall visa all kundinformation *@
+    @* används både på betalningssidan och orderbekräftelsesidan (denna) *@
+    <CustomerInfoViewer CustomerInfo=@Order.CustomerInfo />@*mycket att snygga till här*@
 
 }

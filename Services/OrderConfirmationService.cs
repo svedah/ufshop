@@ -37,4 +37,10 @@ public class OrderConfirmationService
         return output;
     }
 
+    public bool GetShop(out Shop shop)
+    {
+        ShopService ss = new ShopService(beService);
+        return ss.GetShop(beService.DomainPrefix, out shop);
+    }
+
 }
