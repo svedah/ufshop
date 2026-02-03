@@ -1,6 +1,8 @@
 @using ufshop.Data.Models
 @using ufshop.Services
 @rendermode InteractiveServer
+@inject NavigationManager NavigationManager
+
 @code {
     [Parameter]
     public ShopItem? Item { get; set; }
@@ -29,6 +31,13 @@
             await cartService.AddOrUpdateAsync(newCartItem);
         }
     }
+    private void GoToArticle()
+    {
+        if (Item is not null)
+        {
+            NavigationManager.NavigateTo("/article/" + Item.Id.ToString(), forceLoad: true);
+        }
+    }
 }
 
 @if (Item is null)
@@ -37,15 +46,6 @@
 }
 else
 {    
-    @inject NavigationManager NavigationManager
-
-    @code {
-        private void GoToArticle()
-        {    
-            NavigationManager.NavigateTo("/article/" + Item.Id.ToString(), forceLoad: true);
-        }
-    }
-
     <Card class="card article-card shadow-sm rounded rounded-4 border" Style="width:17rem;">
         <a @onclick="GoToArticle" class="text-decoration-none card-link">
             

@@ -26,7 +26,7 @@ public class PaymentService
                         beService.DomainPrefix.ToLower() +
                         "." + 
                         Constants.DOMAINNAME +
-                        "/swishredirect/payment/" +
+                        "/swishredirect/testpayment/" +
                         id.ToString();
         }
         return output;

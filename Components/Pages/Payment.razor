@@ -10,62 +10,18 @@
 @using Microsoft.AspNetCore.Authorization
 
 @inject IServiceProvider Services
-@inject IdentityRedirectManager RedirectManager
+@inject NavigationManager NavigationManager
 
 @code {
     [Parameter]
     public Guid id { get; set; } //order id
     private ShopOrder Order { get; set; }
-    private ShopOrderStatus Status { get; set; }
     private bool ShowIframe { get; set; }
-    private Random Random = new Random();//delete
-    private int RandomNumber { get; set; }//delete
     private CancellationTokenSource cts;
     private readonly BeService BeService;
     private readonly PaymentService Service;
 
     private string SwishRedirectUrl = string.Empty;
-
-/*    private string swishRedirectUrl
-    {
-        get
-        {
-            //BUG: BeService.DomainPrefix (HttpContextAccessor) has thrown NullReferenceException here
-            string output = string.Empty;
-            ShopService ss = new ShopService(BeService);
-            Shop shop;
-            if (ss.GetShop(BeService.DomainPrefix, out shop))
-            {
-                output =    "https://" + 
-                            BeService.DomainPrefix.ToLower() +
-                            "." + 
-                            Constants.DOMAINNAME +
-                            "/swishredirect/payment/" +
-                            id.ToString();
-            }
-            return output;
-        }
-    }
-*/
-    @* private string QrCodeData; *@
-/*    private string QrCodeUrl
-    {
-        get
-        {
-            string output = System.Web.HttpUtility.UrlEncode(swishRedirectUrl);
-            return output;
-        }
-    }
-*/
-    @* private string QrImageUrl; *@
-/*    private string QrImage
-    {
-        get
-        {
-            return "/qr/png/" + QrCodeUrl;
-        }
-    }
-*/
     private string QrEmbeddedImage = string.Empty;
 
     public Payment(BeService beService)
@@ -74,16 +30,13 @@
         Service = new PaymentService(beService);
         cts = new CancellationTokenSource();
         ShowIframe = false;
-
     }
 
     protected override async Task OnInitializedAsync()
     {
         SwishRedirectUrl = Service.BuildSwishRedirectUrl(id);
-        @* string qrCodeData = Service.BuildQrCodeData(id); *@
-        @* QrImageUrl = "/qr/png/" + QrCodeData; *@
         QrEmbeddedImage = QrImageHelper.MakeEmbeddedImage(SwishRedirectUrl);
-        UpdateOrderAndStatus();
+        UpdateOrder();
         if (Order is not null)
         {
             _ = RunLoopAsync(cts.Token);
@@ -100,19 +53,29 @@
             ApplicationDbContext db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
             ShopOrder so = await db.ShopOrders.Where(e => e.Id.Equals(id)).FirstOrDefaultAsync();
-            Status = so.Status;
-            RandomNumber = Random.Next();
 
-            await InvokeAsync(StateHasChanged);
+            if (so is not null && so.Id.Equals(id))
+            {
+                ShopOrderStatus Status = so.Status;
+                if (so.Status != ShopOrderStatus.Unpaid)
+                {
+                    NavigationManager.NavigateTo("/OrderConfirmation/" + id.ToString(), forceLoad: true);
+                    cts.Cancel();
+                }
+                else
+                {
+                    await InvokeAsync(StateHasChanged);
+                }
+            }
+
         }
     }
 
-    private void UpdateOrderAndStatus()
+    private void UpdateOrder()
     {
         if (!id.Equals(Guid.Empty) && Service.ShopOrderExists(id))
         {
             Order = Service.GetShopOrder(id);
-            Status = Order.Status;
         }
     }
 
@@ -128,33 +91,25 @@
     }
 }
 
-@if (Order is not null)
+@if (Order is not null && Order.Status == ShopOrderStatus.Unpaid)
 {
     <PageTitle>Betalning order @id</PageTitle>
-    @* <p>SwishRedirectUrl: @SwishRedirectUrl</p> *@
-    @* <p>QrCodeData: @QrCodeData</p> *@
-    @* <p>QrImageurl: @QrImageUrl</p> *@
+    <h1>Betalning</h1>
     @* qr-kod *@
     <Image Src=@QrEmbeddedImage Alt="Scanna med din mobilkamera för att betala din order" />
-    @* <Image Src=@QrImage Alt="Scanna med din mobilkamera för att betala din order" /> *@
-    @* <qrbild source=@QrImageUrl Alt="qrkod" /> *@
     @* knapp *@
     <Button Color="ButtonColor.Primary" @onclick="() => SwishTrigger()">Swisha från denna enheten</Button>
 
-    @* order status *@
-    <p>Status: @Status</p>@*ta bort, behöver inte synas*@
-    @* slumptal bara för att se att den periodvisa uppdateringen är igång *@
-    <p>Random: @RandomNumber</p>@*ta bort, behöver inte synas*@
+    <p>SwishRedirect: @SwishRedirectUrl</p>@*ta bort, behöver inte synas*@
 
+    @* komponent som skall visa alla items i varukorgen *@
+    @* används både på betalningssidan (denna) och orderbekräftelsesidan *@
     <PaymentCartViewer CartItems=@Order.Cart.CartItems />@*mycket att snygga till här*@
+
+    @* komponent som skall visa all kundinformation *@
+    @* används både på betalningssidan (denna) och orderbekräftelsesidan *@
     <CustomerInfoViewer CustomerInfo=@Order.CustomerInfo />@*mycket att snygga till här*@
 
-    @* swish trigger redirect *@
-    @if (Status == ShopOrderStatus.SwishTriggered)
-    {
-        RedirectManager.RedirectTo("OrderConfirmation/" + id.ToString());
-    }    
-    @* swish trigger *@
     @if (ShowIframe)
     {
         <IframeViewer Url="@SwishRedirectUrl" Width="0" Height="0" />
@@ -162,12 +117,5 @@
 }
 else
 {
-    @*
-    Den här syns om order inte kunde hittas.
-    (order id finns inte i databasen)
-    Detta kommer bara synas om vi programmerat fel
-    eller om någon "hacker" modifierar url
-    Kanske är snyggare att ge en knapp till startsidan istället. 
-    *@
     <Spinner />
 }

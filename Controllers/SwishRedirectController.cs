@@ -5,9 +5,9 @@ using System.Linq;
 using ufshop.Data.Models;
 using ufshop.Services;
 using ufshop.Shared;
+using System.Net.Mime;
 
 namespace ufshop.Controllers;
-
 
 [ApiController]
 // [Route("api/[controller]")]
@@ -20,6 +20,51 @@ public class SwishRedirectController : ControllerBase
     {
         BeService = beService;
     }
+
+
+    //TODO: untested
+    [HttpGet]
+    [Route("[controller]/testpayment/{id?}")]
+    // [ProducesResponseType<string>(StatusCodes.Status200OK)]
+    // [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public IActionResult TestPayment(Guid id) //id = shopOrderId
+    {
+        //TODO: get shop from beservice.domainprefix
+        ShopOrder shopOrder = default; //null
+        if (GetShopOrderFromShop(id, ref shopOrder) && shopOrder is not null && !shopOrder.Id.Equals(EMPTY))
+        {
+            //if there is:
+            //get shoporder, set Status to ShopOrderStatus.SwishTriggered
+            //OK
+            shopOrder.Status = ShopOrderStatus.SwishTriggered;
+            BeService.DbContext.ShopOrders.Update(shopOrder);
+            BeService.DbContext.SaveChanges();
+
+            //calc cart total
+            int cartTotal = CalculateCartTotal(id);
+            //get customer phone number
+            string customerPhoneNumber = GetCustomerPhoneNumber(id);
+            //extract 8 first characters from guid
+            string guidPart = ExtractGuidPart(id);
+            //build message "ufshop%20abcdabcd" where abcdabcd are from guid
+            string message = BuildMessage(guidPart);
+
+            string redirectUrl = BuildSwishRedirectUrl(customerPhoneNumber, cartTotal, message);
+
+            // return Content(redirectUrl, "text/plain");
+            
+            return new RedirectResult(redirectUrl);
+
+        }
+        else
+        {
+            //if not, return not found
+            return new NotFoundResult();
+            
+        }
+    }
+
+
 
     //TODO: untested
     [HttpGet]
@@ -35,9 +80,9 @@ public class SwishRedirectController : ControllerBase
             //if there is:
             //get shoporder, set Status to ShopOrderStatus.SwishTriggered
             //OK
-            // shopOrder.Status = ShopOrderStatus.SwishTriggered;
-            // BeService.DbContext.ShopOrders.Update(shopOrder);
-            // BeService.DbContext.SaveChanges();
+            shopOrder.Status = ShopOrderStatus.SwishTriggered;
+            BeService.DbContext.ShopOrders.Update(shopOrder);
+            BeService.DbContext.SaveChanges();
 
             //calc cart total
             int cartTotal = CalculateCartTotal(id);
