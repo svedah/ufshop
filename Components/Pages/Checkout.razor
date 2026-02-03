@@ -81,33 +81,73 @@
     @* <meta name="headcontent" description="lol yep!" /> *@
 </HeadContent>
 
-<p>@checkoutSuccess</p>
 
-<Button Color="ButtonColor.Primary" @onclick="NavigateBack">
-    <Icon Name="IconName.ArrowLeft" />
-</Button>
+<div class="container my-4">
 
-<h1>Checka ut</h1>
-<p>
-    cartValid: @cartValid
-</p>
-<p>
-    customerInfoValid: @customerInfoValid
-</p>
-<div class="row">
-    <div class="col-md-6 order-md-2 mb-4">
-        <CartEditor OnValidityChanged="UpdateCartValid" />
+    <!-- Tillbaka Knapp -->
+    <div class="mb-3">
+        <Button Color="ButtonColor.Light" @onclick="NavigateBack">
+            <Icon Name="IconName.ArrowLeft" class="me-2" />
+            Tillbaka
+        </Button>
     </div>
-    <div class="col-md-6 order-md-1">
-        <CustomerInfoEditor OnValidityChanged="UpdateCustomerInfoValid" />
+
+    <!-- Header -->
+    <div class="text-center mb-5">
+        <h1 class="fw-bold text-primary">
+            <i class="bi bi-credit-card me-2"></i>Checka ut
+        </h1>
     </div>
+
+    <!-- Main Content -->
+    <div class="row g-4">
+        
+        <!-- Varukorg Sammanfattning -->
+        <div class="col-12 col-md-6 order-2 order-md-2">
+            <CartEditor OnValidityChanged="UpdateCartValid" />
+        </div>
+
+        <!-- Kund Info -->
+        <div class="col-12 col-md-6 order-1 order-md-1">
+            <CustomerInfoEditor OnValidityChanged="UpdateCustomerInfoValid" />
+        </div>
+
+    </div>
+
+    <!-- Genomför Beställning -->
+    <div class="d-grid gap-2 mt-4">
+        @if (cartValid && customerInfoValid)
+        {
+            <Button Color="ButtonColor.Success" Size="ButtonSize.Large" @onclick="() => DoCheckout()">
+                <Icon Name="IconName.CheckCircle" class="me-2" />
+                Genomför beställning
+            </Button>
+            <small class="text-center text-muted">
+                <i class="bi bi-shield-check me-1"></i>
+                Säker betalning
+            </small>
+        }
+        else
+        {
+            @if (!cartValid)
+            {
+                <small class="text-center text-danger">
+                    <i class="bi bi-exclamation-triangle me-1"></i>
+                    Din varukorg är tom eller ogiltig
+                </small>
+            }
+            @if (!customerInfoValid)
+            {
+                <small class="text-center text-danger">
+                    <i class="bi bi-exclamation-triangle me-1"></i>
+                    Fyll i all kundinformation
+                </small>
+            }
+            <Button Color="ButtonColor.Secondary" Size="ButtonSize.Large" Disabled="true">
+                Fyll i all information för att fortsätta
+            </Button>
+        }
+    </div>
+    
 </div>
-@if (cartValid && customerInfoValid)
-{
-    <Button Color="ButtonColor.Primary" @onclick="() => DoCheckout()">Genomför beställning</Button>
-}
-else
-{
-    <Button Color="ButtonColor.Danger" Disabled="true" style="text-decoration:line-through">Genomför beställning</Button>
-}
 

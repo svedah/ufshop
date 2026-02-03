@@ -76,40 +76,74 @@
     }
 
 }
-<h2 class="d-flex justify-content-between align-items-center mb-3">
-    <span>Varukorgen</span>
-    <span>@CartContent.Count</span>
-</h2>
+<div class="container my-4">
+    <!-- Header -->
+<div class="card mb-4">
+    <div class="card-header">
+        <div class="d-flex justify-content-between align-items-center">
+            <h5 class="mb-0 fw-bold">
+                <i class="bi bi-cart3 me-2"></i>Varukorg
+            </h5>
+            <span class="badge bg-primary fs-6">@CartContent.Count st</span>
+        </div>
+    </div>
 
-<ul class="list-group mb-3">
-    @foreach(CartItem cartItem in CartContent)
+    <!-- Cart Items -->
+    <ul class="list-group list-group-flush">
+        @if (CartContent.Any())
+        {
+            @foreach(CartItem cartItem in CartContent)
+            {
+                <li class="list-group-item">
+                    <CartEditorItem @key="@cartItem.Id" Id="@cartItem.Id" OnChange="HandleChangeItem" />
+                </li>
+            }
+        }
+        else
+        {
+            <li class="list-group-item text-center py-5 text-muted">
+                <i class="bi bi-cart-x fs-1"></i>
+                <p class="mt-2 mb-0">Din varukorg är tom</p>
+            </li>
+        }
+    </ul>
+
+    @if (CartContent.Any())
     {
-        <li class="list-group-item lh-condensed"> @* class="list-group-item d-flex justify-content-between lh-condensed"> *@
-            <CartEditorItem @key="@cartItem.Id" Id="@cartItem.Id" OnChange="HandleChangeItem" />
-        </li>
+        <div class="card-footer border-top">
+            <Button Color="ButtonColor.Danger" Size="ButtonSize.Small" Class="w-100" @onclick="() => DeleteCart()">
+                <Icon Name="IconName.Trash" /> Töm Varukorg
+            </Button>
+        </div>
     }
-</ul>
+</div>
 
-@if (CartContent.Count > 0)
-{
-    <p>Ta bort allt i varukorgen</p>
-    <Button Color="ButtonColor.Danger" Size="ButtonSize.ExtraSmall" @onclick="() => DeleteCart()">
-        <Icon Name="IconName.Trash" />
-    </Button>
-
-    <p>
-    Varupris: @CartContentSum
-    </p>
-    <p>
-    Fraktpris: @ShippingPrice
-    </p>
-
-    <p>
-    @{
-        int total = CartContentSum + ShippingPrice;
+    @if (CartContent.Count > 0)
+    {
+        <!-- Pris Sammanfattning -->
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mb-0 fw-semibold">
+                    <i class="bi bi-calculator me-2"></i>Sammanfattning
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="text-muted">Varupris:</span>
+                    <span class="fw-semibold">@CartContentSum kr</span>
+                </div>
+                <div class="d-flex justify-content-between mb-3 pb-3 border-bottom">
+                    <span class="text-muted">Fraktpris:</span>
+                    <span class="fw-semibold">@ShippingPrice kr</span>
+                </div>
+                @{
+                    int total = CartContentSum + ShippingPrice;
+                }
+                <div class="d-flex justify-content-between">
+                    <span class="fs-5 fw-bold">Totalt:</span>
+                    <span class="fs-5 fw-bold text-primary">@total kr</span>
+                </div>
+            </div>
+        </div>
     }
-    Totalt: @total SEK
-    </p>
-}
-
-
+</div>
