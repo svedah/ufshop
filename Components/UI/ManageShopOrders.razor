@@ -27,7 +27,7 @@
     }
 
     private async Task Reload()
-    {   
+    {
         @* ShopOrders = Service.GetAllShopOrders(); *@
         ShopOrders = Service.GetFilteredShopOrders(SelectedFilter);
         StateHasChanged();
@@ -45,40 +45,74 @@
     }
 
 }
-<div class="row">
-    <div class="col">
-        <Button Color="ButtonColor.Primary" @onclick="Reload">
-            <Icon Name="IconName.ArrowClockwise" />
-        </Button>
-    </div>
-</div>
 @if (ShopOrders is null)
 {
     <Spinner />
 }
 else
 {
-    <h2>Ordrar</h2>
-    
-    <select class="form-select" @onchange="SelectFilterChange">
-        <option selected disabled>Visa</option>
-        <option value="1">Betalda</option>
-        <option value="2">Levererade</option>
-        <option value="3">Avvisade</option>
-        <option value="4">Alla</option>
-        <option value="0">Ej betalda</option>
-    </select>
-    <hr />
+    <div class="container my-4">
 
-    <Accordion>
-    @foreach(ShopOrder shopOrder in ShopOrders)
-    {
-        string accordionTitle = shopOrder.Created + " - " + shopOrder.CustomerInfo.FirstName + " " + shopOrder.CustomerInfo.LastName + " " + shopOrder.CustomerInfo.City;
-        <AccordionItem Title="@accordionTitle">
-            <Content>
-                <ManageShopOrder Id="@shopOrder.Id" ShopOrder="@shopOrder" />
-            </Content>
-        </AccordionItem>
-    }
-    </Accordion>
+        <!-- Header -->
+        <div class="text-center mb-5">
+            <h1 class="fw-bold text-primary">
+                <i class="bi bi-box-seam me-2"></i>Beställningar
+            </h1>
+        </div>
+
+        <!-- Filter -->
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h6 class="mb-0 fw-semibold">
+                    <i class="bi bi-funnel me-2"></i>Filtrera beställningar
+                </h6>
+                <Button class="btn btn-sm" Color="ButtonColor.Primary" @onclick="Reload">
+                    <Icon Name="IconName.ArrowClockwise" />
+                </Button>
+            </div>
+            <div class="card-body">
+                <select class="form-select" @onchange="SelectFilterChange">
+                    <option selected disabled>Välj filter...</option>
+                    <option value="1">Betalda</option>
+                    <option value="2">Levererade</option>
+                    <option value="3">Avvisade</option>
+                    <option value="4">Alla</option>
+                    <option value="0">Ej betalda</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Beställningar Lista -->
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h6 class="mb-0 fw-semibold">
+                    <i class="bi bi-list-ul me-2"></i>Beställningar
+                </h6>
+                <span class="badge bg-primary">@ShopOrders.Count() st</span>
+            </div>
+            <div class="card-body p-0">
+                @if (ShopOrders.Any())
+                {
+                    <Accordion>
+                        @foreach(ShopOrder shopOrder in ShopOrders)
+                        {
+                            string accordionTitle = shopOrder.Created.ToString("yyyy-MM-dd HH:mm") + " • " + shopOrder.CustomerInfo.FirstName + " " + shopOrder.CustomerInfo.LastName + " • " + shopOrder.CustomerInfo.City;
+                            <AccordionItem Title="@accordionTitle">
+                                <Content>
+                                    <ManageShopOrder Id="@shopOrder.Id" ShopOrder="@shopOrder" />
+                                </Content>
+                            </AccordionItem>
+                        }
+                    </Accordion>
+                }
+                else
+                {
+                    <div class="text-center py-5 px-3 text-muted">
+                        <i class="bi bi-inbox fs-1"></i>
+                        <p class="mt-2 mb-0">Inga beställningar hittades med det valda filtret</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
 }
