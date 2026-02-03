@@ -65,56 +65,46 @@
 
 
 }
-<div class="row">
-    <div class="col">
-        <label class="form-label">Titel</label>
-    </div>
-</div>
 
-<div class="row">
-    <div class="col">
-        <InputText @bind-value="shopPageFragment.Header" class="form-control" />
-    </div>
-</div>
+<div class="container-fluid">
+    <div class="row g-3">
 
-<div class="row">
-    <div class="col">
-        <label class="form-label">Paragraf</label>
-    </div>
-</div>
-<div class="row">
-    <div class="col">
-        <TextAreaInput @bind-value="shopPageFragment.Paragraph" class="form-control" rows="8" />
-    </div>
-</div>
+        <!-- Titel -->
+        <div class="col-12">
+            <label class="form-label fw-semibold">
+                <i class="bi bi-text-left me-2"></i>Titel
+            </label>
+            <InputText @bind-value="shopPageFragment.Header" class="form-control" placeholder="Ange rubrik..." />
+        </div>
 
-<div class="row">
-    <div class="col">
-        <label class="form-label">Sorteringsordning</label>
-    </div>
-</div>
-<div class="row">
-    <div class="col">
-        <InputNumber @bind-value="shopPageFragment.Order" class="form-control" />
-    </div>
-</div>
+        <!-- Paragraf -->
+        <div class="col-12">
+            <label class="form-label fw-semibold">
+                <i class="bi bi-paragraph me-2"></i>Paragraf
+            </label>
+            <TextAreaInput @bind-value="shopPageFragment.Paragraph" class="form-control" rows="8" placeholder="Skriv ditt innehåll här..." />
+        </div>
 
-<div class="row">
-    <div class="col">
-        <label class="form-label">Bild</label>
+        <!-- Ordning -->
+        <div class="col-12 col-md-4">
+            <label class="form-label fw-semibold">
+                <i class="bi bi-sort-numeric-down me-2"></i>Sorteringsordning
+            </label>
+            <InputNumber @bind-value="shopPageFragment.Order" class="form-control" />
+        </div>
+
+        <!-- Bild Väljare -->
+        <div class="col-12">
+            <label class="form-label fw-semibold mb-2">
+                <i class="bi bi-image me-2"></i>Bild
+            </label>
+            <Accordion>
+                <AccordionItem Title="Välj bild">
+                    <Content>
+                        <ImageSelector Image="@shopPageFragment.Image" OnValueSelected="HandleSelectedPrimaryImage" />
+                    </Content>
+                </AccordionItem>
+            </Accordion>
+        </div>
     </div>
 </div>
-
-<div class="row">
-    <div class="col">
-        @* <Accordion @onclick="((args) => SetCurrentShopPageFragment(args, shopPageFragment.Id))"> *@
-        <Accordion>
-            <AccordionItem Title="Primär bild">
-                <Content>
-                    <ImageSelector Image=@shopPageFragment.Image OnValueSelected="HandleSelectedPrimaryImage" />
-                </Content>
-            </AccordionItem>
-        </Accordion>
-    </div>
-</div>
-
