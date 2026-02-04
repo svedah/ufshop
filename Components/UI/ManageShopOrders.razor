@@ -99,9 +99,9 @@ else
                     class="form-control"
                     pattern="[0-9a-fA-F]{8}" 
                     list="searchorderdatalist"
-                    @bind="SelectedSearchTerm"
                     @oninput="SearchOrderInputChanged"
                     />
+                    @* @bind="SelectedSearchTerm" *@
                 <datalist id="searchorderdatalist">
                     @foreach(Tuple<string, string> item in OrderDataList)
                     {
