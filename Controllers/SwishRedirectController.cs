@@ -111,9 +111,9 @@ public class SwishRedirectController : ControllerBase
         //"https://app.swish.nu/1/p/sw/?sw=0700123456&amt=100&cur=SEK&msg=ett%20litet%20test&src=qr";
         string uriEncodedMessage = System.Web.HttpUtility.UrlEncode(message);
         string output = "https://app.swish.nu/1/p/sw/?sw=" +
-                        phoneNumber + 
+                        phoneNumber.Trim() + 
                         "&amt=" +
-                        amount.ToString() +
+                        amount.ToString().Trim() +
                         "&cur=SEK" +
                         "&msg=" +
                         uriEncodedMessage +
@@ -200,6 +200,7 @@ public class SwishRedirectController : ControllerBase
 
     private string BuildMessage(string identifier)
     {
-        return BeService.DomainPrefix + "." + Constants.DOMAINNAME + ":" + identifier.ToLower();
+        // return BeService.DomainPrefix + "." + Constants.DOMAINNAME + ":" + identifier.ToLower();
+        return BeService.DomainPrefix + "%20" + Constants.DOMAINNAME + "%20" + identifier.ToLower();
     }
 }
