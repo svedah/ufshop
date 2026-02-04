@@ -19,7 +19,7 @@ public class ManageShopOrdersService
         beService = srv;
     }
 
-    public IEnumerable<ShopOrder> GetAllShopOrders()
+    public List<ShopOrder> GetAllShopOrders()
     {
         var tmp = beService.DbContext.Shops
                     .Where(e => e.Prefix.Equals(beService.DomainPrefix))
@@ -33,34 +33,68 @@ public class ManageShopOrdersService
         return orders;
     }
 
-    public IEnumerable<ShopOrder> GetFilteredShopOrders(int filter)
+    public IEnumerable<Tuple<string,string>> GetAllShopOrdersDataList()
     {
-        Contract.Assert(filter >= 0 && filter <= 4);
+        var shop = beService.DbContext.Shops
+                    .Where(e => e.Prefix.Equals(beService.DomainPrefix))
+                    .Include(e => e.Orders)
+                    .First();
+
+        foreach(var order in shop.Orders)
+        {
+            string fullGuid = order.Id.ToString();
+            string shortGuid = fullGuid.Split('-')[0];
+            yield return new Tuple<string, string>(fullGuid, shortGuid);
+        }
+        
+        yield break;
+    }
+
+    public ShopOrder GetShopOrder(Guid id)
+    {
+        ShopOrder output = new ShopOrderService(beService).Empty();
+        output.Id = Guid.Empty;
+
+        var shop = beService.DbContext.Shops
+            .Where(e => e.Prefix.Equals(beService.DomainPrefix))
+            .Include(e => e.Orders)
+            .First();
+        
+        if (shop.Orders.Where(e => e.Id.Equals(id)).Any())
+        {
+            output = shop.Orders.Where(e => e.Id.Equals(id)).First();
+        }
+        return output;
+    }
+
+    public List<ShopOrder> GetFilteredShopOrders(int filter)
+    {
+        Contract.Assert(filter >= -1 && filter <= 4);
 
         List<ShopOrder> output = new List<ShopOrder>();
         var list = GetAllShopOrders();
         switch(filter)
         {
-            case 0:
+            case 0: //unpaid
                 output = list.Where(e => e.Status.Equals(ufshop.Data.Models.ShopOrderStatus.Unpaid)).ToList();
                 break;
-            case 1:
+            case 1: //paid
                 output = list.Where(e => e.Status.Equals(ufshop.Data.Models.ShopOrderStatus.Paid)).ToList();
                 break;
-            case 2:
+            case 2://shipped
                 output = list.Where(e => e.Status.Equals(ufshop.Data.Models.ShopOrderStatus.Shipped)).ToList();
                 break;
-            case 3:
+            case 3://rejected
                 output = list.Where(e => e.Status.Equals(ufshop.Data.Models.ShopOrderStatus.Rejected)).ToList();
                 break;
-            case 4:
+            case 4://swishtriggered
+                output = list.Where(e => e.Status.Equals(ufshop.Data.Models.ShopOrderStatus.SwishTriggered)).ToList();
+                break;
+            default: //-1 - All
                 output = list.ToList();
                 break;
-            default:
-                output = list.ToList();
-                break;
-            
         }
+
         return output;
     }
 }

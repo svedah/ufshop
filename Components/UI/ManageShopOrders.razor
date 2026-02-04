@@ -1,6 +1,3 @@
-@using System.Collections.Immutable
-@using System.Reflection.Metadata
-@using SQLitePCL
 @using ufshop.Data.Models
 @using ufshop.Services
 @using ufshop.Shared
@@ -9,21 +6,29 @@
 
 @code {
 
+    private readonly BeService BeService;
     private readonly ManageShopOrdersService Service;
 
-    private IEnumerable<ShopOrder> ShopOrders { get; set; } = new List<ShopOrder>();
+    private List<ShopOrder> ShopOrders { get; set; } = new List<ShopOrder>();
+    private IEnumerable<Tuple<string, string>> OrderDataList { get; set; } = new List<Tuple<string, string>>();
+    
+    private ShopOrder SearchShopOrder { get; set; }
     private int SelectedFilter { get; set; }
+    private string? SelectedSearchTerm;
 
     public ManageShopOrders(BeService srv)
     {
+        BeService = srv;
         Service = new ManageShopOrdersService(srv);
-        SelectedFilter = 4;
+        SelectedFilter = 4; // swish har triggats
+        SearchShopOrder = new ShopOrderService(srv).Empty();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         @* await Reload(); *@
         ShopOrders = Service.GetAllShopOrders();
+        OrderDataList = Service.GetAllShopOrdersDataList();
     }
 
     private async Task Reload()
@@ -33,13 +38,33 @@
         StateHasChanged();
     }
 
+    private void SearchOrderInputChanged(ChangeEventArgs e)
+    {
+        if (e is not null && e.Value is not null)
+        {
+            SelectedSearchTerm = e.Value.ToString();
+            Guid searchOrderId = Guid.Empty;
+            if (Guid.TryParse(SelectedSearchTerm, out searchOrderId))
+            {
+                ShopOrder searchedShopOrder = Service.GetShopOrder(searchOrderId);
+                if (searchedShopOrder.Id.Equals(searchOrderId))
+                {
+                    SearchShopOrder = searchedShopOrder;
+                }
+            }
+            else
+            {
+                SearchShopOrder = new ShopOrderService(BeService).Empty();
+            }
+        }
+    }
+
     private void SelectFilterChange(ChangeEventArgs e)
     {
         int selectedFilter = -1;
         if (int.TryParse(e.Value.ToString(), out selectedFilter))
         {
             SelectedFilter = selectedFilter;
-            //TODO: refresh ShopOrders
             ShopOrders = Service.GetFilteredShopOrders(selectedFilter);
         }
     }
@@ -60,6 +85,43 @@ else
             </h1>
         </div>
 
+        <!-- Ordersök -->
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h6 class="mb-0 fw-semibold">
+                    <i class="bi bi-funnel me-2"></i>Sök beställning
+                </h6>
+            </div>
+            <div class="card-body>">
+                @* <p>SelectedSearchTerm: @SelectedSearchTerm</p> *@
+                <input 
+                    type="text"
+                    class="form-control"
+                    pattern="[0-9a-fA-F]{8}" 
+                    list="searchorderdatalist"
+                    @bind="SelectedSearchTerm"
+                    @oninput="SearchOrderInputChanged"
+                    />
+                <datalist id="searchorderdatalist">
+                    @foreach(Tuple<string, string> item in OrderDataList)
+                    {
+                        <option value="@item.Item1">@item.Item2</option>
+                    }
+                </datalist>
+                @if(SearchShopOrder is not null && !SearchShopOrder.Id.Equals(Guid.Empty))
+                {
+                    string accordionTitle = SearchShopOrder.Created.ToString("yyyy-MM-dd HH:mm") + " • " + SearchShopOrder.CustomerInfo.FirstName + " " + SearchShopOrder.CustomerInfo.LastName + " • " + SearchShopOrder.CustomerInfo.City;
+                    <Accordion>
+                        <AccordionItem Title="@accordionTitle">
+                            <Content>
+                                <ManageShopOrder Id="@SearchShopOrder.Id" ShopOrder="@SearchShopOrder" />            
+                            </Content>
+                        </AccordionItem>
+                    </Accordion>
+                }
+            </div>
+        </div>
+
         <!-- Filter -->
         <div class="card mb-4">
             <div class="card-header d-flex justify-content-between align-items-center">
@@ -76,8 +138,9 @@ else
                     <option value="1">Betalda</option>
                     <option value="2">Levererade</option>
                     <option value="3">Avvisade</option>
-                    <option value="4">Alla</option>
+                    <option value="4">Eventuellt betalda</option>
                     <option value="0">Ej betalda</option>
+                    <option value="-1">Alla</option>
                 </select>
             </div>
         </div>
