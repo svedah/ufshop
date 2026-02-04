@@ -2,7 +2,7 @@ namespace ufshop.Shared;
 
 static public class Constants
 {
-    static public string DOMAINNAME = "ufshop.nu";//<-- används bara av databas-seedern
+    static public string DOMAINNAME = "ufshop.nu";//<-- används av databas-seedern och swishredirect i payment.razor
     static public string DEFAULTDOMAINPREFIX = "www";
 
 

@@ -110,6 +110,12 @@
     {
         ShowIframe = !ShowIframe;
     }
+
+    public void SwishButtonTrigger()
+    {
+        //TODO: uppdatera shoporders status till swishtriggered
+        NavigationManager.NavigateTo("/OrderConfirmation/" + id.ToString(), forceLoad: true);
+    }
 }
 
 @if (Order is not null && Order.Status == ShopOrderStatus.Unpaid)
@@ -120,6 +126,12 @@
     <Image Src=@QrEmbeddedImage Alt="Scanna med din mobilkamera för att betala din order" />
     @* knapp *@
     <Button Color="ButtonColor.Primary" @onclick="() => SwishTrigger()">Swisha från denna enheten</Button>
+    <br />
+    @* knapp2 *@
+    <a href="https://app.swish.nu/1/p/sw/?sw=0735019697&amt=100&cur=SEK&msg=lol&src=qr" target="_blank">
+        <Button Color="ButtonColor.Primary" @onclick="() => SwishButtonTrigger()">LOL</Button>
+    </a>
+
 
     <p>SwishRedirect: @SwishRedirectUrl</p>@*ta bort, behöver inte synas*@
 
