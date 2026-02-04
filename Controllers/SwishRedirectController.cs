@@ -43,17 +43,17 @@ public class SwishRedirectController : ControllerBase
             //calc cart total
             int cartTotal = CalculateCartTotal(id);
             //get customer phone number
-            string customerPhoneNumber = GetCustomerPhoneNumber(id);
+            string SwishNumber = GetShopSwishNumber();
             //extract 8 first characters from guid
             string guidPart = ExtractGuidPart(id);
             //build message "ufshop%20abcdabcd" where abcdabcd are from guid
             string message = BuildMessage(guidPart);
 
-            string redirectUrl = BuildSwishRedirectUrl(customerPhoneNumber, cartTotal, message);
+            string redirectUrl = BuildSwishRedirectUrl(SwishNumber, cartTotal, message);
 
-            // return Content(redirectUrl, "text/plain");
+            return Content(redirectUrl, "text/plain");
             
-            return new RedirectResult(redirectUrl);
+            // return new RedirectResult(redirectUrl);
 
         }
         else
@@ -86,14 +86,14 @@ public class SwishRedirectController : ControllerBase
 
             //calc cart total
             int cartTotal = CalculateCartTotal(id);
-            //get customer phone number
-            string customerPhoneNumber = GetCustomerPhoneNumber(id);
+            //get shop phone number
+            string SwishNumber = GetShopSwishNumber();
             //extract 8 first characters from guid
             string guidPart = ExtractGuidPart(id);
             //build message "ufshop%20abcdabcd" where abcdabcd are from guid
             string message = BuildMessage(guidPart);
 
-            string redirectUrl = BuildSwishRedirectUrl(customerPhoneNumber, cartTotal, message);
+            string redirectUrl = BuildSwishRedirectUrl(SwishNumber, cartTotal, message);
 
             return new RedirectResult(redirectUrl);
 
@@ -183,6 +183,20 @@ public class SwishRedirectController : ControllerBase
         return output;
     }
 
+    private string GetShopSwishNumber()
+    {
+        string output = string.Empty;
+
+        Shop shop;
+        ShopService ss = new ShopService(BeService);
+        if (ss.GetShop(BeService.DomainPrefix, out shop))
+        {
+            output = shop.Settings.SwishNumber;
+        }
+
+        return output;
+    }
+
     private string ExtractGuidPart(Guid shopOrderId)
     {
         string output = string.Empty;
@@ -201,6 +215,6 @@ public class SwishRedirectController : ControllerBase
     private string BuildMessage(string identifier)
     {
         // return BeService.DomainPrefix + "." + Constants.DOMAINNAME + ":" + identifier.ToLower();
-        return BeService.DomainPrefix + "%20" + Constants.DOMAINNAME + "%20" + identifier.ToLower();
+        return BeService.DomainPrefix + "." + Constants.DOMAINNAME + ":" + identifier.ToLower();
     }
 }
