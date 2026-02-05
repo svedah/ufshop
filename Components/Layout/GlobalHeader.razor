@@ -66,17 +66,18 @@
             
             <!-- Höger Sida -->
             <div class="d-flex align-items-center gap-2">
-
-                <ThemeSwitcher class="btn btn-primary btn-sm"/>
+                
+                @* todo gör att den faktiskt visar rätt tal *@
+                @* <ThemeSwitcher class="btn btn-primary btn-sm"/> *@
 
                 <NavLink class="btn btn-primary position-relative px-3 py-2" @onclick="GoToCart">
                     <Icon Name="IconName.Cart" />
                     <span class="d-none d-md">Varukorg</span>
                     
                     @* todo gör att den faktiskt visar rätt tal *@
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                    @* <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                         3
-                    </span>
+                    </span> *@
                 </NavLink>
             </div>
         </div>
