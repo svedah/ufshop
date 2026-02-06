@@ -20,7 +20,7 @@ public class OrderShopService
         bool validPrefix = ValidatePrefix(prefix);
         bool validCompany = company.Length > 4;
         bool validEmail =  new EmailHelper().IsValidEmail(email);
-        bool validPhone = phone.Length >= 10;
+        bool validPhone = new String(phone.Where(Char.IsDigit).ToArray()).Length >= 10;
 
         return validPrefix && validCompany && validEmail && validPhone;
     }
@@ -38,21 +38,33 @@ public class OrderShopService
         return !alreadyExists && !alreadyOrdered && isValidPrefix;
     }
 
-    public bool MakeOrder(string prefix, string company, string email, string phone, string companytype, bool assisted)
+    public Guid MakeOrder(string prefix, string company, string email, string phone, string companytype, bool assisted)
     {
-        UFShopOrder newUfShopOrder = new UFShopOrder
+        Guid output = Guid.Empty;
+
+        if (IsFormDataValid(prefix, company, email, phone))
         {
-            Id = Guid.NewGuid(),
-            Prefix = prefix,
-            Email = email,
-            Title = company,
-            Assisted = assisted,
-            UF = companytype.Equals("uf"),
-            Active = false,
-            Paid = false,
-            Created = DateTime.Now
-        };
-        return false;
+            Guid newId = Guid.NewGuid();
+            UFShopOrder newUfShopOrder = new UFShopOrder
+            {
+                Id = newId,
+                Prefix = prefix,
+                Email = email,
+                Title = company,
+                Assisted = assisted,
+                UF = companytype.Equals("uf"),
+                Active = false,
+                Paid = false,
+                Created = DateTime.Now
+            };
+
+            beService.DbContext.UFShopOrders.Add(newUfShopOrder);
+            beService.DbContext.SaveChanges();
+
+            output = newId;
+        }
+
+        return output;
     }
 
 
