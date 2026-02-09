@@ -38,7 +38,7 @@ public class OrderShopService
         return !alreadyExists && !alreadyOrdered && isValidPrefix;
     }
 
-    public Guid MakeOrder(string prefix, string company, string email, string phone, string companytype, bool assisted)
+    public Guid MakeOrder(string prefix, string company, string email, string phone, bool companytype, bool assisted)
     {
         Guid output = Guid.Empty;
 
@@ -50,9 +50,10 @@ public class OrderShopService
                 Id = newId,
                 Prefix = prefix,
                 Email = email,
+                Phone = phone,
                 Title = company,
                 Assisted = assisted,
-                UF = companytype.Equals("uf"),
+                UF = companytype,
                 Active = false,
                 Paid = false,
                 Created = DateTime.Now

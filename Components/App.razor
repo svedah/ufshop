@@ -32,7 +32,7 @@
     public App(BeService beService)
     {
         beService.SetSaneValues();
-        ShopExists = new ShopService(beService).ShopExists(beService.DomainPrefix);
+        ShopExists = new ShopService(beService).ShopExistsByDomainPrefix(beService.DomainPrefix);
     }
 
 }

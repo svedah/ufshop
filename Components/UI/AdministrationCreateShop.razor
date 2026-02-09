@@ -1,0 +1,194 @@
+@using SQLitePCL
+@using ufshop.Data.Models
+@using ufshop.Services
+@rendermode InteractiveServer
+@code {
+    private readonly BeService beService;
+    private readonly AdministrationCreateShopService Service;
+
+    private IQueryable<UFShopOrder> AllUfShopOrders
+    {
+        get
+        {
+            return Service.AllUfShopOrders()
+                .Where(e => e.Prefix != "www")
+                .Where(e => !e.Active)
+                .Where(e => !e.Paid)
+                .OrderBy(e => e.Prefix);
+        }
+    }
+
+    private UFShopOrder SelectedUFShopOrder { get; set; }
+    private string SelectedUFPassword { get; set; }
+
+    private Modal modal = default;
+
+    public AdministrationCreateShop(BeService srv)
+    {
+        beService = srv;
+        Service = new AdministrationCreateShopService(srv);
+        SelectedUFShopOrder = GetEmptyUFShopOrder();
+        SelectedUFPassword = string.Empty;
+    }
+
+    private UFShopOrder GetEmptyUFShopOrder()
+    {
+        return Service.EmptyUfShopOrder();
+    }
+
+    private bool ButtonCreateShopDisabled
+    {
+        get
+        {
+            return  SelectedUFShopOrder.Id.Equals(Guid.Empty) ||
+                    !Service.IsValid(SelectedUFShopOrder) ||
+                    string.IsNullOrWhiteSpace(SelectedUFPassword);
+        }
+    }
+
+    private bool ButtonDeleteShopDisabled
+    {
+        get
+        {
+            return SelectedUFShopOrder.Id.Equals(Guid.Empty);
+        }
+    }
+
+    private async Task CreateNewShopAndUser()
+    {
+        bool result = Service.CreateNewShop(SelectedUFShopOrder, SelectedUFPassword);
+        if (result)
+        {
+            //set paid and active on ufshoporder if successfully created shop
+            Service.MarkPaidAndActive(SelectedUFShopOrder);
+
+            //pop up modal for Lara
+            //with relevant info on created shop
+            await modal.ShowAsync();
+        }
+    }
+
+    private async Task CloseModal()
+    {
+        await modal.HideAsync();
+    }
+
+    private void DeleteSelectedUFShopOrder()
+    {
+        Service.DeleteUfShopOrder(SelectedUFShopOrder.Id);
+        SelectedUFShopOrder = Service.EmptyUfShopOrder();
+    }
+
+    private void GenerateNewPassword()
+    {
+        SelectedUFPassword = Helpers.PasswordHelper.GetRandomizedPassword();
+    }
+
+    private void SelectItemChange(ChangeEventArgs e)
+    {
+        Guid SelectedId = Guid.Empty;
+        if (e is not null && e.Value is not null)
+        {
+            if (Guid.TryParse(e.Value.ToString(), out SelectedId))
+            {
+                UFShopOrder ufShopOrder;
+                if (Service.GetUFShopOrder(SelectedId, out ufShopOrder))
+                {
+                    SelectedUFShopOrder = ufShopOrder;
+                }
+            }
+        }
+    }
+
+}
+
+@if (beService is null)
+{
+    <Spinner />
+}
+else
+{
+    <h1>Skapa ny shop</h1>
+
+    @* UFShopordrar som är markerade obetalda och inaktiva *@
+    <div class="row">
+        <div class="col">
+            <select class="form-select form-select-lg" @onchange="SelectItemChange">
+                    <option selected disabled>Välj UF-shop order</option>
+                    @foreach(UFShopOrder o in AllUfShopOrders)
+                    {
+                        <option value=@o.Id>@o.Created - @o.Prefix</option>
+                    }
+            </select>
+        </div>
+    </div>
+    
+    @* lite vertikalt tomrum *@
+    <div class="row">&nbsp;</div>
+
+    @* formuläret *@
+    <fieldset class="border p-2 row">
+        <legend class="w-auto">Vald UFShopOrder</legend>
+        <p>ID: @SelectedUFShopOrder.Id</p>
+        <div>Titel: <TextInput @bind-Value="@SelectedUFShopOrder.Title" /></div>
+        <div>URLen: https://<TextInput @bind-Value="@SelectedUFShopOrder.Prefix" />.ufshop.nu</div>
+        <div>E-post: <TextInput @bind-Value="@SelectedUFShopOrder.Email" /></div>
+        <div>Telefon: <TextInput @bind-Value="@SelectedUFShopOrder.Phone" /></div>
+        <div>UF: <CheckboxInput Label="UF Företag" @bind-Value="@SelectedUFShopOrder.UF" /></div>
+        <div>Assisterad: <CheckboxInput Label="Assisterad" @bind-Value="@SelectedUFShopOrder.Assisted" /></div>
+        <div>Aktiv: <CheckboxInput Label="Aktiv" @bind-Value="@SelectedUFShopOrder.Active" /></div>
+        <div>Betald: <CheckboxInput Label="Betald" @bind-Value="@SelectedUFShopOrder.Paid" /></div>
+        <div>
+            Lösenord: <TextInput @bind-Value="@SelectedUFPassword" />
+            <Button Color="ButtonColor.Primary" @bind-Value="@SelectedUFPassword" @onclick="() => GenerateNewPassword()">
+                Generera Lösenord
+            </Button>
+        </div>
+    </fieldset>
+
+    <Button Color="ButtonColor.Primary" 
+            Disabled="@ButtonCreateShopDisabled"
+            @onclick="() => CreateNewShopAndUser()">
+        Skapa denna shop
+    </Button>
+
+    <Button Color="ButtonColor.Danger" 
+            Disabled="@ButtonDeleteShopDisabled"
+            @onclick="() => DeleteSelectedUFShopOrder()">
+        Ta bort denna beställning
+    </Button>
+
+    @* denna syns när du skapat en shop från en ufshoporder *@
+    <Modal @ref="modal" title="Kontoinformation" IsVerticallyCentered="true">
+        <BodyTemplate>
+            @{string fullUrl = "https://" + SelectedUFShopOrder.Prefix + "." + ufshop.Shared.Constants.DOMAINNAME + "/";} 
+            <div>Domännamn: @fullUrl</div>
+            <div>Inloggning namn: @SelectedUFShopOrder.Email</div>
+            <div>Inloggning lösenord: @SelectedUFPassword</div>
+            @* 
+                kan ju vara smidigt att skapa en e-mail-mall här
+                som man kan kopiera och skicka till kund
+                så slipper man komponera nya mejl varje gång            
+            *@
+        </BodyTemplate>
+        <FooterTemplate>
+            <Button Color="ButtonColor.Secondary" @onclick="CloseModal">Close</Button>
+        </FooterTemplate>
+    </Modal>
+
+    @*
+        Den här knappen öppnar modalen ovanför så den syns
+        Kommentera ut eller ta bort när du stajlat klart
+    *@
+    <button @onclick="() => modal.ShowAsync()">
+        Öppna modal
+    </button>
+
+    @*
+        Den här knappen stänger modalen ovanför så den syns
+        Kommentera ut eller ta bort när du stajlat klart
+    *@
+    <button @onclick="() => modal.HideAsync()">
+        Stäng modal
+    </button>
+}

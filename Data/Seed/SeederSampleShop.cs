@@ -29,6 +29,7 @@ public class SeederSampleShop
     {
         return new ShopSocialMedia
         {
+            Id = Guid.NewGuid(),
             Facebook = "https://www.facebook.com/sample",
             Instagram = "https://instagram.com/sample",
             LinkedIn = "https://linkedin.com/sample",

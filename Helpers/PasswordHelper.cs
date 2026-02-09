@@ -40,14 +40,12 @@ static internal class PasswordHelper
 
     public static string GetRandomizedPassword()
     {
-        int seed = (int)(new DateTime().Ticks);
-
-        Random rnd = new Random(seed);
+        Random rnd = new Random();
 
         int countingwordsindex = rnd.Next(0, countingwords.Length);
         int adjectivesindex = rnd.Next(0, adjectives.Length);
         int nounsindex = rnd.Next(0, nouns.Length);
-        int number = rnd.Next(100, 1000);
+        int number = rnd.Next(10, 100);
 
         string output = countingwords[countingwordsindex] + adjectives[adjectivesindex] + nouns[nounsindex] + number.ToString();
         return output;

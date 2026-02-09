@@ -17,8 +17,14 @@
     string Email { get; set; } = string.Empty;
     string Phone { get; set; } = string.Empty;
     @* string CompanyType { get; set; } = string.Empty; *@
-    bool CompanyTypeUF { get; set; } = false;
-    bool CompanyTypeNotUF { get; set; } = false;
+    bool CompanyTypeUF { get; set; } = true;
+    string CompanyTypeUFCheck
+    {
+        get
+        {
+            return CompanyTypeUF ? "checked" : string.Empty;
+        }
+    }
     bool Assisted { get; set; } = false;
     private bool IsFormDataValid { get { return Service.IsFormDataValid(Prefix, Company, Email, Phone); } }
     //END Form bindings
@@ -58,18 +64,9 @@
 
     private void MakeOrder()
     {
-        string companytype = string.Empty;
-        if (CompanyTypeUF)
-        {
-            companytype = "uf";
-        }
-        else
-        {
-            companytype = "other";
-        }
         if (IsFormDataValid)
         {
-            Guid orderId = Service.MakeOrder(Prefix, Company, Email, Phone, companytype, Assisted);
+            Guid orderId = Service.MakeOrder(Prefix, Company, Email, Phone, CompanyTypeUF, Assisted);
             if (!orderId.Equals(Guid.Empty))
             {
                 OrderId = orderId.ToString().Split('-')[0];
@@ -181,13 +178,15 @@ else
                 <i class="bi bi-briefcase me-2"></i>Typ av företag
             </label>
             <div class="row g-3">
+                <InputRadioGroup @bind-Value="CompanyTypeUF">
                 <div class="row-6 col-md-6 col-lg-6 col-xl-6">
                     <div class="form-check-card">
-                        <input type="radio" 
-                            name="shopType" 
+                        <InputRadio 
                             id="typeUF" 
                             class="form-check-input" 
-                            @bind="CompanyTypeUF" />
+                            checked="@CompanyTypeUFCheck"
+                            Value="true" 
+                        />
                         <label class="form-check-label w-100 p-3 text-center" for="typeUF">
                             <i class="bi bi-mortarboard-fill d-block fs-3 mb-2 text-primary"></i>
                             <strong>UF-företag</strong>
@@ -196,17 +195,20 @@ else
                 </div>
                 <div class="row-6 col-md-6 col-lg-6 col-xl-6">
                     <div class="form-check-card">
-                        <input type="radio" 
-                            name="shopType" 
+                        <InputRadio 
                             id="typeOther" 
                             class="form-check-input" 
-                            @bind="CompanyTypeNotUF" />
+                            checked="@CompanyTypeUFCheck"
+                            Value="false" 
+                        />
                         <label class="form-check-label w-100 p-3 text-center" for="typeOther">
                             <i class="bi bi-building-fill d-block fs-3 mb-2 text-primary"></i>
                             <strong>Annat</strong>
                         </label>
                     </div>
                 </div>
+                @CompanyTypeUF and @CompanyTypeUFCheck
+                </InputRadioGroup>
             </div>
         </section>
 

@@ -14,11 +14,30 @@ public class ShopService
         beService = srv;
     }
 
-    public bool ShopExists(string domainPrefix)
+    public bool ShopExistsByDomainPrefix(string domainPrefix)
     {
         Contract.Assert(domainPrefix is not null);
         return beService.DbContext.Shops.Where(e => e.Prefix.Equals(domainPrefix)).Any();
     }
+
+    public bool ShopExistsById(Guid id)
+    {
+        return beService.DbContext.Shops.Where(e => e.Id.Equals(id)).Any();
+    }
+
+    public bool ShopExistsByTitle(string title)
+    {
+        Contract.Assert(title is not null);
+        bool output = false;
+        if (title is not null && title.Length >= 3)
+        {
+            output = beService.DbContext.Shops
+                    .Include(e=>e.Settings)
+            .Where(e => e.Settings.Title.Equals(title)).Any();
+        }
+        return output;
+    }
+
 
     public bool GetShop(string domainPrefix, out Shop shop)
     {
@@ -91,5 +110,12 @@ public class ShopService
             beService.DbContext.Shops.Update(shop);
             beService.DbContext.SaveChanges();
         } 
+    }
+
+    public bool Add(Shop input)
+    {
+        beService.DbContext.Shops.Add(input);
+        beService.DbContext.SaveChanges();
+        return true;//TODO: dont assume success
     }
 }

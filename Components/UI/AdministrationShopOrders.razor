@@ -4,7 +4,7 @@
 @rendermode InteractiveServer
 @code {
     private readonly BeService beService;
-    private readonly ufshop.Services.AdministrationShopOrdersService Service;
+    private readonly AdministrationShopOrdersService Service;
 
     private IQueryable<Shop> AllShops
     {
@@ -17,22 +17,6 @@
                           .OrderBy(e => e.Prefix);
         }
     } 
-
-    private IQueryable<Shop> UnpaidShops
-    {
-        get
-        {
-            return AllShops.Where(e => !e.Paid);   
-        }
-    }
-
-    private IQueryable<Shop> PaidShops
-    {
-        get
-        {
-            return AllShops.Where(e => !e.Paid);   
-        }
-    }
 
     public AdministrationShopOrders(BeService srv)
     {
@@ -68,10 +52,10 @@ else
                 @shop.Prefix
             </div>
             <div class="col">
-                123
+                @shop.Active
             </div>
             <div class="col">
-                456
+                @shop.Paid
             </div>
         </div>
     }

@@ -2,7 +2,7 @@ namespace ufshop.Data.Models;
 
 public class ShopSocialMedia
 {
-    public Guid Id { get; set; }
+    public required Guid Id { get; set; }
 
     public required string Facebook { get; set; }
     public required string Instagram { get; set; }
