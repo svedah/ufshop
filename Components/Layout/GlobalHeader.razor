@@ -2,20 +2,26 @@
 @using ufshop.Services
 
 @rendermode InteractiveServer
+@inject UIStateService Ui
 @code {
     public readonly BeService beService;
-    public readonly Shop shop;
+    public Shop shop;
 
-    public readonly string ShopTitle;
-    public readonly ShopImage ShopLogo;
+    public string ShopTitle;
+    public ShopImage ShopLogo;
 
     public GlobalHeader(BeService srv)
     {
         beService = srv;
+    }
+
+    private void RefreshData()
+    {
         shop = GetShop();
         ShopTitle = shop.Settings.Title;
         ShopLogo = shop.Settings.LogoImage;
-    } 
+        InvokeAsync(StateHasChanged);
+    }
 
     private Shop GetShop()
     {
@@ -28,62 +34,81 @@
         return default!;
     }
 
+    protected override async Task OnInitializedAsync()
+    {
+        shop = GetShop();
+        ShopTitle = shop.Settings.Title;
+        ShopLogo = shop.Settings.LogoImage;
+    }
+
+    protected override void OnInitialized()
+    {
+        Ui.OnChange += RefreshData;
+    }
+
+    public void Dispose()
+    {
+        Ui.OnChange -= RefreshData;
+    }
+
 }
-<header class="sticky-top ">
-    <nav class="navbar navbar-expand-lg bg-primary-subtle shadow-sm mb-3 p-2 px-sm-4">
-        <div class="container-fluid">
-            <NavLink class="navbar-brand d-flex align-items-center" href="/">
-                @if (ShopLogo is not null)
-                {
-                    string imageUrl = "/img/" + ShopLogo.Filename;
-                    
-                    <Image Src="@imageUrl" 
-                            Alt="@ShopTitle" 
-                            width="60px" 
-                            class="shop-logo me-3 rounded shadow-sm" />
-                    <span class="fw-bold m-0 fs-5 d-none d-sm-inline text-nowrap">
-                        @ShopTitle
-                    </span>
-                }
-                else
-                {
-                    <Icon Name="IconName.House" class="text-primary me-2"/>
-                    <span class="fw-bold  m-0 fs-5 d-none d-sm-inline text-nowrap">
-                        @ShopTitle
-                    </span>
-                }
-            </NavLink>
+@if (shop is not null)
+{
+    <header class="sticky-top ">
+        <nav class="navbar navbar-expand-lg bg-primary-subtle shadow-sm mb-3 p-2 px-sm-4">
+            <div class="container-fluid">
+                <NavLink class="navbar-brand d-flex align-items-center" href="/">
+                    @if (ShopLogo is not null)
+                    {
+                        string imageUrl = "/img/" + ShopLogo.Filename;
+                        
+                        <Image Src="@imageUrl" 
+                                Alt="@ShopTitle" 
+                                width="60px" 
+                                class="shop-logo me-3 rounded shadow-sm" />
+                        <span class="fw-bold m-0 fs-5 d-none d-sm-inline text-nowrap">
+                            @ShopTitle
+                        </span>
+                    }
+                    else
+                    {
+                        <Icon Name="IconName.House" class="text-primary me-2"/>
+                        <span class="fw-bold  m-0 fs-5 d-none d-sm-inline text-nowrap">
+                            @ShopTitle
+                        </span>
+                    }
+                </NavLink>
 
-            @inject NavigationManager NavigationManager
+                @inject NavigationManager NavigationManager
 
-            @code {
-                private void GoToCart()
-                {
-                    
-                    NavigationManager.NavigateTo("/checkout", forceLoad: true);
+                @code {
+                    private void GoToCart()
+                    {
+                        
+                        NavigationManager.NavigateTo("/checkout", forceLoad: true);
+                    }
                 }
-            }
-            
-            <!-- Höger Sida -->
-            <div class="d-flex align-items-center gap-2">
                 
-                @* todo gör att den faktiskt visar rätt tal *@
-                @* <ThemeSwitcher class="btn btn-primary btn-sm"/> *@
-
-                <NavLink class="btn btn-primary position-relative px-3 py-2" @onclick="GoToCart">
-                    <Icon Name="IconName.Cart" />
-                    <span class="d-none d-md">Varukorg</span>
+                <!-- Höger Sida -->
+                <div class="d-flex align-items-center gap-2">
                     
                     @* todo gör att den faktiskt visar rätt tal *@
-                    @* <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                        3
-                    </span> *@
-                </NavLink>
-            </div>
-        </div>
-    </nav>
-</header>
+                    @* <ThemeSwitcher class="btn btn-primary btn-sm"/> *@
 
+                    <NavLink class="btn btn-primary position-relative px-3 py-2" @onclick="GoToCart">
+                        <Icon Name="IconName.Cart" />
+                        <span class="d-none d-md">Varukorg</span>
+                        
+                        @* todo gör att den faktiskt visar rätt tal *@
+                        @* <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            3
+                        </span> *@
+                    </NavLink>
+                </div>
+            </div>
+        </nav>
+    </header>
+}
 
 <style>
 

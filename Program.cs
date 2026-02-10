@@ -28,6 +28,7 @@ namespace ufshop
             builder.Services.AddScoped<IdentityRedirectManager>();
             builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
             builder.Services.AddScoped<BeService, BeService>();
+            builder.Services.AddScoped<UIStateService, UIStateService>();
 
             // builder.Services.AddAuthentication(options =>
             //     {

@@ -2,6 +2,7 @@
 @using ufshop.Data.Models
 @using ufshop.Services
 @inject BeService beService
+@inject UIStateService Ui
 
 @code {
     private Shop? shop;
@@ -20,6 +21,12 @@
     {
         //kunde inte göra en konstruktor så det får bli ett fulhack här
         shop = GetShop();
+        Ui.OnChange += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        Ui.OnChange -= StateHasChanged;
     }
 }
 

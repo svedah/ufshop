@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using ufshop.Data.Models;
 namespace ufshop.Services;
 

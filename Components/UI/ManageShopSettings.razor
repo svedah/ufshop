@@ -6,6 +6,9 @@
 @namespace ufshop.Components.UI
 @rendermode InteractiveServer
 
+
+@inject UIStateService Ui
+
 @code {
 
     public readonly BeService beService;
@@ -42,6 +45,20 @@
             Service.Shop.Settings.Theme = SelectedTheme;
         }
     }
+
+    private void HandleSelectedLogoImage(string value)
+    {
+        Guid Id = Guid.Parse(value);
+        var iss = new ImageSelectorService(beService);
+        ShopImage image = default!;
+        bool result = iss.GetImage(Id, ref image);
+        if (result)
+        {
+            Service.Shop.Settings.LogoImage = image;
+            Ui.NotifyStateChanged();
+        }
+    }
+
 }
 
 
@@ -78,6 +95,20 @@
                             </label>
                             <TextAreaInput @bind-value="Service.Shop.Settings.Description"
                                 class="form-control" rows="5"/>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">
+                                <Icon Name="IconName.Image" /> Logotyp
+                            </label>
+                            <Accordion>
+                                <AccordionItem Title="Primär bild">
+                                    <Content>
+                                        <ImageSelector Image=@Service.Shop.Settings.LogoImage OnValueSelected="HandleSelectedLogoImage"/>
+                                    </Content>
+                                </AccordionItem>
+                            </Accordion>
+
                         </div>
 
                         <div class="mb-4">
