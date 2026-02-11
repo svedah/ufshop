@@ -34,7 +34,7 @@ public class ManageCreateItemService
             bool titleOk = newShopItem.Title.Trim().Length > 0;
             bool descriptionOK = newShopItem.Description.Trim().Length > 0;
             bool sameTitleExists = shop.Items.Where(e => e.Title.Equals(newShopItem.Title)).Any();
-            bool sameDescriptionExists = shop.Items.Where(e => e.Description.Equals(newShopItem.Description)).Any();;
+            bool sameDescriptionExists = false;//shop.Items.Where(e => e.Description.Equals(newShopItem.Description)).Any();;
             bool hasItems = newShopItem.ItemsAvailable > 0;
             bool hasPrice = newShopItem.Price > 0;
             bool hasSortOrder = newShopItem.Order > 0;
