@@ -11,6 +11,8 @@
 
 @inject IServiceProvider Services
 @inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime;
+
 @implements IDisposable
 
 @code {
@@ -18,14 +20,27 @@
     public Guid id { get; set; } //order id
     private ShopOrder Order { get; set; }
     private bool ShowIframe { get; set; }
+
     private CancellationTokenSource cts;
     private bool _disposed = false;
     private Random random = new Random();
     private readonly BeService BeService;
     private readonly PaymentService Service;
 
+    //för qr-kod
     private string SwishRedirectUrl = string.Empty;
     private string QrEmbeddedImage = string.Empty;
+
+    //för knapp
+    private string SwishDirectUrl = string.Empty;
+    private string OrderConfirmationUrl = string.Empty;
+    private string TheScript
+    {
+        get
+        {
+            return "<script>function open2links(){window.location.href=\"" + @OrderConfirmationUrl + "\";window.open(\"" + @SwishDirectUrl + "\", \"_blank\");}</script>";
+        }
+    }
 
     public Payment(BeService beService)
     {
@@ -38,8 +53,15 @@
     protected override async Task OnInitializedAsync()
     {
         NavigationManager.LocationChanged += OnLocationChanged;
+
+        //för qr-kod
         SwishRedirectUrl = Service.BuildSwishRedirectUrl(id);
         QrEmbeddedImage = QrImageHelper.MakeEmbeddedImage(SwishRedirectUrl);
+
+        //för knapp
+        SwishDirectUrl = Service.BuildSwishDirectUrl(id);
+        OrderConfirmationUrl = Service.BuildOrderConfirmationUrl(id);
+
         UpdateOrder();
         if (Order is not null)
         {
@@ -54,6 +76,9 @@
 
     private async Task RunLoopAsync(CancellationToken token)
     {
+        //kolla var 3:e sekund om ordern bytt status från unpaid
+        //när orderstatus bytt till inte unpaid (swishtriggered)
+        //länkas sidan automatiskt vidare till orderconfirmation/guid
         PeriodicTimer timer = new PeriodicTimer(TimeSpan.FromSeconds(3));
         try
         {
@@ -82,7 +107,7 @@
         }
         catch(OperationCanceledException)
         {
-
+            Dispose();
         }
     }
 
@@ -111,11 +136,21 @@
         ShowIframe = !ShowIframe;
     }
 
-    public void SwishButtonTrigger()
+    public async Task SwishButtonTrigger()
     {
-        //TODO: uppdatera shoporders status till swishtriggered
-        NavigationManager.NavigateTo("/OrderConfirmation/" + id.ToString(), forceLoad: true);
+        //stäng av timer
+        Dispose();
+
+        //uppdatera shoporder status till swishtriggered
+        Order.Status = ShopOrderStatus.SwishTriggered;
+        BeService.DbContext.ShopOrders.Update(Order);
+        BeService.DbContext.SaveChanges();
+
+        //gå vidare till orderconfimation och swishlänk
+        await JSRuntime.InvokeVoidAsync("open2links");
     }
+
+
 }
 
 @if (Order is not null && Order.Status == ShopOrderStatus.Unpaid)
@@ -125,16 +160,18 @@
     @* qr-kod *@
     <Image Src=@QrEmbeddedImage Alt="Scanna med din mobilkamera för att betala din order" />
     @* knapp *@
-    <Button Color="ButtonColor.Primary" @onclick="() => SwishTrigger()">Swisha från denna enheten</Button>
-    <br />
-    @* knapp2 *@
-    <a href="https://app.swish.nu/1/p/sw/?sw=0735019697&amt=100&cur=SEK&msg=lol&src=qr" target="_blank">
-        <Button Color="ButtonColor.Primary" @onclick="() => SwishButtonTrigger()">LOL</Button>
-    </a>
+    <Button Color="ButtonColor.Primary" @onclick="() => SwishButtonTrigger()">Klicka här för att swisha från denna enheten</Button>
+    @* <a href="https://app.swish.nu/1/p/sw/?sw=0735019697&amt=100&cur=SEK&msg=lol&src=qr" target="_blank">
+        Länk
+    </a> *@
 
 
-    <p>SwishRedirect: @SwishRedirectUrl</p>@*ta bort, behöver inte synas*@
+    <p>SwishRedirectUrl: @SwishRedirectUrl</p>@*ta bort, behöver inte synas*@
+    <p>SwishDirect: @SwishDirectUrl</p>@*ta bort, behöver inte synas*@
+    <p>OrderConfirmationUrl: @OrderConfirmationUrl</p>@*ta bort, behöver inte synas*@
+    <p>OrderStatus: @Order.Status</p>@*ta bort, behöver inte synas*@
 
+    
     @* komponent som skall visa alla items i varukorgen *@
     @* används både på betalningssidan (denna) och orderbekräftelsesidan *@
     <PaymentCartViewer CartItems=@Order.Cart.CartItems />@*mycket att snygga till här*@
@@ -147,6 +184,9 @@
     {
         <IframeViewer Url="@SwishRedirectUrl" Width="0" Height="0" />
     }
+
+    @* raden nedan injicerar scriptet som triggar sidbyte och öppnar swish på mobilen*@
+    @((MarkupString)TheScript)
 }
 else
 {
