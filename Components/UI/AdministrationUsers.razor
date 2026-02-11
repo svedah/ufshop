@@ -1,0 +1,138 @@
+@using Microsoft.AspNetCore.Identity
+@using ufshop.Data.Models
+@using ufshop.Services
+@rendermode InteractiveServer
+@code {
+    private readonly BeService beService;
+    private readonly AdministrationUsersService Service;
+
+    private IQueryable<IdentityUser> AllUsers
+    {
+        get
+        {
+            return Service.AllUsers()
+                .OrderBy(e => e.Email);
+        }
+    }
+
+    private IdentityUser SelectedUser { get; set; }
+    private string SelectedUserPassword { get; set; }
+
+
+    public AdministrationUsers(BeService srv)
+    {
+        beService = srv;
+        Service = new AdministrationUsersService(srv);
+        SelectedUser = GetEmptyUser();
+        SelectedUserPassword = string.Empty;
+    }
+
+    private IdentityUser GetEmptyUser()
+    {
+        return Service.EmptyUser();
+    }
+
+    private bool ButtonChangeUserDisabled
+    {
+        get
+        {
+            return ButtonBlockUserDisabled || SelectedUserPassword.Length == 0;
+        }
+    }
+
+    private bool ButtonBlockUserDisabled
+    {
+        get
+        {
+            return SelectedUser.Id.Equals(Guid.Empty.ToString());
+        }
+    }
+
+    private void BlockSelectedUser()
+    {
+        SelectedUserPassword = Guid.NewGuid().ToString(); //lycka till gissa lösenordet
+        SetNewUserPassword();
+        //clear form
+        SelectedUser = Service.EmptyUser();
+        SelectedUserPassword = string.Empty;
+    }
+
+    private void SetNewUserPassword()
+    {
+        Service.SetPassword(SelectedUser.Id, SelectedUserPassword);
+    }
+
+    private void GenerateNewPassword()
+    {
+        SelectedUserPassword = Helpers.PasswordHelper.GetRandomizedPassword();
+    }
+    private void SelectItemChange(ChangeEventArgs e)
+    {
+        Guid SelectedId = Guid.Empty;
+        if (e is not null && e.Value is not null)
+        {
+            if (Guid.TryParse(e.Value.ToString(), out SelectedId))
+            {
+                IdentityUser user;
+                if (Service.GetUser(SelectedId, out user))
+                {
+                    SelectedUser = user;
+                    SelectedUserPassword = string.Empty;
+                }
+            }
+        }
+    }
+
+
+
+}
+
+@if (beService is null)
+{
+    <Spinner />
+}
+else
+{
+    <h1>Användarhantering</h1>
+
+    @* Alla användare *@
+    <div class="row">
+        <div class="col">
+            <select class="form-select form-select-lg" @onchange="SelectItemChange">
+                    <option selected disabled>Välj användare</option>
+                    @foreach(IdentityUser o in AllUsers)
+                    {
+                        <option value=@o.Id>@o.Email</option>
+                    }
+            </select>
+        </div>
+    </div>
+    
+    @* lite vertikalt tomrum *@
+    <div class="row">&nbsp;</div>
+
+    @* formuläret *@
+    <fieldset class="border p-2 row">
+        <legend class="w-auto">Vald Användare</legend>
+        <p>ID: @SelectedUser.Id</p>
+        <div>E-post: @SelectedUser.Email</div>
+        <div>
+            Lösenord: <TextInput @bind-Value="@SelectedUserPassword" />
+            <Button Color="ButtonColor.Primary" @bind-Value="@SelectedUserPassword" @onclick="() => GenerateNewPassword()">
+                Generera Lösenord
+            </Button>
+        </div>
+    </fieldset>
+
+    <Button Color="ButtonColor.Primary" 
+            @onclick="() => SetNewUserPassword()"
+            Disabled="@ButtonChangeUserDisabled">
+        Sätt nytt lösenord
+    </Button>
+
+    <Button Color="ButtonColor.Danger" 
+            @onclick="() => BlockSelectedUser()"
+            Disabled="@ButtonBlockUserDisabled">
+        Blockera användare
+    </Button>
+}
