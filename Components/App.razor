@@ -4,6 +4,7 @@
 @using ufshop.Helpers
 @using ufshop.Services
 @inject ufshop.Services.BeService BeService
+@inject IJSRuntime JSRuntime
 @code{
 
     public readonly bool ShopExists;
@@ -37,7 +38,7 @@
 
 }
 <!DOCTYPE html>
-<html lang="sv">
+<html lang="sv" data-bs-theme="dark">
 <head>
     @* @BeService.SetSaneValues() *@
     @* <meta lol="@BeService.wwwroot" /> *@
@@ -90,6 +91,7 @@
         @* <!-- Add sortable.js reference if SortableList component is used in your application. --> *@
         @* <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script> *@
         <script src="_content/Blazor.Bootstrap/blazor.bootstrap.js"></script>
+        <script type="text/javascript" src="/js/themeswitcher.js"></script>
     }
 </body>
 </html>

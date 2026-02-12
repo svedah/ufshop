@@ -6,6 +6,7 @@
 
 @rendermode InteractiveServer
 @* @inject ufshop.Services.BeService BeService *@
+@inject IJSRuntime JSRuntime
 @code {
     private readonly BeService beService;
     private readonly HomePageService Service;
@@ -14,6 +15,15 @@
         beService = srv;
         Service = new HomePageService(beService);
     }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        @* if (firstRender) *@
+        {
+            await JSRuntime.InvokeVoidAsync("applyThemeSwitcher");
+        }
+    }
+
 }
 <PageTitle>Home</PageTitle>
 <HeadContent>
