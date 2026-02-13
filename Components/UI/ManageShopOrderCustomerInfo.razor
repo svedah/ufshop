@@ -30,24 +30,35 @@
 }
 else
 {
-    <address>
-        <div>
-            @CustomerInfo.FirstName @CustomerInfo.LastName
+<address class="mb-0">
+    <div class="row g-3">
+        <div class="col-12 col-lg-6">
+            <small class="text-muted d-block">Namn</small>
+            <span class="fw-semibold">@CustomerInfo.FirstName @CustomerInfo.LastName</span>
         </div>
-        <div>
-            @CustomerInfo.StreetName
+        
+        <div class="col-12 col-lg-6">
+            <small class="text-muted d-block">Adress</small>
+            <span class="d-block">@CustomerInfo.StreetName</span>
+            <span>@CustomerInfo.ZipCode @CustomerInfo.City</span>
         </div>
-        <div>
-            @CustomerInfo.ZipCode @CustomerInfo.City
+        
+        <div class="col-12 col-lg-6">
+            <small class="text-muted d-block">Telefon</small>
+            @{string phonelink = "tel:" + @CustomerInfo.Phone;}
+            <a href="@phonelink" class="text-decoration-none">
+                <i class="bi bi-telephone-fill me-1"></i>@CustomerInfo.Phone
+            </a>
         </div>
-        <div>
-            @{string phonelink = "tel:"+@CustomerInfo.Phone;}
-            tel: <a href="@phonelink" target="_blank">@CustomerInfo.Phone</a>
+        
+        <div class="col-12 col-lg-6">
+            <small class="text-muted d-block">E-post</small>
+            @{string maillink = "mailto:" + @CustomerInfo.Email;}
+            <a href="@maillink" class="text-decoration-none">
+                <i class="bi bi-envelope-fill me-1"></i>@CustomerInfo.Email
+            </a>
         </div>
-        <div>
-            @{string maillink = "mailto:"+@CustomerInfo.Email;}
-            e-post: <a href="@maillink" target="_blank">@CustomerInfo.Email</a>
-        </div>
-    </address>
+    </div>
+</address>
 
 }

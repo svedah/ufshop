@@ -33,38 +33,41 @@
 }
 else
 {
-    <div class="row">
-        <h4 class="col">Titel</h4>
-        <h4 class="col">Antal</h4>
-        <h4 class="col">Styckpris</h4>
-        <h4 class="col">Pris</h4>
-    </div>
-    @foreach(CartItem cartItem in Cart.CartItems)
-    {
-        <div class="row">
-            <div class="col">
-                <p>@cartItem.Title</p>
-            </div>
-            <div class="col">
-                <p>@cartItem.Amount</p>
-            </div>
-            <div class="col">
-                <p>@cartItem.Price</p>
-            </div>
-            <div class="col">
-                @{int pta = cartItem.Amount * cartItem.Price;}
-                <p>@pta</p>
-            </div>
-        </div>
-    }
-    <div class="row">
-        <div class="col">
-            Basfraktpris: @Service.BaseShippingPrice().ToString()
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            Total summa: @Service.TotalSum(Cart)
-        </div>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th class="text-center">Titel</th>
+                    <th class="text-center">Antal</th>
+                    <th class="text-center">Styckpris</th>
+                    <th class="text-center">Pris</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach(CartItem cartItem in Cart.CartItems)
+                {
+                    int itemTotal = cartItem.Amount * cartItem.Price;
+                    <tr>
+                        <td class="text-center">@cartItem.Title</td>
+                        <td class="text-center">@cartItem.Amount st</td>
+                        <td class="text-center">@cartItem.Price kr</td>
+                        <td class="text-center fw-semibold">@itemTotal kr</td>
+                    </tr>
+                }
+            </tbody>
+
+            <tfoot class="border-top">
+                <tr>
+                    <td colspan="2"></td>
+                    <td class="text-center text-muted">Basfraktpris:</td>
+                    <td class="text-center">@Service.BaseShippingPrice() kr</td>
+                </tr>
+                <tr class="fw-bold">
+                    <td colspan="2"></td>
+                    <td class="text-center">Total summa:</td>
+                    <td class="text-center text-primary fs-5">@Service.TotalSum(Cart) kr</td>
+                </tr>
+            </tfoot>
+        </table>
     </div>
 }

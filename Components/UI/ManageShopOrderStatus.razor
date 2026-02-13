@@ -56,14 +56,30 @@ else
 {
     int statusvalue = (int)Status.Value;
     string translated = Translation[(int)(Status.Value)];
-    <p>Order Id: @Id</p>
-    <p>Status: @translated</p>
-    <select class="form-select" @onchange="SelectChange">
-        <option selected disabled>Ändra status till</option>
-        <option value="0">Ej betald</option>
-        <option value="1">Betald</option>
-        <option value="2">Levererad</option>
-        <option value="3">Avvisad</option>
-        <option value="4">Eventuellt betald</option>
-    </select>
+
+    <div class="card mb-3">
+        <div class="card-body">
+            <div class="row g-3 align-items-center">
+                <div class="col-12 col-md-4">
+                    <small class="text-muted d-block">Order ID</small>
+                    <span class="fw-bold">@Id</span>
+                </div>
+                <div class="col-12 col-md-4 text-center">
+                    <small class="text-muted d-block">Status</small>
+                    <span class="badge bg-primary">@translated</span>
+                </div>
+                <div class="col-12 col-md-4">
+                    <small class="text-muted d-block">Ändra status</small>
+                    <select class="form-select form-select-sm" @onchange="SelectChange">
+                        <option selected disabled>Välj ny status...</option>
+                        <option value="0">Ej betald</option>
+                        <option value="1">Betald</option>
+                        <option value="2">Levererad</option>
+                        <option value="3">Avvisad</option>
+                        <option value="4">Eventuellt betald</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
 }

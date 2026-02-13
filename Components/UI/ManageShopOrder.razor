@@ -44,25 +44,27 @@
 else
 {
     <Accordion>
-        <AccordionItem Title="Kontaktinformation">
+        <AccordionItem Title="👤 Kontaktinformation">
             <Content>
-                <ManageShopOrderCustomerInfo Id="@ShopOrder.CustomerInfo.Id" CustomerInfo="@ShopOrder.CustomerInfo" />
+                <div class="p-2">
+                    <ManageShopOrderCustomerInfo Id="@ShopOrder.CustomerInfo.Id" CustomerInfo="@ShopOrder.CustomerInfo" />
+                </div>
             </Content>
         </AccordionItem>
-    </Accordion>
-
-    <Accordion>
-        <AccordionItem Title="Beställning">
+        
+        <AccordionItem Title="🛒 Beställning">
             <Content>
-                <ManageShopOrderCart Id="@ShopOrder.Cart.Id" Cart="@ShopOrder.Cart" />
+                <div class="p-2">
+                    <ManageShopOrderCart Id="@ShopOrder.Cart.Id" Cart="@ShopOrder.Cart" />
+                </div>
             </Content>
         </AccordionItem>
-    </Accordion>
-
-    <Accordion>
-        <AccordionItem Title="Orderstatus">
+        
+        <AccordionItem Title="📊 Orderstatus">
             <Content>
-                <ManageShopOrderStatus Id="@ShopOrder.Id" Status="@ShopOrder.Status" />
+                <div class="p-2">
+                    <ManageShopOrderStatus Id="@ShopOrder.Id" Status="@ShopOrder.Status" />
+                </div>
             </Content>
         </AccordionItem>
     </Accordion>
