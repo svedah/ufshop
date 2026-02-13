@@ -22,9 +22,22 @@
 
 @if (CustomerInfo is not null)
 {
-    <p>@CustomerInfo.FirstName @CustomerInfo.LastName</p>
-    <p>@CustomerInfo.StreetName @CustomerInfo.StreetNo</p>
-    <p>@CustomerInfo.ZipCode @CustomerInfo.City</p>
-    <p>@CustomerInfo.Email @CustomerInfo.Phone</p>
-
+<div class="vstack gap-2">
+    <div>
+        <small class="text-muted d-block">Namn</small>
+        <span class="fw-semibold">@CustomerInfo.FirstName @CustomerInfo.LastName</span>
+    </div>
+    
+    <div>
+        <small class="text-muted d-block">Adress</small>
+        <span>@CustomerInfo.StreetName @CustomerInfo.StreetNo</span><br/>
+        <span>@CustomerInfo.ZipCode @CustomerInfo.City</span>
+    </div>
+    
+    <div>
+        <small class="text-muted d-block">Kontakt</small>
+        <span class="d-block">@CustomerInfo.Email</span>
+        <span class="d-block">@CustomerInfo.Phone</span>
+    </div>
+</div>
 }

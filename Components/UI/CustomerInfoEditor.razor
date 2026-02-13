@@ -64,7 +64,6 @@
     } *@
 
 }
-<h2>Adressuppgifter</h2>
 @* <Button @onclick="() => ForceValidate(true)">OK</Button>
 <Button @onclick="() => ForceValidate(false)">NOTOK</Button>
 <p>valid customerinfo: @Service.Valid(Address)</p> *@
@@ -74,136 +73,183 @@
 }
 else
 {
-    @* förnamn och efternamn *@
-    <div class="row">
-        <div class="col-md-6 mb-3">
-            <label class="form-label" for="cifn">
-                Förnamn
-                @if (Service.ValidFirstName(Address.FirstName))
-                {
-                    <Icon Name="IconName.CheckLg" Color="IconColor.Success"></Icon>
-                }
-                else
-                {
-                    <Icon Name="IconName.Asterisk" Color="IconColor.Danger"></Icon>
-                }
-            </label>
-            @* <TextInput Value="@Address.FirstName" ValueExpression="() => Address.FirstName" ValueChanged="() => TextboxChanged()" type="text" class="form-control" id="cifn" /> *@
-            <TextInput @bind-Value="Address.FirstName" type="text" class="form-control" id="cifn" @onblur="TextboxChanged" />
-        </div>
-        <div class="col-md-6 mb-3">
-            <label class="form-label" for="ciln">
-                Efternamn
-                @if (Service.ValidLastName(Address.LastName))
-                {
-                    <Icon Name="IconName.CheckLg" Color="IconColor.Success"></Icon>
-                }
-                else
-                {
-                    <Icon Name="IconName.Asterisk" Color="IconColor.Danger"></Icon>
-                }
-            </label>
-            <TextInput @bind-Value="Address.LastName" type="text" class="form-control" id="ciln" @onblur="TextboxChanged" />
-        </div>
-    </div>
 
-    @* gatuadress *@
-    <div class="row">
-        <div class="col">
-            <label class="form-label" for="cisn">
-                Gatuadress
-                @if (Service.ValidStreetName(Address.StreetName))
-                {
-                    <Icon Name="IconName.CheckLg" Color="IconColor.Success"></Icon>
-                }
-                else
-                {
-                    <Icon Name="IconName.Asterisk" Color="IconColor.Danger"></Icon>
-                }
-            </label>
-            <TextInput @bind-Value="Address.StreetName" type="text" class="form-control" id="cisn" @onblur="TextboxChanged" />
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0 fw-bold">
+                <i class="bi bi-person-lines-fill me-2"></i>Adressuppgifter
+            </h5>
         </div>
-    </div>
+        <div class="card-body">
 
-    @* postkod och stad *@
-    <div class="row">
-        <div class="col-md-3 mb-3">
-            <label class="form-label" for="cizc">
-                Postkod
-                @if (Service.ValidZipCode(Address.ZipCode))
-                {
-                    <Icon Name="IconName.CheckLg" Color="IconColor.Success"></Icon>
-                }
-                else
-                {
-                    <Icon Name="IconName.Asterisk" Color="IconColor.Danger"></Icon>
-                }
-            </label>
-            <TextInput @bind-Value="Address.ZipCode" type="text" class="form-control" id="cizc" @onblur="TextboxChanged" />
-        </div>
-        <div class="col-md-9 mb-3">
-            <label class="form-label" for="cici">
-                Stad
-                @if (Service.ValidCity(Address.City))
-                {
-                    <Icon Name="IconName.CheckLg" Color="IconColor.Success"></Icon>
-                }
-                else
-                {
-                    <Icon Name="IconName.Asterisk" Color="IconColor.Danger"></Icon>
-                }
-            </label>
-            <TextInput @bind-Value="Address.City" type="text" class="form-control" id="cici" @onblur="TextboxChanged" />
-        </div>
-    </div>
+            <!-- Förnamn och Efternamn -->
+            <div class="row g-3 mb-3">
+                <div class="col-12 col-md-6">
+                    <label class="form-label fw-semibold" for="cifn">
+                        Förnamn
+                        @if (Service.ValidFirstName(Address.FirstName))
+                        {
+                            <Icon Name="IconName.CheckLg" Color="IconColor.Success"></Icon>
+                        }
+                        else
+                        {
+                            <Icon Name="IconName.Asterisk" Color="IconColor.Danger"></Icon>
+                        }
+                    </label>
+                    <TextInput @bind-Value="Address.FirstName" 
+                               type="text" 
+                               class="form-control" 
+                               id="cifn" 
+                               placeholder="Ditt förnamn"
+                               @onblur="TextboxChanged" />
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="form-label fw-semibold" for="ciln">
+                        Efternamn
+                        @if (Service.ValidLastName(Address.LastName))
+                        {
+                            <Icon Name="IconName.CheckLg" Color="IconColor.Success"></Icon>
+                        }
+                        else
+                        {
+                            <Icon Name="IconName.Asterisk" Color="IconColor.Danger"></Icon>
+                        }
+                    </label>
+                    <TextInput @bind-Value="Address.LastName" 
+                               type="text" 
+                               class="form-control" 
+                               id="ciln" 
+                               placeholder="Ditt efternamn"
+                               @onblur="TextboxChanged" />
+                </div>
+            </div>
 
-    @* epost och telefon *@
-    <div class="row">
-        <div class="col-md-6 mb-3">
-            <label class="form-label" for="ciem">
-                E-post
-                @if (Service.ValidEmailPhone(Address.Email, Address.Phone))
-                {
-                    <Icon Name="IconName.CheckLg" Color="IconColor.Success"></Icon>
-                }
-                else
-                {
-                    <Icon Name="IconName.Asterisk" Color="IconColor.Danger"></Icon>
-                }
-            </label>
-            <TextInput @bind-Value="Address.Email" type="text" class="form-control" id="ciem" @onblur="TextboxChanged" />
-        </div>
-        <div class="col-md-6 mb-3">
-            <label class="form-label" for="cipn">
-                Telefonnummer
-                @if (Service.ValidEmailPhone(Address.Email, Address.Phone))
-                {
-                    <Icon Name="IconName.CheckLg" Color="IconColor.Success"></Icon>
-                }
-                else
-                {
-                    <Icon Name="IconName.Asterisk" Color="IconColor.Danger"></Icon>
-                }
-            </label>
-            <TextInput @bind-Value="Address.Phone" type="text" class="form-control" id="cipn" @onblur="TextboxChanged" />
-        </div>
-    </div>
+            <!-- Gatuaddress -->
+            <div class="mb-3">
+                <label class="form-label fw-semibold" for="cisn">
+                    Gatuadress
+                    @if (Service.ValidStreetName(Address.StreetName))
+                    {
+                        <Icon Name="IconName.CheckLg" Color="IconColor.Success"></Icon>
+                    }
+                    else
+                    {
+                        <Icon Name="IconName.Asterisk" Color="IconColor.Danger"></Icon>
+                    }
+                </label>
+                <TextInput @bind-Value="Address.StreetName" 
+                           type="text" 
+                           class="form-control" 
+                           id="cisn" 
+                           placeholder="Gata och nummer"
+                           @onblur="TextboxChanged" />
+            </div>
 
-    @* info *@
-    <div class="row">
-        <div class="col">
-            <label class="form-label" for="ciin">
-                Ytterligare information
-                @if (Service.ValidInfo(Address.Info))
-                {
-                    <Icon Name="IconName.CheckLg" Color="IconColor.Success"></Icon>
-                }
-                else
-                {
-                    <Icon Name="IconName.Asterisk" Color="IconColor.Danger"></Icon>
-                }
-            </label>
-            <TextInput @bind-Value="Address.Info" type="text" class="form-control" id="ciin" @onblur="TextboxChanged" />
+            <!-- Postkod och Stad -->
+            <div class="row g-3 mb-3">
+                <div class="col-12 col-md-4">
+                    <label class="form-label fw-semibold" for="cizc">
+                        Postkod
+                        @if (Service.ValidZipCode(Address.ZipCode))
+                        {
+                            <Icon Name="IconName.CheckLg" Color="IconColor.Success"></Icon>
+                        }
+                        else
+                        {
+                            <Icon Name="IconName.Asterisk" Color="IconColor.Danger"></Icon>
+                        }
+                    </label>
+                    <TextInput @bind-Value="Address.ZipCode" 
+                               type="text" 
+                               class="form-control" 
+                               id="cizc" 
+                               placeholder="123 45"
+                               @onblur="TextboxChanged" />
+                </div>
+                <div class="col-12 col-md-8">
+                    <label class="form-label fw-semibold" for="cici">
+                        Stad
+                        @if (Service.ValidCity(Address.City))
+                        {
+                            <Icon Name="IconName.CheckLg" Color="IconColor.Success"></Icon>
+                        }
+                        else
+                        {
+                            <Icon Name="IconName.Asterisk" Color="IconColor.Danger"></Icon>
+                        }
+                    </label>
+                    <TextInput @bind-Value="Address.City" 
+                               type="text" 
+                               class="form-control" 
+                               id="cici" 
+                               placeholder="Stad"
+                               @onblur="TextboxChanged" />
+                </div>
+            </div>
+
+            <!-- E-post och mobilnummer -->            
+            <div class="row g-3 mb-3">
+                <div class="col-12 col-md-6">
+                    <label class="form-label fw-semibold" for="ciem">
+                        E-post
+                        @if (Service.ValidEmailPhone(Address.Email, Address.Phone))
+                        {
+                            <Icon Name="IconName.CheckLg" Color="IconColor.Success"></Icon>
+                        }
+                        else
+                        {
+                            <Icon Name="IconName.Asterisk" Color="IconColor.Danger"></Icon>
+                        }
+                    </label>
+                    <TextInput @bind-Value="Address.Email" 
+                               type="email" 
+                               class="form-control" 
+                               id="ciem" 
+                               placeholder="din@email.se"
+                               @onblur="TextboxChanged" />
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="form-label fw-semibold" for="cipn">
+                        Telefonnummer
+                        @if (Service.ValidEmailPhone(Address.Email, Address.Phone))
+                        {
+                            <Icon Name="IconName.CheckLg" Color="IconColor.Success"></Icon>
+                        }
+                        else
+                        {
+                            <Icon Name="IconName.Asterisk" Color="IconColor.Danger"></Icon>
+                        }
+                    </label>
+                    <TextInput @bind-Value="Address.Phone" 
+                               type="tel" 
+                               class="form-control" 
+                               id="cipn" 
+                               placeholder="07X-XXX XX XX"
+                               @onblur="TextboxChanged" />
+                </div>
+            </div>
+
+            <!-- Ytterligare Info -->
+            <div class="mb-0">
+                <label class="form-label fw-semibold" for="ciin">
+                    Ytterligare information
+                    @if (Service.ValidInfo(Address.Info))
+                    {
+                        <Icon Name="IconName.CheckLg" Color="IconColor.Success"></Icon>
+                    }
+                    else
+                    {
+                        <Icon Name="IconName.Asterisk" Color="IconColor.Danger"></Icon>
+                    }
+                </label>
+                <TextInput @bind-Value="Address.Info" 
+                           type="text" 
+                           class="form-control" 
+                           id="ciin" 
+                           placeholder="Frivilligt"
+                           @onblur="TextboxChanged" />
+            </div>
+
         </div>
     </div>
 }

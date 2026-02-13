@@ -156,37 +156,107 @@
 @if (Order is not null && Order.Status == ShopOrderStatus.Unpaid)
 {
     <PageTitle>Betalning order @id</PageTitle>
-    <h1>Betalning</h1>
-    @* qr-kod *@
-    <Image Src=@QrEmbeddedImage Alt="Scanna med din mobilkamera för att betala din order" />
-    @* knapp *@
-    <Button Color="ButtonColor.Primary" @onclick="() => SwishButtonTrigger()">Klicka här för att swisha från denna enheten</Button>
-    @* <a href="https://app.swish.nu/1/p/sw/?sw=0735019697&amt=100&cur=SEK&msg=lol&src=qr" target="_blank">
-        Länk
-    </a> *@
 
+    <div class="container my-4">
+        <!-- Header -->
+        <div class="text-center mb-4">
+            <h1 class="fw-bold text-primary">
+                <i class="bi bi-credit-card me-2"></i>Betalning
+            </h1>
+        </div>
 
-    <p>SwishRedirectUrl: @SwishRedirectUrl</p>@*ta bort, behöver inte synas*@
-    <p>SwishDirect: @SwishDirectUrl</p>@*ta bort, behöver inte synas*@
-    <p>OrderConfirmationUrl: @OrderConfirmationUrl</p>@*ta bort, behöver inte synas*@
-    <p>OrderStatus: @Order.Status</p>@*ta bort, behöver inte synas*@
+        <div class="row g-4">
+            <div class="col-12 col-md-5">
+                <div class="card">
+                    <div class="card-header bg-primary text-white text-center">
+                        <h5 class="mb-0 fw-bold">
+                            <i class="bi bi-qr-code me-2"></i>Betala med Swish
+                        </h5>
+                    </div>
+                    <div class="card-body text-center d-flex flex-column justify-content-start py-4">
+                        <div class="mb-4">
+                            <Image Src="@QrEmbeddedImage" 
+                                Alt="Scanna med din mobilkamera för att betala din order" 
+                                class="img-fluid shadow rounded"
+                                style="max-width: 280px; width: 100%;" />
+                        </div>
+                        
+                        <div class="alert alert-info d-flex align-items-center justify-content-center mb-4" role="alert">
+                            <i class="bi bi-info-circle-fill me-2 flex-shrink-0"></i>
+                            <div class="text-start">
+                                <strong>Öppna Swish-appen och skanna QR-koden ovan</strong>
+                            </div>
+                        </div>
 
-    
-    @* komponent som skall visa alla items i varukorgen *@
-    @* används både på betalningssidan (denna) och orderbekräftelsesidan *@
-    <PaymentCartViewer CartItems=@Order.Cart.CartItems />@*mycket att snygga till här*@
+                        <div class="d-grid gap-2 mb-3">
+                            <Button Color="ButtonColor.Primary" Size="ButtonSize.Large" class="fw-bold d-flex align-items-center justify-content-center" @onclick="() => SwishButtonTrigger()">
+                                <i class="bi bi-phone-fill me-2"></i>
+                                Öppna Swish på denna enhet
+                            </Button>
+                        </div>
 
-    @* komponent som skall visa all kundinformation *@
-    @* används både på betalningssidan (denna) och orderbekräftelsesidan *@
-    <CustomerInfoViewer CustomerInfo=@Order.CustomerInfo />@*mycket att snygga till här*@
+                        <small class="text-muted">
+                            Order ID: #@id
+                        </small>
+                    </div>
+                </div>
+            </div>
 
-    @if (ShowIframe)
-    {
-        <IframeViewer Url="@SwishRedirectUrl" Width="0" Height="0" />
-    }
+            <div class="col-12 col-md-7">
+                <div class="d-flex flex-column gap-4">
+                    <!-- Cart Items -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="mb-0 fw-semibold">
+                                <i class="bi bi-cart3 me-2"></i>Din beställning
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <PaymentCartViewer CartItems="@Order.Cart.CartItems" />
+                        </div>
+                    </div>
 
-    @* raden nedan injicerar scriptet som triggar sidbyte och öppnar swish på mobilen*@
-    @((MarkupString)TheScript)
+                    <!-- Customer Info -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="mb-0 fw-semibold">
+                                <i class="bi bi-person-lines-fill me-2"></i>Leveransinformation
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <CustomerInfoViewer CustomerInfo="@Order.CustomerInfo" />
+                        </div>
+                    </div>
+
+                    <!-- Order Status -->
+                    <div class="card border-primary">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div>
+                                    <h6 class="mb-1 fw-semibold">Betalningsstatus</h6>
+                                    <p class="mb-0 text-muted small">
+                                        Väntar på betalning via Swish
+                                    </p>
+                                </div>
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Väntar...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @if (ShowIframe)
+        {
+            <IframeViewer Url="@SwishRedirectUrl" Width="0" Height="0" />
+        }
+
+        @* Injicerar scriptet som triggar sidbyte och öppnar swish på mobilen *@
+        @((MarkupString)TheScript)
+    </div>
+
 }
 else
 {
