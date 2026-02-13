@@ -3,7 +3,7 @@
 @using ufshop.Services
 @inject BeService beService
 @inject UIStateService Ui
-
+@inject IJSRuntime JSRuntime
 @code {
     private Shop? shop;
 
@@ -22,6 +22,12 @@
         //kunde inte göra en konstruktor så det får bli ett fulhack här
         shop = GetShop();
         Ui.OnChange += StateHasChanged;
+    }
+
+    public async Task OnAfterRenderAsync()
+    {
+        //apply user preferred theme (light/darkmode)
+        await JSRuntime.InvokeVoidAsync("applyThemeSwitcher");
     }
 
     public void Dispose()
