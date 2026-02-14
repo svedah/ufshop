@@ -50,21 +50,89 @@
 {
     <PageTitle>Orderbekräftelse @id</PageTitle>
 
-    <p>Order: @Order.Id</p>
-    @* om orderstatus är swishtriggered, skriv ut "ej manuellt bekräftad" till användaren *@
-    <p>Order Status: @Order.Status</p> 
 
-    @* komponent som skall visa alla items i varukorgen *@
-    @* används både på betalningssidan och orderbekräftelsesidan (denna) *@
-    <PaymentCartViewer CartItems=@Order.Cart.CartItems />@*mycket att snygga till här*@
+    <div class="container my-4">
+        <!-- Header -->
+        <div class="text-center mb-5">
+            <div class="mb-3">
+                <i class="bi bi-check-circle-fill text-success" style="font-size: 4rem;"></i>
+            </div>
+            <h1 class="fw-bold text-success mb-2">Tack för din beställning!</h1>
+            <p class="text-muted">Din order har tagits emot och behandlas</p>
+        </div>
 
-    @* komponent som skall visa all kundinformation *@
-    @* används både på betalningssidan och orderbekräftelsesidan (denna) *@
-    <CustomerInfoViewer CustomerInfo=@Order.CustomerInfo />@*mycket att snygga till här*@
-    
-    string pdfUrl = "/pdf/orderconfirmation/" + id.ToString();
-    string fileName = Shop.Settings.Title + " Orderbekräftelse " + id.ToString() + ".pdf";
-    <a href=@pdfUrl download=@fileName>
-        <Button Color="ButtonColor.Primary">Ladda ner som .pdf</Button>
-    </a>
+        <!-- Order ID -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <div class="row align-items-center">
+                    <div class="col-12 col-md-6 mb-2 mb-md-0">
+                        <small class="text-muted d-block">Order ID</small>
+                        <span class="fw-bold fs-5">@Order.Id</span>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <small class="text-muted d-block">Status</small>
+                        @if (Order.Status == ShopOrderStatus.SwishTriggered)
+                        {
+                            <span class="badge bg-warning text-dark">
+                                <i class="bi bi-clock-history me-1"></i>Ej manuellt bekräftad
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-success">@Order.Status</span>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Order Detaljer -->
+        <div class="row g-4 mb-4">
+            <!-- Beställning -->
+            <div class="col-12 col-lg-6">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h6 class="mb-0 fw-semibold">
+                            <i class="bi bi-cart3 me-2"></i>Din beställning
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <PaymentCartViewer CartItems="@Order.Cart.CartItems" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Leveransinformation -->
+            <div class="col-12 col-lg-6">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h6 class="mb-0 fw-semibold">
+                            <i class="bi bi-person-lines-fill me-2"></i>Leveransinformation
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <CustomerInfoViewer CustomerInfo="@Order.CustomerInfo" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ladda ner PDF -->
+        <div class="card border-primary">
+            <div class="card-body text-center py-4">
+                <h6 class="mb-3">
+                    <i class="bi bi-file-earmark-pdf me-2"></i>Orderbekräftelse
+                </h6>
+                @{
+                    string pdfUrl = "/pdf/orderconfirmation/" + id.ToString();
+                    string fileName = Shop.Settings.Title + " Orderbekräftelse " + id.ToString() + ".pdf";
+                }
+                <a href="@pdfUrl" download="@fileName" class="text-decoration-none">
+                    <Button Color="ButtonColor.Primary" Size="ButtonSize.Large">
+                        <i class="bi bi-download me-2"></i>Ladda ner som PDF
+                    </Button>
+                </a>
+            </div>
+        </div>
+    </div>
 }

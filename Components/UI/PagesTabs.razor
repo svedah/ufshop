@@ -26,10 +26,12 @@
     {
         <Tab Title="@sp.Header">
             <Content>
-                @foreach(ShopPageFragment spf in sp.ShopPageFragments.OrderBy(e => e.Order))
-                {
-                    <PagesTabContent ContentFragment=spf />
-                }
+                <div class="container my-4">
+                    @foreach(ShopPageFragment spf in sp.ShopPageFragments.OrderBy(e => e.Order))
+                    {
+                        <PagesTabContent ContentFragment=spf />
+                    }
+                </div>
             </Content>
         </Tab>
     }

@@ -4,18 +4,38 @@
         [Parameter]
         public ShopPageFragment ContentFragment { get; set; }
 }
-
-    <h4 class="h4">
-        @ContentFragment.Header
-    </h4>
-    <p class="p">
-        @ContentFragment.Paragraph
-    </p>
-    @if (ContentFragment.Image is not null)
-    {
-        string imageUrl = "/img/" + ContentFragment.Image.Filename;
-        string imageText = ContentFragment.Image.AltText;
-        <span>bild:</span>
-        <img src="@imageUrl" alt="@imageText" />
-        <span>bild:</span>
-    }
+<div class="card shadow-sm mb-4">
+    <div class="row g-0 align-items-center">
+        
+        @* Text *@
+        <div class="@(ContentFragment.Image is not null ? "col-md-7" : "col-12") text-center text-md-start p-4 p-md-5">
+            @if (!string.IsNullOrEmpty(ContentFragment.Header))
+            {
+                <h4 class="fw-bold text-primary mb-3">
+                    @ContentFragment.Header
+                </h4>
+            }
+            
+            @if (!string.IsNullOrEmpty(ContentFragment.Paragraph))
+            {
+                <p class="text-muted fs-5 mb-0" style="line-height: 1.6;">
+                    @ContentFragment.Paragraph
+                </p>
+            }
+        </div>
+        
+        @* Bild *@
+        @if (ContentFragment.Image is not null)
+        {
+            string imageUrl = "/img/" + ContentFragment.Image.Filename;
+            string imageText = ContentFragment.Image.AltText;
+            
+            <div class="col-md-5 p-4 d-flex justify-content-center align-items-center">
+                <img src="@imageUrl" 
+                     alt="@imageText" 
+                     class="img-fluid rounded shadow"
+                     style="max-width: 200px; max-height: 400px; object-fit: contain;"/>
+            </div>
+        }
+    </div>
+</div>
