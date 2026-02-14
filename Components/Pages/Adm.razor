@@ -10,9 +10,10 @@
 @* <h1>You are authenticated</h1> *@
 
 <AuthorizeView Roles="Administrator">
-    Hello @context.User.Identity?.Name!
 
-    <Tabs>
+    <h1 class="text-center my-4">Hantera Shoppar</h1>
+    
+    <Tabs class="nav-fill flex-column flex-md-row fw-bold">
         <Tab Title="Beställningar">
             <Content>
                 <AdministrationShopOrders />

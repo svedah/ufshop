@@ -36,25 +36,61 @@
 }
 else
 {
-    <h1>Shoptoggling</h1>
-
-    @foreach(Shop shop in AllShops)
-    {
-        <div>
-            <p>
-                @shop.Prefix
-                @if (shop.Active)
-                {
-                    //avaktivera
-                    <Button Color="ButtonColor.Primary" Size="ButtonSize.ExtraSmall" @onclick="() => Disable(shop.Id)"> Disable </Button>
-                }
-                else
-                {
-                    //aktivera
-                    <Button Color="ButtonColor.Primary" Size="ButtonSize.ExtraSmall" @onclick="() => Enable(shop.Id)"> Enable </Button>
-                }
-            </p>
+    <div class="container my-4">
+        <!-- Header -->
+        <div class="text-center mb-5">
+            <h1 class="fw-bold text-primary">
+                <i class="bi bi-toggles me-2"></i>Shoptoggling
+            </h1>
         </div>
-    }
-    
+
+        <!-- Shoppar Lista -->
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mb-0 fw-semibold">
+                    <i class="bi bi-list-ul me-2"></i>Hantera butiker
+                </h6>
+            </div>
+            <div class="card-body p-0">
+                <div class="list-group list-group-flush">
+                    @if (AllShops.Any())
+                    {
+                        @foreach(Shop shop in AllShops)
+                        {
+                            <div class="list-group-item">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="fw-semibold fs-5">@shop.Prefix</span>
+                                    <div>
+                                        @if (shop.Active)
+                                        {
+                                            <Button Color="ButtonColor.Danger" 
+                                                    Size="ButtonSize.Small" 
+                                                    @onclick="() => Disable(shop.Id)">
+                                                    Avaktivera
+                                            </Button>
+                                        }
+                                        else
+                                        {
+                                            <Button Color="ButtonColor.Success" 
+                                                    Size="ButtonSize.Small" 
+                                                    @onclick="() => Enable(shop.Id)">
+                                                    Aktivera
+                                            </Button>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="list-group-item text-center py-5 text-muted">
+                            <i class="bi bi-inbox fs-1"></i>
+                            <p class="mt-2 mb-0">Inga butiker ännu</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
 }

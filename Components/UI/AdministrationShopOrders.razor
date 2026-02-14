@@ -32,33 +32,82 @@
 }
 else
 {
-    <h1>ShopOrdrar</h1>
+    <div class="container my-4">
+        <!-- Header -->
+        <div class="text-center mb-5">
+            <h1 class="fw-bold text-primary">
+                <i class="bi bi-shop-window me-2"></i>ShopOrdrar
+            </h1>
+        </div>
 
-    <div class="row">
-        <div class="col">
-            Domänprefix
-        </div>
-        <div class="col">
-            Aktiv
-        </div>
-        <div class="col">
-            Betald
+        <!-- Shoppar Tabell -->
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mb-0 fw-semibold">
+                    <i class="bi bi-list-ul me-2"></i>Alla butiker
+                </h6>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="">
+                            <tr>
+                                <th class="text-center fw-bold">Domänprefix</th>
+                                <th class="text-center fw-bold">Aktiv</th>
+                                <th class="text-center fw-bold">Betald</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (AllShops.Any())
+                            {
+                                @foreach(Shop shop in AllShops)
+                                {
+                                    <tr>
+                                        <td class="text-center fw-semibold">@shop.Prefix</td>
+                                        <td class="text-center">
+                                            @if (shop.Active)
+                                            {
+                                                <span class="badge bg-success">
+                                                    <i class="bi bi-check-circle-fill"></i> Ja
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-secondary">
+                                                    <i class="bi bi-x-circle-fill"></i> Nej
+                                                </span>
+                                            }
+                                        </td>
+                                        <td class="text-center">
+                                            @if (shop.Paid)
+                                            {
+                                                <span class="badge bg-success">
+                                                    <i class="bi bi-cash-coin"></i> Ja
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-warning text-dark">
+                                                    <i class="bi bi-clock-history"></i> Nej
+                                                </span>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="3" class="text-center py-5 text-muted">
+                                        <i class="bi bi-inbox fs-1"></i>
+                                        <p class="mt-2 mb-0">Inga butiker ännu</p>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
-    @foreach(Shop shop in AllShops)
-    {
-        <div class="row">
-            <div class="col">
-                @shop.Prefix
-            </div>
-            <div class="col">
-                @shop.Active
-            </div>
-            <div class="col">
-                @shop.Paid
-            </div>
-        </div>
-    }
-
-    
 }
