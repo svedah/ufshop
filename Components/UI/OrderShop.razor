@@ -77,16 +77,57 @@
 }
 
 @* Lara: Kommentera bort dessa två knappar när du designat klart *@
-<button @onclick="() => {OrderId = string.Empty;}">Formulär</button>
-<button @onclick="() => {OrderId = Guid.NewGuid().ToString().Split('-')[0].ToUpper();}">Beställd</button>
+@* <button @onclick="() => {OrderId = string.Empty;}">Formulär</button>
+<button @onclick="() => {OrderId = Guid.NewGuid().ToString().Split('-')[0].ToUpper();}">Beställd</button> *@
 
 @if (OrderId.Length > 0)
 {
-    <div>Er beställning är mottagen</div>
-    <div>Notera ert ordernummer: @OrderId</div>
-    <div>Om beställningen godkänns kommer ni få ett kontrakt via e-post</div>
-    <div>När betalning skett, kontraktet är signerat och returnerat till oss</div>
-    <div>kommer ni få ytterligare information med inloggningsuppgifter till er UF-shop.</div>
+    <div class="container py-4">
+        <div class="row justify-content-center">
+            <div class="col-12">
+                <div class="d-grid text-center mb-4">
+                    <Icon Name="IconName.CheckCircleFill"
+                        Class="text-success mb-3"
+                        Size="IconSize.x1" />
+
+                    <h3 Class="fw-semibold mb-1">
+                        Tack för er beställning!
+                    </h3>
+
+                    <p class="text-muted small mb-0">
+                        Er beställning är mottagen
+                    </p>
+                </div>
+
+                <div class="text-center my-4">
+                    <p class="text-muted small mb-2">Ert ordernummer</p>
+                    <Badge Color="BadgeColor.Primary"
+                        VisuallyHiddenText="Ordernummer"
+                        Class="fs-6 px-3 py-2 rounded-pill">
+                        @OrderId
+                    </Badge>
+                </div>
+
+                <Alert Color="AlertColor.Info" Class="mb-0 mt-4">
+                    <Icon Name="IconName.InfoCircleFill" Class="me-2" />
+                    <span class="fw-semibold">Vad händer nu?</span>
+
+                    <ul class="mt-2 mb-0 ps-3 small">
+                        <li class="mb-1">
+                            Om beställningen godkänns får ni ett
+                            <strong>kontrakt via e-post</strong>.
+                        </li>
+                        <li class="mb-1">
+                            När betalning skett och kontraktet är
+                            <strong>signerat och returnerat</strong> till oss
+                            får ni ytterligare information med
+                            <strong>inloggningsuppgifter till er UF-shop</strong>.
+                        </li>
+                    </ul>
+                </Alert>
+            </div>
+        </div>
+    </div>
 }
 else
 {
@@ -105,10 +146,17 @@ else
                 <input @bind="Prefix"
                     type="text"
                     pattern="[a-z]{16}"
-                    class="form-control border-start-0 border-end-0 text-center"
+                    class="form-control border-end-0 text-center rounded-start d-sm-none"
                     placeholder="uf-namn"
                     style="@PrefixCSS"
-                />            
+                />
+                <input @bind="Prefix"
+                    type="text"
+                    pattern="[a-z]{16}"
+                    class="form-control border-start-0 border-end-0 text-center d-none d-sm-flex"
+                    placeholder="uf-namn"
+                    style="@PrefixCSS"
+                />          
                 <span class="input-group-text border-start-0">.ufshop.nu</span>
             </div>
 
@@ -144,7 +192,12 @@ else
                         </span>
                         <InputText @bind-Value="Email" 
                                 type="email" 
-                                class="form-control" 
+                                class="form-control rounded d-sm-none" 
+                                placeholder="din@email.se" />
+
+                        <InputText @bind-Value="Email" 
+                                type="email" 
+                                class="form-control d-none d-sm-flex" 
                                 placeholder="din@email.se" />
                     </div>
                     <small class="text-muted d-block mt-2">
@@ -160,7 +213,10 @@ else
                             <i class="bi bi-telephone"></i>
                         </span>
                         <InputText @bind-Value="Phone" 
-                                class="form-control" 
+                                class="form-control rounded d-sm-none" 
+                                placeholder="07X-XXX XX XX" />
+                        <InputText @bind-Value="Phone" 
+                                class="form-control d-none d-sm-flex" 
                                 placeholder="07X-XXX XX XX" />
                     </div>
                     <small class="text-muted d-block mt-2">
@@ -179,35 +235,34 @@ else
             </label>
             <div class="row g-3">
                 <InputRadioGroup @bind-Value="CompanyTypeUF">
-                <div class="row-6 col-md-6 col-lg-6 col-xl-6">
-                    <div class="form-check-card">
-                        <InputRadio 
-                            id="typeUF" 
-                            class="form-check-input" 
-                            checked="@CompanyTypeUFCheck"
-                            Value="true" 
-                        />
-                        <label class="form-check-label w-100 p-3 text-center" for="typeUF">
-                            <i class="bi bi-mortarboard-fill d-block fs-3 mb-2 text-primary"></i>
-                            <strong>UF-företag</strong>
-                        </label>
+                    <div class="row-6 col-md-6 col-lg-6 col-xl-6">
+                        <div class="form-check-card">
+                            <InputRadio 
+                                id="typeUF" 
+                                class="form-check-input" 
+                                checked="@CompanyTypeUFCheck"
+                                Value="true" 
+                            />
+                            <label class="form-check-label w-100 p-3 text-center" for="typeUF">
+                                <i class="bi bi-mortarboard-fill d-block fs-3 mb-2 text-primary"></i>
+                                <strong>UF-företag</strong>
+                            </label>
+                        </div>
                     </div>
-                </div>
-                <div class="row-6 col-md-6 col-lg-6 col-xl-6">
-                    <div class="form-check-card">
-                        <InputRadio 
-                            id="typeOther" 
-                            class="form-check-input" 
-                            checked="@CompanyTypeUFCheck"
-                            Value="false" 
-                        />
-                        <label class="form-check-label w-100 p-3 text-center" for="typeOther">
-                            <i class="bi bi-building-fill d-block fs-3 mb-2 text-primary"></i>
-                            <strong>Annat</strong>
-                        </label>
+                    <div class="row-6 col-md-6 col-lg-6 col-xl-6">
+                        <div class="form-check-card">
+                            <InputRadio 
+                                id="typeOther" 
+                                class="form-check-input" 
+                                checked="@CompanyTypeUFCheck"
+                                Value="false" 
+                            />
+                            <label class="form-check-label w-100 p-3 text-center" for="typeOther">
+                                <i class="bi bi-building-fill d-block fs-3 mb-2 text-primary"></i>
+                                <strong>Annat</strong>
+                            </label>
+                        </div>
                     </div>
-                </div>
-                @CompanyTypeUF and @CompanyTypeUFCheck
                 </InputRadioGroup>
             </div>
         </section>

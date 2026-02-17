@@ -108,87 +108,234 @@
 }
 else
 {
-    <h1>Skapa ny shop</h1>
 
-    @* UFShopordrar som är markerade obetalda och inaktiva *@
-    <div class="row">
-        <div class="col">
-            <select class="form-select form-select-lg" @onchange="SelectItemChange">
-                    <option selected disabled>Välj UF-shop order</option>
+    <div class="container my-4">
+        <!-- Header -->
+        <div class="text-center mb-5">
+            <h1 class="fw-bold text-primary">
+                <i class="bi bi-shop-window me-2"></i>Skapa ny shop
+            </h1>
+        </div>
+
+        <!-- Välj Order -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h6 class="mb-0 fw-semibold">
+                    <i class="bi bi-list-check me-2"></i>Välj UF-shop beställning
+                </h6>
+            </div>
+            <div class="card-body">
+                <select class="form-select form-select-lg" @onchange="SelectItemChange">
+                    <option selected disabled>Välj beställning...</option>
                     @foreach(UFShopOrder o in AllUfShopOrders)
                     {
-                        <option value=@o.Id>@o.Created - @o.Prefix</option>
+                        <option value="@o.Id">@o.Created.ToString("yyyy-MM-dd") • @o.Prefix</option>
                     }
-            </select>
+                </select>
+            </div>
         </div>
-    </div>
-    
-    @* lite vertikalt tomrum *@
-    <div class="row">&nbsp;</div>
 
-    @* formuläret *@
-    <fieldset class="border p-2 row">
-        <legend class="w-auto">Vald UFShopOrder</legend>
-        <p>ID: @SelectedUFShopOrder.Id</p>
-        <div>Titel: <TextInput @bind-Value="@SelectedUFShopOrder.Title" /></div>
-        <div>URLen: https://<TextInput @bind-Value="@SelectedUFShopOrder.Prefix" />.ufshop.nu</div>
-        <div>E-post: <TextInput @bind-Value="@SelectedUFShopOrder.Email" /></div>
-        <div>Telefon: <TextInput @bind-Value="@SelectedUFShopOrder.Phone" /></div>
-        <div>UF: <CheckboxInput Label="UF Företag" @bind-Value="@SelectedUFShopOrder.UF" /></div>
-        <div>Assisterad: <CheckboxInput Label="Assisterad" @bind-Value="@SelectedUFShopOrder.Assisted" /></div>
-        <div>Aktiv: <CheckboxInput Label="Aktiv" @bind-Value="@SelectedUFShopOrder.Active" /></div>
-        <div>Betald: <CheckboxInput Label="Betald" @bind-Value="@SelectedUFShopOrder.Paid" /></div>
-        <div>
-            Lösenord: <TextInput @bind-Value="@SelectedUFPassword" />
-            <Button Color="ButtonColor.Primary" @bind-Value="@SelectedUFPassword" @onclick="() => GenerateNewPassword()">
-                Generera Lösenord
+        <!-- Order Detaljer -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h6 class="mb-0 fw-semibold">
+                    <i class="bi bi-pencil-square me-2"></i>Shopinformation
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <!-- ID -->
+                    <div class="col-12">
+                        <small class="text-muted d-block">Order-ID</small>
+                        <code class="fs-6">@SelectedUFShopOrder.Id</code>
+                    </div>
+
+                    <!-- Titel -->
+                    <div class="col-12 col-md-6">
+                        <label class="form-label fw-semibold">Titel</label>
+                        <TextInput @bind-Value="@SelectedUFShopOrder.Title" 
+                                class="form-control" 
+                                placeholder="Företagsnamn" />
+                    </div>
+
+                    <!-- URL -->
+                    <div class="col-12 col-md-6">
+                        <label class="form-label fw-semibold">Domänprefix</label>
+                        <div class="input-group">
+                            <span class="input-group-text d-none d-sm-flex">https://</span>
+                            <TextInput @bind-Value="@SelectedUFShopOrder.Prefix" 
+                                    class="form-control rounded-start d-sm-none" 
+                                    placeholder="prefix" />
+                            <TextInput @bind-Value="@SelectedUFShopOrder.Prefix" 
+                                    class="form-control d-none d-sm-flex" 
+                                    placeholder="prefix" />
+                            <span class="input-group-text">.ufshop.nu</span>
+                        </div>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="col-12 col-md-6">
+                        <label class="form-label fw-semibold">E-post</label>
+                        <TextInput @bind-Value="@SelectedUFShopOrder.Email" 
+                                type="email"
+                                class="form-control" 
+                                placeholder="kontakt@exempel.se" />
+                    </div>
+
+                    <!-- Mobilnummer -->
+                    <div class="col-12 col-md-6">
+                        <label class="form-label fw-semibold">Telefon</label>
+                        <TextInput @bind-Value="@SelectedUFShopOrder.Phone" 
+                                type="tel"
+                                class="form-control" 
+                                placeholder="07X-XXX XX XX" />
+                    </div>
+
+                    <!-- Checkboxes -->
+                    <div class="col-12">
+                        <label class="form-label fw-semibold d-block mb-2">Inställningar</label>
+                        <div class="row g-2">
+                            <div class="col-6 col-md-3">
+                                <div class="form-check form-switch">
+                                    <CheckboxInput Label="UF Företag" 
+                                                @bind-Value="@SelectedUFShopOrder.UF" 
+                                                class="form-check-input" />
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <div class="form-check form-switch">
+                                    <CheckboxInput Label="Assisterad" 
+                                                @bind-Value="@SelectedUFShopOrder.Assisted" 
+                                                class="form-check-input" />
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <div class="form-check form-switch">
+                                    <CheckboxInput Label="Aktiv" 
+                                                @bind-Value="@SelectedUFShopOrder.Active" 
+                                                class="form-check-input" />
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <div class="form-check form-switch">
+                                    <CheckboxInput Label="Betald" 
+                                                @bind-Value="@SelectedUFShopOrder.Paid" 
+                                                class="form-check-input" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Lösenord -->
+                    <div class="col-12">
+                        <label class="form-label fw-semibold">
+                            <i class="bi bi-key me-2"></i>Lösenord
+                        </label>
+                        <div class="input-group">
+                            <TextInput @bind-Value="@SelectedUFPassword" 
+                                    class="form-control" 
+                                    placeholder="Ange lösenord" />
+                            <Button Color="ButtonColor.Primary" @onclick="() => GenerateNewPassword()">
+                                <i class="bi bi-arrow-clockwise me-1"></i> Generera
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Knappar -->
+        <div class="d-flex gap-2 justify-content-end flex-wrap">
+            <Button Color="ButtonColor.Danger"
+                    Size="ButtonSize.Large"
+                    Disabled="@ButtonDeleteShopDisabled"
+                    @onclick="() => DeleteSelectedUFShopOrder()">
+                <i class="bi bi-trash me-2"></i>Ta bort beställning
+            </Button>
+            <Button Color="ButtonColor.Success" 
+                    Size="ButtonSize.Large"
+                    Disabled="@ButtonCreateShopDisabled"
+                    @onclick="() => CreateNewShopAndUser()">
+                <i class="bi bi-plus-circle me-2"></i>Skapa shop
             </Button>
         </div>
-    </fieldset>
 
-    <Button Color="ButtonColor.Primary" 
-            Disabled="@ButtonCreateShopDisabled"
-            @onclick="() => CreateNewShopAndUser()">
-        Skapa denna shop
-    </Button>
+        <Modal @ref="modal" title="Shop skapad" IsVerticallyCentered="true">
+            <BodyTemplate>
 
-    <Button Color="ButtonColor.Danger" 
-            Disabled="@ButtonDeleteShopDisabled"
-            @onclick="() => DeleteSelectedUFShopOrder()">
-        Ta bort denna beställning
-    </Button>
+                @{string fullUrl = "https://" + SelectedUFShopOrder.Prefix + ".ufshop.nu/";}
+                
+                <div class="card">
+                    <div class="card-body">
+                        <h6 class="fw-bold mb-3">Inloggningsuppgifter</h6>
+                        
+                        <div class="mb-3">
+                            <small class="text-muted d-block">Webbadress</small>
+                            <a href="@fullUrl" target="_blank" class="fw-semibold">@fullUrl</a>
+                        </div>
+
+                        <div class="mb-3">
+                            <small class="text-muted d-block">Användarnamn</small>
+                            <code>@SelectedUFShopOrder.Email</code>
+                        </div>
+
+                        <div class="mb-0">
+                            <small class="text-muted d-block">Lösenord</small>
+                            <code>@SelectedUFPassword</code>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alert alert-info mt-3 mb-0" role="alert">
+                    <i class="bi bi-info-circle me-2"></i>
+                    <small>Kopiera denna information och skicka till kunden via e-post</small>
+                </div>
+            </BodyTemplate>
+            <FooterTemplate>
+                <Button Color="ButtonColor.Primary" @onclick="CloseModal">
+                    <i class="bi bi-check-lg me-2"></i>Stäng
+                </Button>
+            </FooterTemplate>
+        </Modal>
+    </div>
+
+
+
+
+
+
 
     @* denna syns när du skapat en shop från en ufshoporder *@
-    <Modal @ref="modal" title="Kontoinformation" IsVerticallyCentered="true">
+    @* <Modal @ref="modal" title="Kontoinformation" IsVerticallyCentered="true">
         <BodyTemplate>
             @{string fullUrl = "https://" + SelectedUFShopOrder.Prefix + "." + ufshop.Shared.Constants.DOMAINNAME + "/";} 
             <div>Domännamn: @fullUrl</div>
             <div>Inloggning namn: @SelectedUFShopOrder.Email</div>
-            <div>Inloggning lösenord: @SelectedUFPassword</div>
+            <div>Inloggning lösenord: @SelectedUFPassword</div> *@
             @* 
                 kan ju vara smidigt att skapa en e-mail-mall här
                 som man kan kopiera och skicka till kund
                 så slipper man komponera nya mejl varje gång            
             *@
-        </BodyTemplate>
+        @* </BodyTemplate>
         <FooterTemplate>
             <Button Color="ButtonColor.Secondary" @onclick="CloseModal">Close</Button>
         </FooterTemplate>
-    </Modal>
+    </Modal> *@
 
     @*
         Den här knappen öppnar modalen ovanför så den syns
         Kommentera ut eller ta bort när du stajlat klart
     *@
-    <button @onclick="() => modal.ShowAsync()">
+    @* <button @onclick="() => modal.ShowAsync()">
         Öppna modal
-    </button>
+    </button> *@
 
     @*
         Den här knappen stänger modalen ovanför så den syns
         Kommentera ut eller ta bort när du stajlat klart
     *@
-    <button @onclick="() => modal.HideAsync()">
+    @* <button @onclick="() => modal.HideAsync()">
         Stäng modal
-    </button>
+    </button> *@
 }
