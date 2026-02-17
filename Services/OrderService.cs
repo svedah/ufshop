@@ -15,8 +15,43 @@ public class OrderService
         beService = srv;
     }
 
+    public bool ItemsInStock(List<CartItem> cartItems)
+    {
+        bool output = true;
+
+        foreach(CartItem ci in cartItems)
+        {
+            ShopItem si = ci.ShopItem;
+            if (si.ItemsAvailable < ci.Amount)
+            {
+                output = false;
+            }
+        }
+
+        return output;
+    }
+
+    //tar bort shopitems från shops lagersaldo
+    private void SubtractBalance(List<CartItem> cartItems)
+    {
+        foreach(CartItem ci in cartItems)
+        {
+            bool exists = beService.DbContext.ShopItems.Where(e => e.Id.Equals(ci.ShopItem.Id)).Any();
+            if (exists)
+            {
+                ShopItem si = beService.DbContext.ShopItems.Where(e => e.Id.Equals(ci.ShopItem.Id)).First();
+                si.ItemsAvailable -= ci.Amount;
+                beService.DbContext.ShopItems.Update(si);
+            }
+        }
+        beService.DbContext.SaveChanges();
+    }
+
     public async Task<Guid> MakeOrderAsync(List<CartItem> cartItems, CustomerInfo customerInfo)
     {
+        //TODO: dra bort cartitems från shop saldo
+        SubtractBalance(cartItems);
+
         //skapa och spara cart
         Cart cart = new Cart
         {

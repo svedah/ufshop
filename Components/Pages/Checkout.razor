@@ -16,6 +16,7 @@
     //adress i localstorage
 
     private bool cartValid { get; set; }
+    private bool showCheckoutFail { get; set; } = false;
     private async Task UpdateCartValid(bool isValid)
     {
         cartValid = isValid;
@@ -41,7 +42,7 @@
         await beService.JsRuntime.InvokeVoidAsync("history.back");
     }
 
-    private bool checkoutSuccess { get; set; } = false;
+    @* private bool checkoutSuccess { get; set; } = false; *@
 
     private async Task DoCheckout()
     {
@@ -53,27 +54,30 @@
 
             OrderService orderService = new OrderService(beService);
 
-
             //should return orderResult GUID
-            Guid shopOrderId = await orderService.MakeOrderAsync(cart, customerInfo);
+            //if guid.empty, probably invalid cart
+            Guid shopOrderId = Guid.Empty;
+            if (orderService.ItemsInStock(cart))
+            {
+                shopOrderId = await orderService.MakeOrderAsync(cart, customerInfo);
+            }
+            else
+            {
+                cartValid = false;
+            }
 
             if (!shopOrderId.Equals(Guid.Empty))
             {
-                //stored OK, navigate to payment page
-                checkoutSuccess = true;
-
                 await cartService.ClearAsync();
 
                 //do NOT clean customerinfo in localStorage
 
                 //TODO: navigate to payment page with shoporder id
                 RedirectManager.RedirectTo("Payment/" + shopOrderId.ToString());
-
-
             }
             else
             {
-                //sum thin won
+                showCheckoutFail = true;
             }
 
             
@@ -120,7 +124,14 @@
 
     <!-- Genomför Beställning -->
     <div class="d-grid gap-2 mt-4">
-        @if (cartValid && customerInfoValid)
+        @if (showCheckoutFail)
+        {
+                <small class="text-center text-danger">
+                    <i class="bi bi-exclamation-triangle me-1"></i>
+                    Din varukorg är ogiltig. Töm din varukorg och börja om.
+                </small>
+        }
+        @if (cartValid && customerInfoValid && !showCheckoutFail)
         {
             <Button Color="ButtonColor.Success" Size="ButtonSize.Large" @onclick="() => DoCheckout()">
                 <Icon Name="IconName.CheckCircle" class="me-2" />
