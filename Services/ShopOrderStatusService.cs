@@ -53,4 +53,41 @@ public class ShopOrderStatusService
         return ShopOrderStatus.Unpaid;
     }
 
+    public ShopOrder ReclaimToStock(Guid Id)
+    {
+        ShopOrder output = new ShopOrderService(beService).Empty();
+
+        //återför shoporders "inventarier" till shoppens lager
+        //sätter sedan shoporder till cancelled -> "makulerad"
+        bool exists = beService.DbContext.ShopOrders.Where(e => e.Id.Equals(Id)).Any();
+
+        if (exists)
+        {
+            output = beService.DbContext.ShopOrders
+                                        .Where(e => e.Id.Equals(Id))
+                                        .Include(e => e.Cart)
+                                        .ThenInclude(e => e.CartItems)
+                                        .ThenInclude(e => e.ShopItem)
+                                        .Include(e => e.CustomerInfo)
+                                        .First();
+
+            //reclaims to stock but does not change cart
+            foreach(CartItem ci in output.Cart.CartItems)
+            {
+                //TODO: reclaim to stock here
+                ShopItem si = beService.DbContext.ShopItems.Where(e => e.Id.Equals(ci.ShopItem.Id)).First();
+                si.ItemsAvailable += ci.Amount;
+                beService.DbContext.ShopItems.Update(si);
+            }
+
+            //cancel order
+            output.Status = ShopOrderStatus.Cancelled;
+            //spara i databasen
+            beService.DbContext.ShopOrders.Update(output);
+            beService.DbContext.SaveChanges();
+        }
+
+        return output;
+    }
+
 }

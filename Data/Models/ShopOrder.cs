@@ -21,4 +21,5 @@ public enum ShopOrderStatus
     Shipped = 2,
     Rejected = 3,
     SwishTriggered = 4,
+    Cancelled = 5//makulerad
 }

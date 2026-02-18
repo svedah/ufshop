@@ -69,7 +69,7 @@ public class ManageShopOrdersService
 
     public List<ShopOrder> GetFilteredShopOrders(int filter)
     {
-        Contract.Assert(filter >= -1 && filter <= 4);
+        Contract.Assert(filter >= -1 && filter <= 5);
 
         List<ShopOrder> output = new List<ShopOrder>();
         var list = GetAllShopOrders();
@@ -89,6 +89,9 @@ public class ManageShopOrdersService
                 break;
             case 4://swishtriggered
                 output = list.Where(e => e.Status.Equals(ufshop.Data.Models.ShopOrderStatus.SwishTriggered)).ToList();
+                break;
+            case 5://cancelled
+                output = list.Where(e => e.Status.Equals(ufshop.Data.Models.ShopOrderStatus.Cancelled)).ToList();
                 break;
             default: //-1 - All
                 output = list.ToList();
