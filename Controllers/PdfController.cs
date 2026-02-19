@@ -12,5 +12,8 @@ public class PDFController : ControllerBase
     {
         return new FileContentResult(new byte[0], "application/pdf");
     }
+    // var html = File.ReadAllText("order.html");
+    // byte[] pdf = Freeware.Html2Pdf.Convert(html);
+    // File.WriteAllBytes("pdf.pdf", pdf);
 
 }

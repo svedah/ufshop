@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8" />
+    <title>Orderbekräftelse</title>
+
+    <!-- PDF-inställningar (anpassa vid behov) -->
+    <meta name="pdf:page-width" content="2480" />
+    <meta name="pdf:page-height" content="3508" />
+    <meta name="pdf:header-height" />
+    <meta name="pdf:header-on-first-page" content="true" />
+    <meta name="pdf:footer-height" content="250" />
+    <meta name="pdf:footer-on-first-page" content="true" />
+
+    <style>
+        /* Grundinställningar */
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 28pt;
+            color: #222;
+            margin: 2.5cm;
+        }
+
+        h1, h2, h3 {
+            margin: 0 0 20pt 0;
+        }
+
+        h1 {
+            font-size: 56pt;
+        }
+
+        h2 {
+            font-size: 40pt;
+        }
+
+        h3 {
+            font-size: 32pt;
+        }
+
+        p {
+            margin: 0 0 16pt 0;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 5pt solid #0a7cff;
+            padding-bottom: 20pt;
+            margin-bottom: 40pt;
+        }
+
+        header .company-info {
+            font-size: 35pt;
+        }
+
+        header img {
+            height: 100pt;
+        }
+
+        /* Order- och kundinfo */
+        .info-section {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 50pt;
+        }
+
+        .info-box {
+            width: 48%;
+            border: 2pt solid lightgray;
+            padding: 20pt;
+        }
+
+        .info-box strong {
+            display: block;
+            margin-bottom: 10pt;
+        }
+
+        /* Produkttabell */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 40pt;
+        }
+
+        table thead th {
+            background-color: #f2f2f2;
+            border-bottom: 3pt solid #ccc;
+            padding: 25pt;
+            text-align: left;
+        }
+
+        table tbody td {
+            border-bottom: 2pt solid #e0e0e0;
+            padding: 25pt;
+        }
+
+        table .right {
+            text-align: right;
+        }
+
+        table .center{
+            text-align: center;
+        }
+
+        /* Summering */
+        .summary {
+            width: 40%;
+            margin-left: auto;
+            border: 2pt solid lightgray;
+            padding: 25pt;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20pt;
+        }
+
+        .summary-row.total {
+            font-weight: bold;
+            font-size: 32pt;
+            border-top: 3pt solid #000;
+            padding-top: 20pt;
+        }
+
+        .rabattVärde {
+            color: red;
+        }
+
+        /* Footer */
+        footer {
+            border-top: 4pt solid grey;
+            /* todo fortsätt här */
+            padding: 20pt 0;
+            padding-top: 20pt; 
+            margin-top: 40pt;
+            font-size: 22pt;
+            display: flex;
+        }
+    </style>
+</head>
+<body>
