@@ -15,14 +15,14 @@ public class OrderShopService
         beService = srv;
     }
 
-    public bool IsFormDataValid(string prefix, string company, string email, string phone)
+    public bool IsFormDataValid(string prefix, string company, string email, string phone, bool agreement)
     {
         bool validPrefix = ValidatePrefix(prefix);
         bool validCompany = company.Length > 4;
         bool validEmail =  new EmailHelper().IsValidEmail(email);
         bool validPhone = new String(phone.Where(Char.IsDigit).ToArray()).Length >= 10;
 
-        return validPrefix && validCompany && validEmail && validPhone;
+        return validPrefix && validCompany && validEmail && validPhone && agreement;
     }
 
     public bool IsValidPrefix(string input)
@@ -38,11 +38,11 @@ public class OrderShopService
         return !alreadyExists && !alreadyOrdered && isValidPrefix;
     }
 
-    public Guid MakeOrder(string prefix, string company, string email, string phone, bool companytype, bool assisted)
+    public Guid MakeOrder(string prefix, string company, string email, string phone, bool companytype, bool assisted, bool agreement)
     {
         Guid output = Guid.Empty;
 
-        if (IsFormDataValid(prefix, company, email, phone))
+        if (IsFormDataValid(prefix, company, email, phone, agreement))
         {
             Guid newId = Guid.NewGuid();
             UFShopOrder newUfShopOrder = new UFShopOrder

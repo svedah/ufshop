@@ -26,7 +26,8 @@
         }
     }
     bool Assisted { get; set; } = false;
-    private bool IsFormDataValid { get { return Service.IsFormDataValid(Prefix, Company, Email, Phone); } }
+    private bool IsFormDataValid { get { return Service.IsFormDataValid(Prefix, Company, Email, Phone, AgreementCheck); } }
+    private bool AgreementCheck { get; set; }
     //END Form bindings
 
     private bool IsPrefixValid { get { return Service.IsValidPrefix(Prefix); } }
@@ -66,7 +67,7 @@
     {
         if (IsFormDataValid)
         {
-            Guid orderId = Service.MakeOrder(Prefix, Company, Email, Phone, CompanyTypeUF, Assisted);
+            Guid orderId = Service.MakeOrder(Prefix, Company, Email, Phone, CompanyTypeUF, Assisted, AgreementCheck);
             if (!orderId.Equals(Guid.Empty))
             {
                 OrderId = orderId.ToString().Split('-')[0];
@@ -114,13 +115,10 @@
 
                     <ul class="mt-2 mb-0 ps-3 small">
                         <li class="mb-1">
-                            Om beställningen godkänns får ni ett
-                            <strong>kontrakt via e-post</strong>.
-                        </li>
-                        <li class="mb-1">
-                            När betalning skett och kontraktet är
-                            <strong>signerat och returnerat</strong> till oss
-                            får ni ytterligare information med
+                            Om beställningen godkänns och betalning för tjänsten skett, 
+                            får ni ett
+                            <strong>avtalskontrakt via e-post</strong>.
+                            Detta avtalskontrakt innehåller 
                             <strong>inloggningsuppgifter till er UF-shop</strong>.
                         </li>
                     </ul>
@@ -290,6 +288,26 @@ else
                 </div>
             </div>
         </section>
+
+        <!-- Agreement BEGIN -->
+        <section class="mb-4">
+            <Accordion>
+                <AccordionItem Title="Läs och acceptera vårt avtal">
+                    <Content>
+                        <h2>Agreement</h2>
+                        <ol>
+                            <li>Dont do stupid stuff</li>
+                            <li>Be excellent to eachother</li>
+                            <li>Read above at least one more time</li>
+                        </ol>
+                        <p>
+                            <CheckboxInput Label="Jag har läst och accepterar detta avtal" @bind-Value="AgreementCheck" />
+                        </p>
+                    </Content>
+                </AccordionItem>
+            </Accordion>
+        </section>
+        <!-- Agreement END -->
 
         <!-- Submit Button -->
         <section class="d-grid">
