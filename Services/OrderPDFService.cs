@@ -35,7 +35,8 @@ public class OrderPDFService
         BuildHtml_HeaderTag(ref sb, shop.Settings.Title, shop.Settings.LogoImage.Filename);
         BuildHtml_InfoSection(ref sb, shop, shopOrder);
         BuildHtml_ProductTable(ref sb, shopOrder);
-        BuildHtml_Summary(ref sb, shopOrder);
+        BuildHtml_Summary(ref sb, shop, shopOrder);
+        BuildHtml_Footer(ref sb, shop);
         return sb.ToString();
     }
 
@@ -44,30 +45,41 @@ public class OrderPDFService
         sb.AppendLine("<footer>");
         sb.AppendLine("<div>Tack för din beställning<br />");
         sb.AppendLine("Vid frågor, kontakta oss på ");
-        sb.AppendLine();//email
+        sb.AppendLine(shop.Settings.ContactInfo.Email);//email
         sb.AppendLine(" eller ");
-        sb.AppendLine();//telefonnummer
+        sb.AppendLine(shop.Settings.ContactInfo.MobileNumber);//telefonnummer
         sb.AppendLine("</footer>");
         sb.AppendLine("</body></html>");
     }
 
-    private void BuildHtml_Summary(ref StringBuilder sb, ShopOrder shopOrder)
+    private int CalculateShopOrderSum(ShopOrder shopOrder)
     {
+        int output = 0;
+        foreach(CartItem cartItem in shopOrder.Cart.CartItems)
+        {
+            output += (cartItem.Amount * cartItem.Price);
+        }
+        return output;
+    }
+
+    private void BuildHtml_Summary(ref StringBuilder sb, Shop shop, ShopOrder shopOrder)
+    {
+        int shopOrderSum = CalculateShopOrderSum(shopOrder);
         sb.AppendLine("<div class=\"summary\">");
 
         sb.AppendLine("<div class=\"summary-row\">");
         sb.AppendLine("<span>Summa</span>");
-        sb.AppendLine("<span> SEK</span>");//TODO: Summa
+        sb.AppendLine("<span>" + shopOrderSum + " SEK</span>");//Summa
         sb.AppendLine("</div>");
 
         sb.AppendLine("<div class=\"summary-row\">");
         sb.AppendLine("<span>Frakt</span>");
-        sb.AppendLine("<span> SEK</span>");//TODO: Basfraktpris
+        sb.AppendLine("<span>" + shop.Settings.BaseShippingPrice + " SEK</span>");//Basfraktpris
         sb.AppendLine("</div>");
 
         sb.AppendLine("<div class=\"summary-row total\">");
         sb.AppendLine("<span>Att betala</span>");
-        sb.AppendLine("<span> SEK</span>");//TODO: Totalpris
+        sb.AppendLine("<span>" + (shopOrderSum + shop.Settings.BaseShippingPrice) + " SEK</span>");//Totalpris
         sb.AppendLine("</div>");
 
         sb.AppendLine("</div>");
@@ -79,6 +91,31 @@ public class OrderPDFService
         sb.AppendLine("<table><thead><tr><th>Produkt</th><th class=\"center\">Antal</th><th class=\"center\">Pris</th><th class=\"right\">Summa</th></tr></thead>");
         sb.AppendLine("<tbody>");
         //TODO: Lista produkter
+
+        foreach(CartItem cartItem in shopOrder.Cart.CartItems)
+        {
+            sb.AppendLine("<tr>");
+
+            sb.AppendLine("<td>");
+            sb.AppendLine(cartItem.Title);
+            sb.AppendLine("</td>");
+
+            sb.AppendLine("<td class=\"center\">");
+            sb.AppendLine(cartItem.Amount.ToString());
+            sb.AppendLine("</td>");
+
+            sb.AppendLine("<td class=\"center\">");
+            sb.AppendLine(cartItem.Price.ToString() + " SEK");
+            sb.AppendLine("</td>");
+
+            sb.AppendLine("<td class=\"right\">");
+            sb.AppendLine((cartItem.Price * cartItem.Amount).ToString() + " SEK");
+            sb.AppendLine("</td>");
+
+            sb.AppendLine("</tr>");
+        }
+
+
         sb.AppendLine("</tbody>");
         sb.AppendLine("</table>");
     }
@@ -88,19 +125,25 @@ public class OrderPDFService
         sb.AppendLine("<div class=\"info-section\">");
         sb.AppendLine("<div class=\"info-box\">");
         sb.AppendLine("<strong>Kunduppgifter</strong>");
-        sb.AppendLine("<br />");//Kundnamn
-        sb.AppendLine("<br />");//Leveransadress
-        sb.AppendLine("<br />");//Zip och Stad
-        sb.AppendLine("E-post: <br />");
-        sb.AppendLine("Telefon: ");
+        sb.AppendLine(shopOrder.CustomerInfo.FirstName + " " + shopOrder.CustomerInfo.LastName + "<br />");//Kundnamn
+        sb.AppendLine(shopOrder.CustomerInfo.StreetName + " " + shopOrder.CustomerInfo.StreetNo + "<br />");//Leveransadress
+        sb.AppendLine(shopOrder.CustomerInfo.ZipCode + " " + shopOrder.CustomerInfo.City + "<br />");//Zip och Stad
+        sb.AppendLine("E-post: " + shopOrder.CustomerInfo.Email + "<br />");
+        sb.AppendLine("Telefon: " + shopOrder.CustomerInfo.Phone);
         sb.AppendLine("</div>");
         sb.AppendLine("<div class=\"info-box\">");
         sb.AppendLine("<strong>Orderinformation</strong>");
-        sb.AppendLine("Ordernummer: <br />");//Ordernummer
-        sb.AppendLine("Orderdatum: <br />");//Orderdatum
+        sb.AppendLine("Order ID: " + ShopOrderIdToShortShopOrderId(shopOrder.Id) + "<br />");//Order ID
+        sb.AppendLine("Orderdatum: " + shopOrder.Created + "<br />");//Orderdatum
         sb.AppendLine("Betalsätt: Swish");
         sb.AppendLine("</div>");
         sb.AppendLine("</div>");
+    }
+
+    private string ShopOrderIdToShortShopOrderId(Guid id)
+    {
+        string sid = id.ToString().Split('-')[0].ToUpper();
+        return sid;
     }
 
     private void BuildHtml_HeaderBodyStart(ref StringBuilder sb)
@@ -118,7 +161,9 @@ public class OrderPDFService
         sb.AppendLine("<div class=\"company-info\">");
         sb.AppendLine("<strong>" + shopTitle + "</strong><br />");
         sb.AppendLine("</div>");
-        sb.AppendLine("<img src=\"/img/" + shopImageFilename + ".jpeg\" />");
+        sb.AppendLine("<img src=\"https://www.ufshop.nu/img/" + shopImageFilename + ".jpeg\" />");
+        // sb.AppendLine("<img src=\"https://www.ufshop.nu/img/WebbHelp_Logo.jpeg\" />");
+        // sb.AppendLine("<p>" + shopImageFilename + "</p>");
         sb.AppendLine("</header>");
         sb.AppendLine("<h1>Orderbekräftelse</h1>");
     }
