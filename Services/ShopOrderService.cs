@@ -33,12 +33,17 @@ public class ShopOrderService
 
     public bool Exists(Guid shopOrderId)
     {
-        bool output = beService.DbContext.ShopOrders.Where(e => e.Id.Equals(shopOrderId)).AsNoTracking().Any();
+        // bool output = beService.DbContext.ShopOrders.Where(e => e.Id.Equals(shopOrderId)).AsNoTracking().Any();
+        bool output = false;
+        var ss = new ShopService(beService);
+        Shop shop;
+        if (ss.GetShop(beService.DomainPrefix, out shop))
+        {
+            output = shop.Orders.Where(e => e.Id.Equals(shopOrderId)).Any();
+        }
         return output;
-        // return true;
     }
 
-    //TODO: untested
     public ShopOrder Get(Guid id)
     {
         ShopOrder shopOrder = beService.DbContext.ShopOrders
