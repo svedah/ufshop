@@ -23,6 +23,7 @@
 
     private CancellationTokenSource cts;
     private bool _disposed = false;
+    private bool _initialized = false;
     private Random random = new Random();
     private readonly BeService BeService;
     private readonly PaymentService Service;
@@ -39,6 +40,18 @@
         get
         {
             return "<script>function open2links(){window.location.href=\"" + @OrderConfirmationUrl + "\";window.open(\"" + @SwishDirectUrl + "\", \"_blank\");}</script>";
+        }
+    }
+    private string ShortOrderId
+    {
+        get
+        {
+            string output = string.Empty;
+            if (!id.Equals(Guid.Empty))
+            {
+                output = id.ToString().Split('-')[0];
+            }
+            return output;
         }
     }
 
@@ -67,6 +80,8 @@
         {
             _ = RunLoopAsync(cts.Token);
         }
+
+        _initialized = true;
     }
 
     private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
@@ -153,9 +168,10 @@
 
 }
 
-@if (Order is not null && Order.Status == ShopOrderStatus.Unpaid)
+@* @if (Order is not null && Order.Status == ShopOrderStatus.Unpaid) *@
+@if (Order is not null && _initialized)
 {
-    <PageTitle>Betalning order @id</PageTitle>
+    <PageTitle>Betalning order @ShortOrderId</PageTitle>
 
     <div class="container my-4">
         <!-- Header -->
@@ -184,7 +200,7 @@
                         <div class="alert alert-info d-flex align-items-center justify-content-center mb-4" role="alert">
                             <i class="bi bi-info-circle-fill me-2 flex-shrink-0"></i>
                             <div class="text-start">
-                                <strong>Öppna Swish-appen och skanna QR-koden ovan</strong>
+                                <strong>Scanna med din mobilkamera för att betala din order</strong>
                             </div>
                         </div>
 
@@ -196,7 +212,7 @@
                         </div>
 
                         <small class="text-muted">
-                            Order ID: #@id
+                            Order ID: #@ShortOrderId
                         </small>
                     </div>
                 </div>
@@ -252,13 +268,12 @@
         {
             <IframeViewer Url="@SwishRedirectUrl" Width="0" Height="0" />
         }
-
-        @* Injicerar scriptet som triggar sidbyte och öppnar swish på mobilen *@
-        @((MarkupString)TheScript)
     </div>
-
+    @* Injicerar scriptet som triggar sidbyte och öppnar swish på mobilen *@
+    @((MarkupString)TheScript)
 }
 else
 {
     <Spinner />
+    @* NavigationManager.NavigateTo("/OrderConfirmation/" + id.ToString(), forceLoad: true); *@
 }
