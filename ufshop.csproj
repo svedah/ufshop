@@ -21,6 +21,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.3" />
     <PackageReference Include="SixLabors.ImageSharp" Version="3.1.11" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="3.119.1" />
     <PackageReference Include="SkiaSharp.QrCode" Version="0.12.0" />
     <!-- <PackageReference Include="SkiaSharp" Version="3.119.0" /> -->
     <PackageReference Include="Freeware.Html2Pdf" Version="1.1.0" />

@@ -1,5 +1,7 @@
 @using ufshop.Services
 @using ufshop.Data.Models
+@using ufshop.Shared
+
 @rendermode InteractiveServer
 @code {
     [Parameter]
@@ -16,11 +18,14 @@
 
 <Tabs class="nav-pills nav-fill flex-column flex-md-row p-3 border-bottom pb-0 fw-semibold">
 
-    <Tab Title="Våra varor och tjänster" KeepAlive="false">
-        <Content>
-            <ArticleCards ShopItems=Items />
-        </Content>
-    </Tab>
+    @if (Items.ToList().Count > 0 || beService.DomainPrefix.Equals(Constants.DEFAULTDOMAINPREFIX))
+    {
+        <Tab Title="Våra varor och tjänster" KeepAlive="false">
+            <Content>
+                <ArticleCards ShopItems=Items />
+            </Content>
+        </Tab>
+    }
 
     @foreach(ShopPage sp in Pages)
     {
