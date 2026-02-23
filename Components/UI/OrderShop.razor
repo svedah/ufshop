@@ -114,6 +114,22 @@
                     <span class="fw-semibold">Vad händer nu?</span>
 
                     <ul class="mt-2 mb-0 ps-3 small">
+                        @if(Assisted)
+                        {
+                            <li class="mb-1">
+                                En betalning på 
+                                <strong>500 kr</strong>
+                                ska ske.
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="mb-1">
+                                En betalning på 
+                                <strong>350 kr</strong>
+                                ska ske.
+                            </li>
+                        }
                         <li class="mb-1">
                             Om beställningen godkänns och betalning för tjänsten skett, 
                             får ni ett
@@ -294,41 +310,89 @@ else
             <Accordion>
                 <AccordionItem Title="Läs och acceptera vårt avtal">
                     <Content>
-                        <h2>Avtal om Leverans av UF Shop</h2>
+                        <div class="agreement-content p-3" style="max-height: 400px; overflow-y: auto;">
 
-                        <h3>Avtalets omfattning</h3>
-                        <p>Leverantören åtar sig att utveckla och leverera en hemsida ("Tjänsten") enligt den offert eller specifikation som Parterna kommit överens om. Tjänsten omfattar endast tekniskt underhåll och driftsättning, om inget annat avtalas skriftligen.</p>
+                            <h4 class="text-primary mb-3">Avtal om Leverans av UF Shop</h4>
 
-                        <h3>Kundens ansvar för innehåll</h3>
-                        <p>Kunden är ensam ansvarig för allt innehåll som publiceras, lagras eller tillgängliggörs via hemsidan, inklusive men inte begränsat till texter, bilder, grafik, media samt produkter eller tjänster som säljs. Kunden garanterar att innehållet inte bryter mot lag eller gör intrång i tredje parts rättigheter.</p>
+                            <div class="mb-4">
+                                <h6 class="fw-bold text-secondary">Avtalets omfattning</h6>
+                                <p class="text-muted small">
+                                    Leverantören åtar sig att utveckla och leverera en hemsida ("Tjänsten") enligt den offert eller specifikation som Parterna kommit överens om. Tjänsten omfattar endast tekniskt underhåll och driftsättning, om inget annat avtalas skriftligen.
+                                </p>
+                            </div>
 
-                        <h3>Ansvarsfriskrivning</h3>
-                        <p>Leverantören ansvarar inte för kundens användning av hemsidan, juridiska konsekvenser av innehållet eller skador som uppstår till följd av kundens hantering av hemsidan. Kunden håller Leverantören skadeslös för alla krav som riktas mot Leverantören.</p>
+                            <div class="mb-4">
+                                <h6 class="fw-bold text-secondary">Kundens ansvar för innehåll</h6>
+                                <p class="text-muted small">
+                                    Kunden är ensam ansvarig för allt innehåll som publiceras, lagras eller tillgängliggörs via hemsidan, inklusive men inte begränsat till texter, bilder, grafik, media samt produkter eller tjänster som säljs. Kunden garanterar att innehållet inte bryter mot lag eller gör intrång i tredje parts rättigheter.
+                                </p>
+                            </div>
 
-                        <h3>Förbud mot missbruk av Tjänsten</h3>
-                        <p>Kunden får inte använda hemsidan för olagliga aktiviteter, spridning av skadlig kod eller handlingar som skadar Leverantörens rykte eller system. Leverantören har rätt att stänga av hemsidan omedelbart vid missbruk. Leverantören förbehåller sig rätten att utan förvarning ta bort innehåll som är olagligt eller kan anses stötande, för politisk aktivism, hat, hot eller hets.</p>
+                            <div class="mb-4">
+                                <h6 class="fw-bold text-secondary">Ansvarsfriskrivning</h6>
+                                <p class="text-muted small">
+                                    Leverantören ansvarar inte för kundens användning av hemsidan, juridiska konsekvenser av innehållet eller skador som uppstår till följd av kundens hantering av hemsidan. Kunden håller Leverantören skadeslös för alla krav som riktas mot Leverantören.
+                                </p>
+                            </div>
 
-                        <h3>Drift och support</h3>
-                        <p>Om kund önskar ytterligare utveckling av tjänsten skall detta regleras i ett separat avtal. Utan sådant avtal ansvarar Leverantören inte för uppdateringar, säkerhet, backup eller driftstörningar hos tredje part.</p>
+                            <div class="mb-4">
+                                <h6 class="fw-bold text-secondary">Förbud mot missbruk av Tjänsten</h6>
+                                <p class="text-muted small">
+                                    Kunden får inte använda hemsidan för olagliga aktiviteter, spridning av skadlig kod eller handlingar som skadar Leverantörens rykte eller system. Leverantören har rätt att stänga av hemsidan omedelbart vid missbruk. Leverantören förbehåller sig rätten att utan förvarning ta bort innehåll som är olagligt eller kan anses stötande, för politisk aktivism, hat, hot eller hets.
+                                </p>
+                            </div>
 
-                        <h3>Leverans och godkännande</h3>
-                        <p>Tjänsten anses levererad när hemsidan görs tillgänglig för Kunden. Kunden ska inom 10 dagar meddela eventuella fel, annars anses Tjänsten godkänd.</p>
+                            <div class="mb-4">
+                                <h6 class="fw-bold text-secondary">Drift och support</h6>
+                                <p class="text-muted small">
+                                    Om kund önskar ytterligare utveckling av tjänsten skall detta regleras i ett separat avtal. Utan sådant avtal ansvarar Leverantören inte för uppdateringar, säkerhet, backup eller driftstörningar hos tredje part.
+                                </p>
+                            </div>
 
-                        <h3>Betalningsvillkor</h3>
-                        <p>Betalning ska ske enligt offert eller faktura. Försenad betalning kan medföra dröjsmålsränta enligt räntelagen.</p>
+                            <div class="mb-4">
+                                <h6 class="fw-bold text-secondary">Leverans och godkännande</h6>
+                                <p class="text-muted small">
+                                    Tjänsten anses levererad när hemsidan görs tillgänglig för Kunden. Kunden ska inom 10 dagar meddela eventuella fel, annars anses Tjänsten godkänd.
+                                </p>
+                            </div>
 
-                        <h3>Äganderätt och licenser</h3>
-                        <p>Kunden får full nyttjanderätt till hemsidan vid full betalning. Leverantören behåller äganderätten till tjänsten och material som inte specifikt ingår i beställningen.</p>
+                            <div class="mb-4">
+                                <h6 class="fw-bold text-secondary">Betalningsvillkor</h6>
+                                <p class="text-muted small">
+                                    Betalning ska ske enligt offert eller faktura. Försenad betalning kan medföra dröjsmålsränta enligt räntelagen.
+                                </p>
+                            </div>
 
-                        <h3>Avtalstid och uppsägning</h3>
-                        <p>Avtalet gäller från underskriftsdatum tills Tjänsten är levererad. Ansvarsbegränsningarna gäller även efter avtalstidens slut. Tjänsten anses uppsagd när endera part i avtalet meddelar att avtalet inte längre gäller.</p>
+                            <div class="mb-4">
+                                <h6 class="fw-bold text-secondary">Äganderätt och licenser</h6>
+                                <p class="text-muted small">
+                                    Kunden får full nyttjanderätt till hemsidan vid full betalning. Leverantören behåller äganderätten till tjänsten och material som inte specifikt ingår i beställningen.
+                                </p>
+                            </div>
 
-                        <h3>Tvist</h3>
-                        <p>Tvist avgörs i första hand genom förhandling. I andra hand avgörs tvist i svensk domstol med Leverantörens hemort som forum.</p>
+                            <div class="mb-4">
+                                <h6 class="fw-bold text-secondary">Avtalstid och uppsägning</h6>
+                                <p class="text-muted small">
+                                    Avtalet gäller från underskriftsdatum tills Tjänsten är levererad. Ansvarsbegränsningarna gäller även efter avtalstidens slut. Tjänsten anses uppsagd när endera part i avtalet meddelar att avtalet inte längre gäller.
+                                </p>
+                            </div>
 
-                        <p>
-                            <CheckboxInput Label="Jag har läst och accepterar detta avtal" @bind-Value="AgreementCheck" />
-                        </p>
+                            <div class="mb-0">
+                                <h6 class="fw-bold text-secondary">Tvist</h6>
+                                <p class="text-muted small mb-0">
+                                    Tvist avgörs i första hand genom förhandling. I andra hand avgörs tvist i svensk domstol med Leverantörens hemort som forum.
+                                </p>
+                            </div>
+
+                        </div>
+                        <div class="border-top mt-3 pt-3">
+                            <div class="form-check">
+                                <CheckboxInput Label="Jag har läst och accepterar detta avtal" 
+                                            @bind-Value="AgreementCheck" 
+                                            class="form-check-input" 
+                                            id="agreementCheck" />
+                            </div>
+                        </div>
                     </Content>
                 </AccordionItem>
             </Accordion>
