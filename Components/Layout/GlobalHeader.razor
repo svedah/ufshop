@@ -7,6 +7,11 @@
     public readonly BeService beService;
     public Shop shop;
 
+    private CartService cartService;
+    private int cartNumberOfItems = 0;
+    private PeriodicTimer? _timer;
+    private CancellationTokenSource _cts = new();
+
     public string ShopTitle;
     public ShopImage ShopLogo;
 
@@ -34,11 +39,27 @@
         return default!;
     }
 
+    private async Task RefreshCartIcon()
+    {
+        cartNumberOfItems = await cartService.CartNumberOfItems();
+        InvokeAsync(StateHasChanged);
+    }
+
     protected override async Task OnInitializedAsync()
     {
+        _timer = new PeriodicTimer(TimeSpan.FromSeconds(2));
+
         shop = GetShop();
         ShopTitle = shop.Settings.Title;
         ShopLogo = shop.Settings.LogoImage;
+        cartService = new CartService(beService);
+
+        _ = Task.Run(async ( ) => {
+            while (await _timer.WaitForNextTickAsync(_cts.Token))
+            {
+                await RefreshCartIcon();
+            }
+        });
     }
 
     protected override void OnInitialized()
@@ -49,6 +70,9 @@
     public void Dispose()
     {
         Ui.OnChange -= RefreshData;
+
+        _cts.Cancel();
+        _cts.Dispose();
     }
 
 }
@@ -93,15 +117,24 @@
                 <div class="d-flex align-items-center gap-2">
                     
                     <ThemeSwitcher class="btn btn-primary btn-sm"/>
-
                     <NavLink class="btn btn-primary position-relative px-3 py-2" @onclick="GoToCart">
                         <Icon Name="IconName.Cart" />
                         <span class="d-none d-md">Varukorg</span>
                         
                         @* todo gör att den faktiskt visar rätt tal *@
-                        @* <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                            3
-                        </span> *@
+                        @if(cartNumberOfItems > 0)
+                        {
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            @if (cartNumberOfItems > 9)
+                            {
+                                <span>+</span>
+                            }
+                            else
+                            {
+                                @cartNumberOfItems
+                            }
+                            </span>
+                        }
                     </NavLink>
                 </div>
             </div>

@@ -167,6 +167,12 @@ public class CartService
         return output;        
     }
 
+    public async Task<int> CartNumberOfItems()
+    {
+        List<CartItem> cart = await LoadCartAsync();
+        return cart.Count;
+    }
+
     private async Task SaveCartAsync(List<CartItem> input)
     {
         input = FilterInvalidCartItems(input);

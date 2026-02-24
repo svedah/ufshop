@@ -78,8 +78,8 @@
 }
 
 @* Lara: Kommentera bort dessa två knappar när du designat klart *@
-@* <button @onclick="() => {OrderId = string.Empty;}">Formulär</button>
-<button @onclick="() => {OrderId = Guid.NewGuid().ToString().Split('-')[0].ToUpper();}">Beställd</button> *@
+<button @onclick="() => {OrderId = string.Empty;}">Formulär</button>
+<button @onclick="() => {OrderId = Guid.NewGuid().ToString().Split('-')[0].ToUpper();}">Beställd</button>
 
 @if (OrderId.Length > 0)
 {
