@@ -108,7 +108,7 @@ public class PaymentService
     }
 
 
-    private string BuildSwishRedirectUrl(string phoneNumber, int amount, string message)
+    public string BuildSwishRedirectUrl(string phoneNumber, int amount, string message)
     {
         //"https://app.swish.nu/1/p/sw/?sw=0700123456&amt=100&cur=SEK&msg=ett%20litet%20test&src=qr";
         string uriEncodedMessage = System.Web.HttpUtility.UrlEncode(message);
@@ -125,7 +125,7 @@ public class PaymentService
 
 
 
-    private string GetShopSwishNumber()
+    public string GetShopSwishNumber()
     {
         string output = string.Empty;
 

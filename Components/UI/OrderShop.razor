@@ -1,4 +1,7 @@
 @using System.Drawing
+@using Microsoft.AspNetCore.Identity
+@using ufshop.Data.Models
+@using ufshop.Helpers
 @using ufshop.Shared
 @using ufshop.Services
 @namespace ufshop.Components.UI
@@ -53,14 +56,70 @@
         }
     }
 
-    public string OrderId { get; set; }
+    private Guid OrderId { get; set; } = Guid.Empty;
+    public string ShortOrderId
+    { 
+        get
+        {
+            if (OrderId.Equals(Guid.Empty))
+            {
+                return string.Empty;
+            }
+            return OrderId.ToString().Split('-')[0].ToUpper();
+        }
+    }
+
+    private string SwishButton
+    {
+        get
+        {
+            string output = string.Empty;
+            output += "<a class=\"btn btn-primary text-nowrap w-100 d-flex justify-content-center\" ";
+            output += "target=\"_blank\" ";
+            output += "href=\"" + SwishUrl + "\" ";
+            output += ">";
+            output += "Swisha från denna enheten";
+            output += "</a>";
+            return output;
+        }
+    }
+
+    private string SwishQRImage
+    {
+        get
+        {
+            return QrImageHelper.MakeEmbeddedImage(SwishUrl);
+        }
+    }
+
+    private string SwishUrl
+    {
+        get
+        {
+            string output = "#";
+            if (!OrderId.Equals(Guid.Empty))
+            {
+                ShopService ss = new ShopService(beService);
+                Shop shop;
+                if (ss.GetShop(beService.DomainPrefix, out shop))
+                {
+                    PaymentService ps = new PaymentService(beService);
+                    string phoneNumber = ps.GetShopSwishNumber();
+                    int amount = Assisted ? Constants.ASSISTEDPRICE : Constants.NONASSISTEDPRICE;
+                    string message = Constants.DOMAINNAME + ":" + ShortOrderId;
+                    output = ps.BuildSwishRedirectUrl(phoneNumber, amount, message);
+                }
+            }
+            return output;
+        }
+    }
 
     public OrderShop(BeService srv)
     {
         beService = srv;
         Service = new OrderShopService(beService);
 
-        OrderId = string.Empty;
+        OrderId = Guid.Empty;
     }
 
     private void MakeOrder()
@@ -70,18 +129,23 @@
             Guid orderId = Service.MakeOrder(Prefix, Company, Email, Phone, CompanyTypeUF, Assisted, AgreementCheck);
             if (!orderId.Equals(Guid.Empty))
             {
-                OrderId = orderId.ToString().Split('-')[0];
+                OrderId = orderId;
             }
         }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+
     }
 
 }
 
 @* Lara: Kommentera bort dessa två knappar när du designat klart *@
-<button @onclick="() => {OrderId = string.Empty;}">Formulär</button>
-<button @onclick="() => {OrderId = Guid.NewGuid().ToString().Split('-')[0].ToUpper();}">Beställd</button>
+<button @onclick="() => {OrderId = Guid.Empty;}">Formulär</button>
+<button @onclick="() => {OrderId = Guid.NewGuid();}">Beställd</button>
 
-@if (OrderId.Length > 0)
+@if (ShortOrderId.Length > 0)
 {
     <div class="container py-4">
         <div class="row justify-content-center">
@@ -105,7 +169,7 @@
                     <Badge Color="BadgeColor.Primary"
                         VisuallyHiddenText="Ordernummer"
                         Class="fs-6 px-3 py-2 rounded-pill">
-                        @OrderId
+                        @ShortOrderId
                     </Badge>
                 </div>
 
@@ -118,7 +182,7 @@
                         {
                             <li class="mb-1">
                                 En betalning på 
-                                <strong>500 kr</strong>
+                                <strong>@Constants.ASSISTEDPRICE kr</strong>
                                 ska ske.
                             </li>
                         }
@@ -126,7 +190,7 @@
                         {
                             <li class="mb-1">
                                 En betalning på 
-                                <strong>350 kr</strong>
+                                <strong>@Constants.NONASSISTEDPRICE kr</strong>
                                 ska ske.
                             </li>
                         }
@@ -139,6 +203,22 @@
                         </li>
                     </ul>
                 </Alert>
+
+                <div>
+
+                    <div>
+                        @((MarkupString)SwishButton)
+                    </div>
+
+                    <div>
+                        <Image Src="@SwishQRImage" 
+                        Alt="Scanna med din mobilkamera eller Swish-appen för att betala din order" 
+                        class="img-fluid shadow rounded"
+                        style="max-width: 280px; width: 100%;" />
+                    </div>
+
+                </div>
+
             </div>
         </div>
     </div>

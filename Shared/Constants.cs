@@ -5,7 +5,8 @@ static public class Constants
     static public string DOMAINNAME = "ufshop.nu";//<-- används av databas-seedern och swishredirect i payment.razor och skapandet av ufshopordern
     static public string DEFAULTDOMAINPREFIX = "www";
 
-
+    static public int ASSISTEDPRICE = 350;
+    static public int NONASSISTEDPRICE = 250;
     
     static public string ALLOWEDPREFIXREGEX = "[a-z]{16}"; //a-z gemener, 16 tecken
 
