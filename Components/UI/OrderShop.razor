@@ -74,10 +74,11 @@
         get
         {
             string output = string.Empty;
-            output += "<a class=\"btn btn-primary text-nowrap w-100 d-flex justify-content-center\" ";
+            output += "<a class=\"btn btn-primary btn-lg w-100 fw-bold d-flex justify-content-center align-items-center\" ";
             output += "target=\"_blank\" ";
             output += "href=\"" + SwishUrl + "\" ";
             output += ">";
+            output += "<i class=\"bi bi-phone-fill me-2\"></i>";
             output += "Swisha från denna enheten";
             output += "</a>";
             return output;
@@ -173,52 +174,66 @@
                     </Badge>
                 </div>
 
-                <Alert Color="AlertColor.Info" Class="mb-0 mt-4">
-                    <Icon Name="IconName.InfoCircleFill" Class="me-2" />
-                    <span class="fw-semibold">Vad händer nu?</span>
+                <div class="row g-4 align-items-start">
 
-                    <ul class="mt-2 mb-0 ps-3 small">
-                        @if(Assisted)
-                        {
-                            <li class="mb-1">
-                                En betalning på 
-                                <strong>@Constants.ASSISTEDPRICE kr</strong>
-                                ska ske.
-                            </li>
-                        }
-                        else
-                        {
-                            <li class="mb-1">
-                                En betalning på 
-                                <strong>@Constants.NONASSISTEDPRICE kr</strong>
-                                ska ske.
-                            </li>
-                        }
-                        <li class="mb-1">
-                            Om beställningen godkänns och betalning för tjänsten skett, 
-                            får ni ett
-                            <strong>avtalskontrakt via e-post</strong>.
-                            Detta avtalskontrakt innehåller 
-                            <strong>inloggningsuppgifter till er UF-shop</strong>.
-                        </li>
-                    </ul>
-                </Alert>
 
-                <div>
+                    <div class="col-12 col-md-6 order-md-2">
+                        <Alert Color="AlertColor.Info" Class="">
+                            <Icon Name="IconName.InfoCircleFill" Class="me-2" />
+                            <span class="fw-semibold">Vad händer nu?</span>
 
-                    <div>
-                        @((MarkupString)SwishButton)
+                            <ul class="mt-2 mb-0 ps-3 small">
+                                @if(Assisted)
+                                {
+                                    <li class="mb-1">
+                                        En betalning på 
+                                        <strong>@Constants.ASSISTEDPRICE kr</strong>
+                                        ska ske.
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li class="mb-1">
+                                        En betalning på 
+                                        <strong>@Constants.NONASSISTEDPRICE kr</strong>
+                                        ska ske.
+                                    </li>
+                                }
+                                <li class="mb-1">
+                                    Om beställningen godkänns och betalning för tjänsten skett, 
+                                    får ni ett
+                                    <strong>avtalskontrakt via e-post</strong>.
+                                    Detta avtalskontrakt innehåller 
+                                    <strong>inloggningsuppgifter till er UF-shop</strong>.
+                                </li>
+                            </ul>
+                        </Alert>
                     </div>
 
-                    <div>
-                        <Image Src="@SwishQRImage" 
-                        Alt="Scanna med din mobilkamera eller Swish-appen för att betala din order" 
-                        class="img-fluid shadow rounded"
-                        style="max-width: 280px; width: 100%;" />
+                    <div class="col-12 col-md-6 order-md-1">
+                        <div class="card shadow-sm">
+                            <div class="card-header text-white text-center">
+                                <h5 class="mb-0 fw-bold">
+                                    <i class="bi bi-qr-code me-2"></i>Betala med Swish
+                                </h5>
+                            </div>
+
+                            <div class="card-body text-center">
+                                <div class="mb-4">
+                                    <Image Src="@SwishQRImage" 
+                                        Alt="Scanna med din mobilkamera eller Swish-appen för att betala din order" 
+                                        class="img-fluid shadow rounded"
+                                        style="max-width: 280px; width: 100%;" />
+                                </div>
+
+                                <div class="mb-4">
+                                    @((MarkupString)SwishButton)
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                 </div>
-
             </div>
         </div>
     </div>
